@@ -1,0 +1,6 @@
+// lagrange polinomial order
+p=1
+
+// physical domain
+domain_x=5 //cm
+domain_y=5 //cm
