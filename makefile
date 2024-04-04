@@ -1,30 +1,18 @@
-# Compiler
-CXX = g++
+CC = g++
+CFLAGS = -std=c++11 -Wall
+LDFLAGS = -I/usr/include/hdf5/serial -L/usr/lib/x86_64-linux-gnu/hdf5/serial
+LIBS = -lhdf5 -lhdf5_cpp
 
-# Compiler flags
-CXXFLAGS = -std=c++11 -Wall
-
-# Source files
-SRCS = main.cpp Parameters.cpp
-
-# Object files
+SRCS = main.cpp Parameters.cpp Utilities.cpp
 OBJS = $(SRCS:.cpp=.o)
+EXEC = Vortex-Transport
 
-# Executable name
-TARGET = Vortex-Transport 
+$(EXEC): $(OBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ $(LIBS) -o $@
 
-# Default target
-all: $(TARGET)
-
-# Rule to build the executable
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS)
-
-# Rule to build object files
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(LDFLAGS) -c $< -o $@
 
-# Clean rule
+.PHONY: clean
 clean:
-	rm -f $(OBJS) $(TARGET)
-
+	rm -f $(OBJS) $(EXEC)
