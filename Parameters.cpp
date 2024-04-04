@@ -5,6 +5,7 @@
 
 #include "Parameters.H"
 
+// this function reads the input parameter script and return an struct of the type parameters with all of them
 parameters read_input_files(int argc, char* argv[]) {
     // Check if input file is provided as a command-line argument
     if (argc != 2) {
