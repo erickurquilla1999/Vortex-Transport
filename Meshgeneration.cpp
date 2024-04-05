@@ -1,8 +1,13 @@
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
+#include <string>
+#include <fstream>
+#include <vector>
+
 
 #include "Meshgeneration.H"
+#include "Utilities.H"
 
 void generate_mesh(const parameters& parms){
 
@@ -38,9 +43,9 @@ void generate_mesh(const parameters& parms){
         std::cout << i <<" : ( " << allgridpoints_x[i] << " , " << allgridpoints_y[i] << " )"<< std::endl;
     }
 
-    float el_to_nod_1[ 2 * parms.num_element_in_x * parms.num_element_in_y ]; // node one is the square angle
-    float el_to_nod_2[ 2 * parms.num_element_in_x * parms.num_element_in_y ]; // node two is the next to the node one counter clockwise
-    float el_to_nod_3[ 2 * parms.num_element_in_x * parms.num_element_in_y ]; // node two is the next to the node two counter clockwise
+    int el_to_nod_1[ 2 * parms.num_element_in_x * parms.num_element_in_y ]; // node one is the square angle
+    int el_to_nod_2[ 2 * parms.num_element_in_x * parms.num_element_in_y ]; // node two is the next to the node one counter clockwise
+    int el_to_nod_3[ 2 * parms.num_element_in_x * parms.num_element_in_y ]; // node two is the next to the node two counter clockwise
 
     // generate element to node information 
     counter = 0;
@@ -115,9 +120,28 @@ void generate_mesh(const parameters& parms){
     int status = system(command.c_str());
 
     if (status == 0) {
-        std::cout << "grid directory created successfully: " << dirPath << std::endl;
+        std::cout << "Directory created successfully: " << dirPath << std::endl;
     } else {
-        std::cerr << "Failed to create grid directory: " << dirPath << std::endl;
+        std::cerr << "Failed to create directory: " << dirPath << std::endl;
         exit(EXIT_FAILURE);
+    }
+
+    // saving grid information for each element
+    for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y; ++i) {
+
+        std::vector<std::string> lines(11);
+        lines[0]="element_number=" + std::to_string(i);
+        lines[1]="coordinate_1_x=" + std::to_string(allgridpoints_x[el_to_nod_1[i]]);
+        lines[2]="coordinate_1_y=" + std::to_string(allgridpoints_y[el_to_nod_1[i]]);
+        lines[3]="coordinate_2_x=" + std::to_string(allgridpoints_x[el_to_nod_2[i]]);
+        lines[4]="coordinate_2_y=" + std::to_string(allgridpoints_y[el_to_nod_2[i]]);
+        lines[5]="coordinate_3_x=" + std::to_string(allgridpoints_x[el_to_nod_3[i]]);
+        lines[6]="coordinate_3_y=" + std::to_string(allgridpoints_y[el_to_nod_3[i]]);
+        lines[7]="type=" + std::to_string(element_type[i]);
+        lines[8]="right_element=" + std::to_string(element_right[i]);
+        lines[9]="left_element=" + std::to_string(element_left[i]);
+        lines[10]="vertical_element=" + std::to_string(element_vertical[i]);
+
+        writeToFile("grid/element" + std::to_string( i ) + ".txt", lines);
     }
 }
