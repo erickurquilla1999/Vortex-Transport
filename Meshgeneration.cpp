@@ -73,7 +73,7 @@ void generate_mesh(const parameters& parms){
     }
 
     // element type 0: square angle down, 1: squeare angle up    
-    float element_type[2 * parms.num_element_in_x * parms.num_element_in_y];
+    int element_type[2 * parms.num_element_in_x * parms.num_element_in_y];
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y; ++i) {
         element_type[i] = (i % 2 == 0 ? 0 : 1);
     }
@@ -84,9 +84,9 @@ void generate_mesh(const parameters& parms){
     }
 
     // element boundary information
-    float element_right[2 * parms.num_element_in_x * parms.num_element_in_y];
-    float element_left[2 * parms.num_element_in_x * parms.num_element_in_y];
-    float element_vertical[2 * parms.num_element_in_x * parms.num_element_in_y];
+    int element_right[2 * parms.num_element_in_x * parms.num_element_in_y];
+    int element_left[2 * parms.num_element_in_x * parms.num_element_in_y];
+    int element_vertical[2 * parms.num_element_in_x * parms.num_element_in_y];
     
     // element to the right
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y; ++i){
