@@ -9,7 +9,7 @@ int main(int argc, char* argv[]) {
     // read simulation paramaters
     parameters parms = read_input_files(argc, argv);
     
-    float mesh = generate_mesh(parms);
+    generate_mesh(parms);
 
     // // Example usage
     // std::string filename = "example.h5";
@@ -20,12 +20,3 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-
-
-
-
-
-
-
-
-
