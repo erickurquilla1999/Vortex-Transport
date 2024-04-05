@@ -8,6 +8,8 @@ struct parameters{
     float domain_y;
     int num_element_in_x;
     int num_element_in_y;
+    float perturb_grid;
+
 };
 
 // this function reads the input parameter script and return an struct of the type parameters with all of them
