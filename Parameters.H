@@ -6,6 +6,8 @@ struct parameters{
     int p;
     float domain_x;
     float domain_y;
+    int num_element_in_x;
+    int num_element_in_y;
 };
 
 // this function reads the input parameter script and return an struct of the type parameters with all of them

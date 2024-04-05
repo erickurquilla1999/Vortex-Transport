@@ -44,6 +44,8 @@ parameters read_input_files(int argc, char* argv[]) {
     params.p = std::stoi(paramMap["p"]);
     params.domain_x = std::stof(paramMap["domain_x"]);
     params.domain_y = std::stof(paramMap["domain_y"]);
+    params.num_element_in_x = std::stoi(paramMap["num_element_in_x"]);
+    params.num_element_in_y = std::stoi(paramMap["num_element_in_y"]);
 
     return params;
 }
