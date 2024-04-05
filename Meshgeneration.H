@@ -6,8 +6,7 @@
 
 struct mesh{
     std::vector<int> element_number;
-    std::vector<std::vector<double>> grid_points;
-    std::vector<std::vector<int>> element_to_node;
+    std::vector<std::vector<std::vector<double>>> element_coordinates;
     std::vector<std::vector<int>> elements_at_boundary;
     std::vector<int> element_type;
 
