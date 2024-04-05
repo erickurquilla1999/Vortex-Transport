@@ -1,5 +1,8 @@
 #include <iostream>
 #include <H5Cpp.h>
+#include <fstream>
+#include <string>
+#include <vector>
 
 #include "Utilities.H"
 
@@ -21,4 +24,24 @@ void write_hdf5_dataset(const std::string& filename, const std::string& dataset_
     // Close the dataset and file
     dataset.close();
     file.close();
+}
+
+// write an text file with name filemane, the data is given by an string array named line, each element of the array will be a line
+void writeToFile(const std::string& filename, const std::vector<std::string>& lines) {
+    // Open the file for writing
+    std::ofstream outfile(filename);
+
+    // Check if the file is open
+    if (!outfile.is_open()) {
+        std::cerr << "Error opening file!" << std::endl;
+        return;
+    }
+
+    // Write each line to the file
+    for (const std::string& line : lines) {
+        outfile << line << std::endl;
+    }
+
+    // Close the file
+    outfile.close();
 }
