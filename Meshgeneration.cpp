@@ -11,11 +11,11 @@
 
 void generate_mesh(const parameters& parms){
 
-    float grids_cord_x[parms.num_element_in_x+1];
-    float grids_cord_y[parms.num_element_in_y+1];
+    std::vector<double> grids_cord_x(parms.num_element_in_x+1);
+    std::vector<double> grids_cord_y(parms.num_element_in_y+1);
 
-    float element_size_x = parms.domain_x / parms.num_element_in_x;
-    float element_size_y = parms.domain_y / parms.num_element_in_y;
+    double element_size_x = parms.domain_x / parms.num_element_in_x;
+    double element_size_y = parms.domain_y / parms.num_element_in_y;
 
     // generate x and y coordinates of the grid on the grid boundary
     for (int i = 0; i < parms.num_element_in_x + 1; ++i) {
@@ -25,8 +25,8 @@ void generate_mesh(const parameters& parms){
         grids_cord_y[i] = -1 * parms.domain_y / 2 + element_size_y * i ;
     }
 
-    float allgridpoints_x[ ( parms.num_element_in_x + 1 ) * ( parms.num_element_in_y + 1 ) ];
-    float allgridpoints_y[ ( parms.num_element_in_x + 1 ) * ( parms.num_element_in_y + 1 ) ]; 
+    std::vector<double> allgridpoints_x( ( parms.num_element_in_x + 1 ) * ( parms.num_element_in_y + 1 ) );
+    std::vector<double> allgridpoints_y( ( parms.num_element_in_x + 1 ) * ( parms.num_element_in_y + 1 ) ); 
 
     // generate all the grid points cordinates
     int counter = 0;
@@ -43,9 +43,9 @@ void generate_mesh(const parameters& parms){
         std::cout << i <<" : ( " << allgridpoints_x[i] << " , " << allgridpoints_y[i] << " )"<< std::endl;
     }
 
-    int el_to_nod_1[ 2 * parms.num_element_in_x * parms.num_element_in_y ]; // node one is the square angle
-    int el_to_nod_2[ 2 * parms.num_element_in_x * parms.num_element_in_y ]; // node two is the next to the node one counter clockwise
-    int el_to_nod_3[ 2 * parms.num_element_in_x * parms.num_element_in_y ]; // node two is the next to the node two counter clockwise
+    std::vector<int> el_to_nod_1( 2 * parms.num_element_in_x * parms.num_element_in_y ); // node one is the square angle
+    std::vector<int> el_to_nod_2( 2 * parms.num_element_in_x * parms.num_element_in_y ); // node two is the next to the node one counter clockwise
+    std::vector<int> el_to_nod_3( 2 * parms.num_element_in_x * parms.num_element_in_y ); // node two is the next to the node two counter clockwise
 
     // generate element to node information 
     counter = 0;
@@ -73,7 +73,7 @@ void generate_mesh(const parameters& parms){
     }
 
     // element type 0: square angle down, 1: squeare angle up    
-    int element_type[2 * parms.num_element_in_x * parms.num_element_in_y];
+    std::vector<int> element_type(2 * parms.num_element_in_x * parms.num_element_in_y);
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y; ++i) {
         element_type[i] = (i % 2 == 0 ? 0 : 1);
     }
@@ -84,9 +84,9 @@ void generate_mesh(const parameters& parms){
     }
 
     // element boundary information
-    int element_right[2 * parms.num_element_in_x * parms.num_element_in_y];
-    int element_left[2 * parms.num_element_in_x * parms.num_element_in_y];
-    int element_vertical[2 * parms.num_element_in_x * parms.num_element_in_y];
+    std::vector<int> element_right   ( 2 * parms.num_element_in_x * parms.num_element_in_y);
+    std::vector<int> element_left    ( 2 * parms.num_element_in_x * parms.num_element_in_y);
+    std::vector<int> element_vertical( 2 * parms.num_element_in_x * parms.num_element_in_y);
     
     // element to the right
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y; ++i){
@@ -114,10 +114,37 @@ void generate_mesh(const parameters& parms){
         std::cout << i << " : " << element_right[i] << " , " << element_left[i] << " , " << element_vertical[i] << std::endl;
     }
 
-    // create grid directory to store grid information
+    // // create grid directory to store grid information
+    // std::string dirPath = "grid";
+    // std::string command = "mkdir -p " + dirPath;
+    // int status = system(command.c_str());
+
+    // if (status == 0) {
+    //     std::cout << "Directory created successfully: " << dirPath << std::endl;
+    // } else {
+    //     std::cerr << "Failed to create directory: " << dirPath << std::endl;
+    //     exit(EXIT_FAILURE);
+    // }
+
+
+
+
+
+    // Create grid directory to store grid information
     std::string dirPath = "grid";
-    std::string command = "mkdir -p " + dirPath;
+    std::string command = "rm -rf " + dirPath; // Remove directory and its contents
     int status = system(command.c_str());
+
+    if (status == 0) {
+        std::cout << "Directory cleaned successfully: " << dirPath << std::endl;
+    } else {
+        std::cerr << "Failed to clean directory: " << dirPath << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    // Now create the grid directory
+    command = "mkdir -p " + dirPath;
+    status = system(command.c_str());
 
     if (status == 0) {
         std::cout << "Directory created successfully: " << dirPath << std::endl;
@@ -125,6 +152,23 @@ void generate_mesh(const parameters& parms){
         std::cerr << "Failed to create directory: " << dirPath << std::endl;
         exit(EXIT_FAILURE);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // saving grid information for each element
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y; ++i) {
