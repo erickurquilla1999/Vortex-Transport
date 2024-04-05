@@ -16,3 +16,4 @@ $(EXEC): $(OBJS)
 .PHONY: clean
 clean:
 	rm -f $(OBJS) $(EXEC)
+	rm -r grid
