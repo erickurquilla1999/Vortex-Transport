@@ -1,7 +1,7 @@
 # generated files
 Vortex-Transport
 grid
-
+plottools/*pdf
 # Prerequisites
 *.d
 
