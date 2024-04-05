@@ -11,9 +11,10 @@ int main(int argc, char* argv[]) {
     parameters parms = read_input_files(argc, argv);
     
     // generate mesh
-    generate_mesh(parms);
+    mesh simulation_mesh = generate_mesh(parms);
 
-    
+
+
 
     return 0;
 }

@@ -9,7 +9,7 @@
 #include "Meshgeneration.H"
 #include "Utilities.H"
 
-void generate_mesh(const parameters& parms){
+mesh generate_mesh(const parameters& parms){
 
     std::vector<double> grids_cord_x(parms.num_element_in_x+1);
     std::vector<double> grids_cord_y(parms.num_element_in_y+1);
@@ -155,4 +155,44 @@ void generate_mesh(const parameters& parms){
 
         writeToFile("grid/element" + std::to_string( i ) + ".txt", lines);
     }
+
+    // preparing data to return
+
+    std::vector<int> elem_n( 2 * parms.num_element_in_x * parms.num_element_in_y );
+
+    for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
+        elem_n[i] = i;
+    }
+
+    std::vector<std::vector<double>> grid_pts( ( parms.num_element_in_x+1 ) * ( parms.num_element_in_y+1 ) , std::vector<double>(2) );
+
+    for (int i = 0; i < ( parms.num_element_in_x+1 ) * ( parms.num_element_in_y+1 ) ; ++i) {
+        grid_pts[i][0] = allgridpoints_x[i];
+        grid_pts[i][1] = allgridpoints_y[i];
+    }
+
+    std::vector<std::vector<int>> ele_2_node( 2 * parms.num_element_in_x * parms.num_element_in_y , std::vector<int>(3) );
+
+    for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y  ; ++i) {
+        ele_2_node[i][0] = el_to_nod_1[i];
+        ele_2_node[i][1] = el_to_nod_2[i];
+        ele_2_node[i][2] = el_to_nod_3[i];
+    }
+
+    std::vector<std::vector<int>> ele_at_bondry( 2 * parms.num_element_in_x * parms.num_element_in_y , std::vector<int>(3) );
+
+    for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y  ; ++i) {
+        ele_at_bondry[i][0] = element_right[i];
+        ele_at_bondry[i][1] = element_left[i];
+        ele_at_bondry[i][2] = element_vertical[i];
+    }
+
+    mesh grid;
+    grid.element_number = elem_n;
+    grid.grid_points = grid_pts;             // It contains all the point in the mesh by number. These points define the element vertices. The element vertices number in the array "ele_2_node" represent the coordinates index. To get this values evalue this array in this index.  
+    grid.element_to_node = ele_2_node;           // First index represent element number, second index represent vertices of the element (run between 0 and 2): 0 is the vertice at the square angle, 1 and 2 are the other vertices going counter clock wise. The coordinates of vertice m of element n if grid_pts[ele_2_node[element_n][vertice_m]]
+    grid.elements_at_boundary = ele_at_bondry;   // Cointains the elements number of the elements at the boundaries. The first index in the element number of the current element. The second index runs over 0 and 2. The index 0 is the element at the right, 1 at the left and 2 in the vertical direction.
+    grid.element_type = element_type;        // Contains zero or uno. Zero is for elements with square anglue down. One for squera anglue up.
+
+    return grid;
 }
