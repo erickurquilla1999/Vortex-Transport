@@ -11,13 +11,16 @@
 
 mesh generate_mesh(const parameters& parms){
 
+    // ..................................................................
+    // Generate x and y coordinates of the grid on the grid boundary
+    // ..................................................................
+
     std::vector<double> grids_cord_x(parms.num_element_in_x+1);
     std::vector<double> grids_cord_y(parms.num_element_in_y+1);
 
     double element_size_x = parms.domain_x / parms.num_element_in_x;
     double element_size_y = parms.domain_y / parms.num_element_in_y;
 
-    // generate x and y coordinates of the grid on the grid boundary
     for (int i = 0; i < parms.num_element_in_x + 1; ++i) {
         grids_cord_x[i] = -1 * parms.domain_x / 2 + element_size_x * i ;
     }
@@ -25,10 +28,13 @@ mesh generate_mesh(const parameters& parms){
         grids_cord_y[i] = -1 * parms.domain_y / 2 + element_size_y * i ;
     }
 
+    // ..................................................................
+    // Generate all the grid points cordinates
+    // ..................................................................
+
     std::vector<double> allgridpoints_x( ( parms.num_element_in_x + 1 ) * ( parms.num_element_in_y + 1 ) );
     std::vector<double> allgridpoints_y( ( parms.num_element_in_x + 1 ) * ( parms.num_element_in_y + 1 ) ); 
 
-    // generate all the grid points cordinates
     int counter = 0;
     for (int i = 0; i < parms.num_element_in_y+1; ++i){
         for (int j = 0; j < parms.num_element_in_x+1; ++j){
@@ -43,11 +49,14 @@ mesh generate_mesh(const parameters& parms){
         std::cout << i <<" : ( " << allgridpoints_x[i] << " , " << allgridpoints_y[i] << " )"<< std::endl;
     }
 
+    // ..................................................................
+    // Generate element to node information
+    // ..................................................................
+
     std::vector<int> el_to_nod_1( 2 * parms.num_element_in_x * parms.num_element_in_y ); // node one is the square angle
     std::vector<int> el_to_nod_2( 2 * parms.num_element_in_x * parms.num_element_in_y ); // node two is the next to the node one counter clockwise
     std::vector<int> el_to_nod_3( 2 * parms.num_element_in_x * parms.num_element_in_y ); // node two is the next to the node two counter clockwise
 
-    // generate element to node information 
     counter = 0;
     // node one is the square angle
     for (int i = 1; i < parms.num_element_in_y+1; ++i){
@@ -58,11 +67,11 @@ mesh generate_mesh(const parameters& parms){
             counter++; 
         }
     }
-    // node two is the next to the node one counter clockwise
+    // node two is the next to the node one counter clockwise direction
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y; ++i) {
         el_to_nod_2[i] = el_to_nod_1[i] + (i % 2 == 0 ? 1 : -1);
     }
-    // node two is the next to the node two counter clockwise
+    // node three is the next to the node two counter clockwise direction
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y; ++i) {
         el_to_nod_3[i] = el_to_nod_2[(i % 2 == 0 ? i+1 : i-1)];
     }
@@ -71,6 +80,10 @@ mesh generate_mesh(const parameters& parms){
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y; ++i) {
         std::cout << i << " : " << el_to_nod_1[i] << " , " << el_to_nod_2[i] << " , " << el_to_nod_3[i] << std::endl;
     }
+
+    // ..................................................................
+    // Generate element type information
+    // ..................................................................
 
     // element type 0: square angle down, 1: squeare angle up    
     std::vector<int> element_type(2 * parms.num_element_in_x * parms.num_element_in_y);
@@ -83,7 +96,10 @@ mesh generate_mesh(const parameters& parms){
         std::cout << i << " : " << element_type[i] << std::endl;
     }
 
-    // element boundary information
+    // ..................................................................
+    // Element boundary information, for node n, it gets the node numbers at the righ, left and vertical direction 
+    // ..................................................................
+
     std::vector<int> element_right   ( 2 * parms.num_element_in_x * parms.num_element_in_y);
     std::vector<int> element_left    ( 2 * parms.num_element_in_x * parms.num_element_in_y);
     std::vector<int> element_vertical( 2 * parms.num_element_in_x * parms.num_element_in_y);
@@ -114,13 +130,8 @@ mesh generate_mesh(const parameters& parms){
         std::cout << i << " : " << element_right[i] << " , " << element_left[i] << " , " << element_vertical[i] << std::endl;
     }
 
-
-    // if you have time improve the above line
     // ..................................................................
-
-
-    // ..................................................................
-    // preparing data to return
+    // preparing data structure mesh grid to return
     // ..................................................................
 
     // create the array that contains the element number
