@@ -13,6 +13,7 @@ int main(int argc, char* argv[]) {
     // generate mesh
     mesh simulation_mesh = generate_mesh(parms);
 
+    // print mesh information
     std::vector<std::string> lines(11);
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y; ++i) {
         lines[0]="\nelement_number=" + std::to_string(simulation_mesh.element_number[i]);
@@ -29,6 +30,11 @@ int main(int argc, char* argv[]) {
         for (int j = 0; j < 11; ++j) {
             std::cout << lines[j] << std::endl;
         }
+    }
+
+    std::cout << "\nInterior nodes in reference space ( xi , eta ) for p = " << parms.p << std::endl;
+    for (int i = 0; i < ( parms.p + 1 ) *( parms.p + 2 ) / 2 ; ++i) {
+        std::cout << i << " : ( " << simulation_mesh.nodes_reference_space[i][0] << " , " << simulation_mesh.nodes_reference_space[i][1] << " )" << std::endl;        
     }
 
     return 0;
