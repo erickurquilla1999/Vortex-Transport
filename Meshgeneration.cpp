@@ -196,7 +196,7 @@ mesh generate_mesh(const parameters& parms){
         lines[7]="type=" + std::to_string(element_type[i]);
         lines[8]="right_element=" + std::to_string(ele_at_bondry[i][0]);
         lines[9]="left_element=" + std::to_string(ele_at_bondry[i][1]);
-        lines[10]="vertical_element=" + std::to_string(ele_at_bondry[i][1]);
+        lines[10]="vertical_element=" + std::to_string(ele_at_bondry[i][2]);
 
         writeToFile("grid/element" + std::to_string( i ) + ".txt", lines);
     }
