@@ -29,9 +29,9 @@ public:
     std::vector<std::vector<double>> hidrodynamics_vector_u; // containg the hydrodinamics vecto u for each interior node
     std::vector<std::vector<std::vector<double>>> hidrodynamics_vector_f; // containg the hydrodinamics vecto f for each interior node
 
-    // // Element functions
-    // void initialize_hydrodinamics(int id); // initialize the hydronimics quantities u and f
-    // void save_data(int id); // save element data
+    // Element functions
+    void initialize_hydrodinamics(const parameters& parms); // initialize the hydronimics quantities u and f
+    // void save_data(); // save element data
 
 };
 

@@ -1,5 +1,6 @@
 #include <vector>
 #include <string>
+#include <cmath>
 
 #include "Element.H"
 #include "Lagrangebasis.H"
@@ -26,6 +27,66 @@ Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<st
     // compute interior nodes coordinate in physical space
     for (int i = 0; i < ( parms.p + 1 ) *( parms.p + 2 ) / 2 ; ++i) {
         nods_coords_phys_space[i] = reference_to_physical_space(nods_coords_refe_space[i], vertices_coords_phys_space);
+    }
+
+}
+
+void Element::initialize_hydrodinamics(const parameters& parms){
+
+    for (int i = 0; i < ( parms.p + 1 ) *( parms.p + 2 ) / 2 ; ++i) {
+
+        double x, y, t;
+        x = this->nods_coords_phys_space[i][0]; // x position of node i
+        y = this->nods_coords_phys_space[i][1]; // y position of node i
+        t = this->time; // initial time
+
+        double rho_infty, rc, epsilon, gamma, M_infty, p_infty, U_infty, V_infty, x0, y0;
+
+        rho_infty = 1.0;
+        rc = 1.0;
+        epsilon = 0.3;
+        gamma = 1.4;
+        M_infty = 0.5;
+        p_infty = 20 / 7;
+        U_infty = 1 / pow( 2 , 0.5);
+        V_infty = 1 / pow( 2 , 0.5);
+        x0 = 0.0;
+        y0 = 0.0;
+
+        double f0, f1, f2;
+
+        f0 = 1 - ( pow ( x - x0 - U_infty * t , 2 ) + pow ( y - y0 - V_infty * t , 2 ) ) / pow ( rc , 2 );
+        f1 = 1 - pow ( epsilon , 2 ) * ( gamma -1 ) * pow ( M_infty , 2) * exp( f0 ) / ( 8 * pow ( M_PI , 2 ) );
+        f2 = epsilon * ( pow( U_infty , 2) + pow( V_infty , 2) ) * exp( f0 / 2 ) / ( 2 * M_PI * rc );
+
+        // hidrodynamic quantities 
+        double rho, u, v, p, E, H;
+
+        rho = rho_infty * pow( f1 , 1 / ( gamma - 1 ) ); // density
+        u   = U_infty - f2 * ( y - y0 - V_infty * t ); // horizontal velocity
+        v   = V_infty - f2 * ( x - x0 - U_infty * t ); // vertical velocity
+        p   = p_infty * pow( f1 , gamma / ( gamma - 1 ) ); // pressure
+        E   = p / ( rho * ( gamma -1 ) ) + ( pow( u , 2) + pow( v , 2) ) / 2; // Energy
+        H   = E + p / rho; // Entalpy
+
+        // initialize the hidrodinamic vector u  
+        this->hidrodynamics_vector_u[i][0] = rho;
+        this->hidrodynamics_vector_u[i][1] = rho * u;
+        this->hidrodynamics_vector_u[i][2] = rho * v;
+        this->hidrodynamics_vector_u[i][3] = rho * E;
+
+        // initialize the hidrodinamic vector f, x component  
+        this->hidrodynamics_vector_f[i][0][0] = rho * u;
+        this->hidrodynamics_vector_f[i][0][1] = rho * pow( u , 2 ) + p;
+        this->hidrodynamics_vector_f[i][0][2] = rho * u * v;
+        this->hidrodynamics_vector_f[i][0][3] = rho * u * H;
+
+        // initialize the hidrodinamic vector f, y component  
+        this->hidrodynamics_vector_f[i][1][0] = rho * v;
+        this->hidrodynamics_vector_f[i][2][1] = rho * u * v;
+        this->hidrodynamics_vector_f[i][3][2] = rho * pow( v , 2 ) + p;
+        this->hidrodynamics_vector_f[i][4][3] = rho * v * H;
+
     }
 
 }
