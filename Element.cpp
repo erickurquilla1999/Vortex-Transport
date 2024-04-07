@@ -95,8 +95,9 @@ void Element::initialize_hydrodinamics(const parameters& parms){
 }
 
 // write element data in output directory
-void Element::write_data(const parameters& parms){
+void Element::write_data(const parameters& parms, const int& step_num){
 
+    // prepare data to be saved
     std::vector<std::string> lines( 1 + ( parms.p + 1 ) *( parms.p + 2 ) / 2 );
     lines[0]="node_number time x y u0 u1 u2 u3 fx0 fx1 fx2 fx3 fy0 fy1 fy2 fy3";
 
@@ -119,7 +120,7 @@ void Element::write_data(const parameters& parms){
         lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][1][2])+" "; // fy2
         lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][1][3])+" "; // fy3
 
-    writeToFile("output/element_" + std::to_string( this->number) + ".txt", lines);
+    writeToFile("output/step_" + std::to_string( step_num ) + "/element_" + std::to_string( this->number) + ".txt", lines);
 
     }
 

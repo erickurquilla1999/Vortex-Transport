@@ -31,7 +31,7 @@ public:
 
     // Element functions
     void initialize_hydrodinamics(const parameters& parms); // initialize the hydronimics quantities u and f
-    void write_data(const parameters& parms); // write element data in output directory
+    void write_data(const parameters& parms, const int& step_num); // write element data in output directory
 
 };
 
