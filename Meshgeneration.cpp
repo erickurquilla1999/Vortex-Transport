@@ -131,38 +131,6 @@ mesh generate_mesh(const parameters& parms){
     }
 
     // ..................................................................
-    // Element nodes in reference space xi
-    // ..................................................................
-
-    std::vector<std::vector<double>> ele_nod_ref_space( ( parms.p + 1 ) *( parms.p + 2 ) / 2 , std::vector<double>(2) );
-
-    if (parms.p == 0) {
-        ele_nod_ref_space[0][0] = 0; // xi
-        ele_nod_ref_space[0][1] = 0; // eta
-    }
-
-    double size_between_nodes = 1.0 / parms.p ; 
-    std::cout << "size_between_nodes " << size_between_nodes << std::endl;
-
-    if (parms.p > 0) {
-        counter = 0;
-        for (int j = 0; j < parms.p+1 ; ++j) {
-            for (int i = 0; i < parms.p+1 ; ++i) {
-                if (i+j < parms.p+1) {
-                    ele_nod_ref_space[counter][0] = size_between_nodes * i ; // xi
-                    ele_nod_ref_space[counter][1] = size_between_nodes * j ; // eta
-                    counter++;
-                }
-            }
-        }
-    }    
-
-    std::cout << "\nInterior nodes in reference space ( xi , eta ) for p = " << parms.p << std::endl;
-    for (int i = 0; i < ( parms.p + 1 ) *( parms.p + 2 ) / 2 ; ++i) {
-        std::cout << i << " : ( " << ele_nod_ref_space[i][0] << " , " << ele_nod_ref_space[i][1] << " )" << std::endl;        
-    }
-
-    // ..................................................................
     // preparing data structure mesh grid to return
     // ..................................................................
 
@@ -197,7 +165,6 @@ mesh generate_mesh(const parameters& parms){
     grid.element_coordinates = ele_coords;     // First index represent element number. Second index represent vertices of the element (run between 0 and 2): 0 is the vertice at the square angle, 1 and 2 are the other vertices going counter clock wise. Third index represent x:0 and y:1 position
     grid.elements_at_boundary = ele_at_bondry; // Cointains the elements number of the elements at the boundaries. The first index in the element number of the current element. The second index runs over 0 and 2. The index 0 is the element at the right, 1 at the left and 2 in the vertical direction.
     grid.element_type = element_type;          // Contains zero or uno. Zero is for elements with square anglue down. One for squera anglue up.
-    grid.nodes_reference_space = ele_nod_ref_space; 
 
     // ..................................................................
     // writing mesh data
@@ -250,4 +217,42 @@ mesh generate_mesh(const parameters& parms){
     // ..................................................................
 
     return grid;
+}
+
+std::vector<std::vector<double>> generate_nodes_reference_space(const parameters& parms){
+
+    // ..................................................................
+    // Element nodes in reference space xi
+    // ..................................................................
+
+    std::vector<std::vector<double>> ele_nod_ref_space( ( parms.p + 1 ) *( parms.p + 2 ) / 2 , std::vector<double>(2) );
+
+    if (parms.p == 0) {
+        ele_nod_ref_space[0][0] = 0; // xi
+        ele_nod_ref_space[0][1] = 0; // eta
+    }
+
+    double size_between_nodes = 1.0 / parms.p ;
+    std::cout << "size_between_nodes " << size_between_nodes << std::endl;
+
+    int counter = 0;
+    if (parms.p > 0) {
+        counter = 0;
+        for (int j = 0; j < parms.p+1 ; ++j) {
+            for (int i = 0; i < parms.p+1 ; ++i) {
+                if (i+j < parms.p+1) {
+                    ele_nod_ref_space[counter][0] = size_between_nodes * i ; // xi
+                    ele_nod_ref_space[counter][1] = size_between_nodes * j ; // eta
+                    counter++;
+                }
+            }
+        }
+    }
+
+    std::cout << "\nInterior nodes in reference space ( xi , eta ) for p = " << parms.p << std::endl;
+    for (int i = 0; i < ( parms.p + 1 ) *( parms.p + 2 ) / 2 ; ++i) {
+        std::cout << i << " : ( " << ele_nod_ref_space[i][0] << " , " << ele_nod_ref_space[i][1] << " )" << std::endl;
+    }
+
+    return ele_nod_ref_space;
 }

@@ -32,10 +32,15 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    // generate elements interior nodes in reference space
+    std::vector<std::vector<double>> nodes_reference_space = generate_nodes_reference_space(parms);
+
     std::cout << "\nInterior nodes in reference space ( xi , eta ) for p = " << parms.p << std::endl;
     for (int i = 0; i < ( parms.p + 1 ) *( parms.p + 2 ) / 2 ; ++i) {
-        std::cout << i << " : ( " << simulation_mesh.nodes_reference_space[i][0] << " , " << simulation_mesh.nodes_reference_space[i][1] << " )" << std::endl;        
+        std::cout << i << " : ( " << nodes_reference_space[i][0] << " , " << nodes_reference_space[i][1] << " )" << std::endl;        
     }
+
+
 
     return 0;
 }
