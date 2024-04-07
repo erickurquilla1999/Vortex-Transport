@@ -4,7 +4,7 @@
 #include "Lagrangebasis.H"
 
 // compute the lagrange basis function in reference space ( xi , eta )
-std::vector<double> lagrange_basis_reference_space(int& p, int& node_num, const std::vector<double>& coords_ref_spa){
+std::vector<double> lagrange_basis_reference_space(const int& p, const std::vector<double>& coords_ref_spa){
 
     // coordinates in reference space ( xi , eta )
     double xi, eta;
@@ -56,7 +56,7 @@ std::vector<double> lagrange_basis_reference_space(int& p, int& node_num, const 
 }
 
 // compute the gradiente of the lagrange basis function in reference space ( xi , eta )
-std::vector<std::vector<double>> lagrange_basis_gradient_reference_space(int& p, const std::vector<double>& coords_ref_spa){
+std::vector<std::vector<double>> lagrange_basis_gradient_reference_space(const int& p, const std::vector<double>& coords_ref_spa){
 
     // coordinates in reference space ( xi , eta )
     double xi, eta;
@@ -135,4 +135,20 @@ std::vector<std::vector<double>> lagrange_basis_gradient_reference_space(int& p,
     // first index represent the node number, runs between 0 and ( p + 1 ) *( p + 2 ) / 2
     // second index represent physical space. 0: x and 1: y
     return gradient_phi;
+}
+
+// compute coordinates in physical space given ( xi , eta ) in reference space
+std::vector<double> reference_to_physical_space(const std::vector<double>& coord_ref_spa, const std::vector<std::vector<double>>& vertex_phys_spa){
+
+    // phi( xhi , eta )
+    std::vector<double> phi = lagrange_basis_reference_space(1, coord_ref_spa);
+
+    // interpolation from reference to physical space
+    std::vector<double> r(2);
+
+    r[0] = vertex_phys_spa[0][0] * phi[0] + vertex_phys_spa[1][0] * phi[1] + vertex_phys_spa[2][0] * phi[2]; // x coordinate
+    r[1] = vertex_phys_spa[0][1] * phi[0] + vertex_phys_spa[1][1] * phi[1] + vertex_phys_spa[2][1] * phi[2]; // y coordinate
+
+    return r;
+
 }
