@@ -254,5 +254,5 @@ std::vector<std::vector<double>> generate_nodes_reference_space(const parameters
         std::cout << i << " : ( " << ele_nod_ref_space[i][0] << " , " << ele_nod_ref_space[i][1] << " )" << std::endl;
     }
 
-    return ele_nod_ref_space;
+    return ele_nod_ref_space; // Contains the node coordinates in reference space, the first index in the node number, the second inxed runs between 0 and 1. 0: xi and 1: eta.
 }
