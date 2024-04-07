@@ -17,3 +17,4 @@ $(EXEC): $(OBJS)
 clean:
 	rm -f $(OBJS) $(EXEC)
 	rm -r grid
+	rm -r output
