@@ -46,20 +46,23 @@ int main(int argc, char* argv[]) {
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
 
     // Define an array of Elements members of the class Elements
-    Element* Elements = new Element[  2 * parms.num_element_in_x * parms.num_element_in_y  ];
+    Element* elements = new Element[  2 * parms.num_element_in_x * parms.num_element_in_y  ];
 
     // Initialize elements of the array
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
         // Initialize each element with its element number 
-        Elements[i] = Element(i);
+        elements[i] = Element(i, simulation_mesh, nodes_reference_space);
     }
 
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
     // Access and print elements of the array
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
-        std::cout << "Element " << i << ": " << Elements[i].number << std::endl;
+        std::cout << "Element " << i << ": " << elements[i].nods_coords_refe_space[0][0] << " , " << elements[i].nods_coords_refe_space[0][1] << std::endl;
     }
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+
+
+
 
 
 
