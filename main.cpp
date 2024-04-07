@@ -51,13 +51,15 @@ int main(int argc, char* argv[]) {
     // Initialize elements of the array
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
         // Initialize each element with its element number 
-        elements[i] = Element(i, simulation_mesh, nodes_reference_space);
+        elements[i] = Element(i, simulation_mesh, nodes_reference_space, parms);
     }
 
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
     // Access and print elements of the array
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
-        std::cout << "Element " << i << ": " << elements[i].nods_coords_refe_space[0][0] << " , " << elements[i].nods_coords_refe_space[0][1] << std::endl;
+        for (int j = 0; j < ( parms.p + 1 ) *( parms.p + 2 ) / 2 ; ++j) {
+            std::cout << "Element " << i << ": " << elements[i].nods_coords_phys_space[j][0] << " , " << elements[i].nods_coords_phys_space[j][1] << std::endl;
+        }
     }
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
 
