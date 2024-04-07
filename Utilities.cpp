@@ -45,3 +45,31 @@ void writeToFile(const std::string& filename, const std::vector<std::string>& li
     // Close the file
     outfile.close();
 }
+
+void clean_create_directory(const std::string& dirname){
+
+    // Clean directory
+    std::string dirPath = dirname;
+    std::string command = "rm -rf " + dirPath; // Remove directory and its contents
+    int status = system(command.c_str());
+
+    if (status == 0) {
+        std::cout << "Directory cleaned successfully: " << dirPath << std::endl;
+    } else {
+        std::cerr << "Failed to clean directory: " << dirPath << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    // Now directory to store simulation for current step
+    command = "mkdir -p " + dirPath;
+    status = system(command.c_str());
+
+    if (status == 0) {
+        std::cout << "Directory created successfully: " << dirPath << std::endl;
+    } else {
+        std::cerr << "Failed to create directory: " << dirPath << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+}
+
