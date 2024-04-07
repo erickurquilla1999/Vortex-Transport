@@ -2,8 +2,8 @@
 p=1
 
 // physical domain
-domain_x=10 //cm
-domain_y=10 //cm
+domain_x=2 //cm
+domain_y=2 //cm
 
 // number of elements
 num_element_in_x=2
