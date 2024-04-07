@@ -36,10 +36,10 @@ def read_input_file(file_path):
 if __name__ == "__main__":
 
     # Get all file names matching the pattern "element*.txt"
-    file_names = glob.glob("grid/element*.txt")
+    file_names = glob.glob("grid/element_*.txt")
 
     # Remove the ".txt" extension from each file name and sort them
-    sorted_files = sorted(file_names, key=lambda x: int(x.lstrip("grid/element").rstrip(".txt")))
+    sorted_files = sorted(file_names, key=lambda x: int(x.lstrip("grid/element_").rstrip(".txt")))
 
     fig, ax = plt.subplots()
 
