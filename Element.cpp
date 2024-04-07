@@ -1,9 +1,11 @@
 #include <vector>
 #include <string>
 #include <cmath>
+#include <iostream>
 
 #include "Element.H"
 #include "Lagrangebasis.H"
+#include "Utilities.H"
 
 Element::Element() {}
 
@@ -31,6 +33,7 @@ Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<st
 
 }
 
+// initialize the hydronimics quantities u and f
 void Element::initialize_hydrodinamics(const parameters& parms){
 
     for (int i = 0; i < ( parms.p + 1 ) *( parms.p + 2 ) / 2 ; ++i) {
@@ -58,7 +61,7 @@ void Element::initialize_hydrodinamics(const parameters& parms){
         f0 = 1 - ( pow ( x - x0 - U_infty * t , 2 ) + pow ( y - y0 - V_infty * t , 2 ) ) / pow ( rc , 2 );
         f1 = 1 - pow ( epsilon , 2 ) * ( gamma -1 ) * pow ( M_infty , 2) * exp( f0 ) / ( 8 * pow ( M_PI , 2 ) );
         f2 = epsilon * ( pow( U_infty , 2) + pow( V_infty , 2) ) * exp( f0 / 2 ) / ( 2 * M_PI * rc );
-
+ 
         // hidrodynamic quantities 
         double rho, u, v, p, E, H;
 
@@ -83,9 +86,40 @@ void Element::initialize_hydrodinamics(const parameters& parms){
 
         // initialize the hidrodinamic vector f, y component  
         this->hidrodynamics_vector_f[i][1][0] = rho * v;
-        this->hidrodynamics_vector_f[i][2][1] = rho * u * v;
-        this->hidrodynamics_vector_f[i][3][2] = rho * pow( v , 2 ) + p;
-        this->hidrodynamics_vector_f[i][4][3] = rho * v * H;
+        this->hidrodynamics_vector_f[i][1][1] = rho * u * v;
+        this->hidrodynamics_vector_f[i][1][2] = rho * pow( v , 2 ) + p;
+        this->hidrodynamics_vector_f[i][1][3] = rho * v * H;
+
+    }
+
+}
+
+// write element data in output directory
+void Element::write_data(const parameters& parms){
+
+    std::vector<std::string> lines( 1 + ( parms.p + 1 ) *( parms.p + 2 ) / 2 );
+    lines[0]="node_number time x y u0 u1 u2 u3 fx0 fx1 fx2 fx3 fy0 fy1 fy2 fy3";
+
+    for (int i = 0; i < ( parms.p + 1 ) *( parms.p + 2 ) / 2 ; ++i) {
+
+        lines[i+1]=std::to_string(i)+" "; // node number
+        lines[i+1]+=std::to_string(this->time)+" "; // time
+        lines[i+1]+=std::to_string(this->nods_coords_phys_space[i][0])+" "; // x
+        lines[i+1]+=std::to_string(this->nods_coords_phys_space[i][1])+" "; // y 
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_u[i][0])+" "; // u0
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_u[i][1])+" "; // u1
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_u[i][2])+" "; // u2
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_u[i][3])+" "; // u3
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][0][0])+" "; // fx0
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][0][1])+" "; // fx1
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][0][2])+" "; // fx2
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][0][3])+" "; // fx3
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][1][0])+" "; // fy0
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][1][1])+" "; // fy1
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][1][2])+" "; // fy2
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][1][3])+" "; // fy3
+
+    writeToFile("output/element_" + std::to_string( this->number) + ".txt", lines);
 
     }
 

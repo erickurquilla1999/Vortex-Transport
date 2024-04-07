@@ -54,6 +54,8 @@ int main(int argc, char* argv[]) {
         elements[i] = Element(i, simulation_mesh, nodes_reference_space, parms);
         //Initialize hidrodynamic quanities
         elements[i].initialize_hydrodinamics(parms);
+        //write data
+        elements[i].write_data(parms);
     }
 
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
