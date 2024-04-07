@@ -45,11 +45,12 @@ int main(int argc, char* argv[]) {
     }
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
 
-    // Create the output directory
-    clean_create_directory("output");
-
     // Define an array of Elements members of the class Elements
     Element* elements = new Element[  2 * parms.num_element_in_x * parms.num_element_in_y  ];
+
+    // Create the output directory
+    clean_create_directory("output");
+    clean_create_directory("output/step_0");
 
     // Initialize elements of the array
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
@@ -58,7 +59,6 @@ int main(int argc, char* argv[]) {
         //Initialize hidrodynamic quanities
         elements[i].initialize_hydrodinamics(parms);
         //write data
-        clean_create_directory("output/step_0");
         elements[i].write_data(parms, 0);
     }
 
