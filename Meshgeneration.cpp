@@ -170,51 +170,8 @@ mesh generate_mesh(const parameters& parms){
     // writing mesh data
     // ..................................................................
 
-    // Create grid directory to store grid information
-    std::string dirPath = "grid";
-    std::string command = "rm -rf " + dirPath; // Remove directory and its contents
-    int status = system(command.c_str());
-
-    if (status == 0) {
-        std::cout << "Directory cleaned successfully: " << dirPath << std::endl;
-    } else {
-        std::cerr << "Failed to clean directory: " << dirPath << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    // Now create the grid directory
-    command = "mkdir -p " + dirPath;
-    status = system(command.c_str());
-
-    if (status == 0) {
-        std::cout << "Directory created successfully: " << dirPath << std::endl;
-    } else {
-        std::cerr << "Failed to create directory: " << dirPath << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    // Create output directory to store simulation output data
-    dirPath = "output";
-    command = "rm -rf " + dirPath; // Remove directory and its contents
-    status = system(command.c_str());
-
-    if (status == 0) {
-        std::cout << "Directory cleaned successfully: " << dirPath << std::endl;
-    } else {
-        std::cerr << "Failed to clean directory: " << dirPath << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    // Now create the grid directory
-    command = "mkdir -p " + dirPath;
-    status = system(command.c_str());
-
-    if (status == 0) {
-        std::cout << "Directory created successfully: " << dirPath << std::endl;
-    } else {
-        std::cerr << "Failed to create directory: " << dirPath << std::endl;
-        exit(EXIT_FAILURE);
-    }
+    // Create the grid directory
+    clean_create_directory("grid");
 
     // saving grid information for each element in grid directory
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y; ++i) {
