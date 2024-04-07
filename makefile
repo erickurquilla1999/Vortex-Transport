@@ -3,7 +3,7 @@ CFLAGS = -std=c++11 -Wall
 LDFLAGS = -I/usr/include/hdf5/serial -L/usr/lib/x86_64-linux-gnu/hdf5/serial
 LIBS = -lhdf5 -lhdf5_cpp
 
-SRCS = main.cpp Parameters.cpp Utilities.cpp Meshgeneration.cpp
+SRCS = main.cpp Parameters.cpp Utilities.cpp Meshgeneration.cpp Element.cpp
 OBJS = $(SRCS:.cpp=.o)
 EXEC = Vortex-Transport
 

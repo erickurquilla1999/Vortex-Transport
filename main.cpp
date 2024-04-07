@@ -4,6 +4,7 @@
 #include "Parameters.H"
 #include "Utilities.H"
 #include "Meshgeneration.H"
+#include "Element.H"
 
 int main(int argc, char* argv[]) {
     
@@ -13,6 +14,7 @@ int main(int argc, char* argv[]) {
     // generate mesh
     mesh simulation_mesh = generate_mesh(parms);
 
+    //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
     // print mesh information
     std::vector<std::string> lines(11);
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y; ++i) {
@@ -31,14 +33,33 @@ int main(int argc, char* argv[]) {
             std::cout << lines[j] << std::endl;
         }
     }
+    //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
 
     // generate elements interior nodes in reference space
     std::vector<std::vector<double>> nodes_reference_space = generate_nodes_reference_space(parms);
 
+    //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
     std::cout << "\nInterior nodes in reference space ( xi , eta ) for p = " << parms.p << std::endl;
     for (int i = 0; i < ( parms.p + 1 ) *( parms.p + 2 ) / 2 ; ++i) {
         std::cout << i << " : ( " << nodes_reference_space[i][0] << " , " << nodes_reference_space[i][1] << " )" << std::endl;        
     }
+    //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+
+    // Define an array of Elements members of the class Elements
+    Element* Elements = new Element[  2 * parms.num_element_in_x * parms.num_element_in_y  ];
+
+    // Initialize elements of the array
+    for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
+        // Initialize each element with its element number 
+        Elements[i] = Element(i);
+    }
+
+    //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+    // Access and print elements of the array
+    for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
+        std::cout << "Element " << i << ": " << Elements[i].number << std::endl;
+    }
+    //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
 
 
 
