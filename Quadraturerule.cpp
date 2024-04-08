@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <iostream>
 
 #include "Quadraturerule.H"
 
@@ -116,10 +117,11 @@ std::vector<std::vector<double>> gauss_line_integral(const int& IntOrder){
   // with N points, we can integrate accurately up to order 2N-1
   // (start with IntOrder = 0)
   int IntOrder2Rule[] = {1,1,3,3,5,5,7,7,9,9,11,11,13,13,15,15,17,17,19,19};
-
+  int number_quad_point [] = {0,1,0,2,0,3,0,4,0,5, 0, 6, 0, 7, 0, 8, 0, 9, 0,10};
+                            //0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
     int n;
-    double x[IntOrder2Rule[IntOrder]];
-    double w[IntOrder2Rule[IntOrder]];
+    double x[number_quad_point[IntOrder2Rule[IntOrder]]];
+    double w[number_quad_point[IntOrder2Rule[IntOrder]]];
 
   // choose necessary quadrature rule
   switch(IntOrder2Rule[IntOrder]) {
@@ -158,7 +160,7 @@ std::vector<std::vector<double>> gauss_line_integral(const int& IntOrder){
     exit(EXIT_FAILURE);
     break;
   }
-    
+
     // return gauss quadrature information for line integral, first index in the gauss quadrature coordinate number, second index runs from 0 to 1. 0 is xi coordinate. 1 is weight.
     std::vector<std::vector<double>> gauss_quadrature_weights(n, std::vector<double>(2));
 
@@ -578,57 +580,58 @@ std::vector<std::vector<double>> gauss_area_integral(const int& IntOrder){
   
   // (start with IntOrder = 0)
   int IntOrder2Rule[] = {1,1,2,3,4,5,6,7,8,9,10,12,12,13,14,17,17,17,19,19};
-
+  int number_quad_point [] = {0,1,3,4,6,7,12,13,16,19,25, 0,33,37,42, 0, 0,61, 0,73};
+                            //0,1,2,3,4,5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19
     int n;
-    double x[2 * IntOrder2Rule[IntOrder]];
-    double w[IntOrder2Rule[IntOrder]];
+    double x[2 * number_quad_point[IntOrder2Rule[IntOrder]]];
+    double w[number_quad_point[IntOrder2Rule[IntOrder]]];
 
   // choose necessary quadrature rule
   switch(IntOrder2Rule[IntOrder]) {
   case 1:
-    n = n1; std::copy(x1, x1 + n1, x); std::copy(w1, w1 + n1, w);
+    n = n1; std::copy(x1, x1 + 2 * n1, x); std::copy(w1, w1 + n1, w);
     break;
   case 2:
-    n = n2; std::copy(x2, x2 + n2, x); std::copy(w2, w2 + n2, w);
+    n = n2; std::copy(x2, x2 + 2 * n2, x); std::copy(w2, w2 + n2, w);
     break;
   case 3:
-    n = n3; std::copy(x3, x3 + n3, x); std::copy(w3, w3 + n3, w);
+    n = n3; std::copy(x3, x3 + 2 * n3, x); std::copy(w3, w3 + n3, w);
     break;
   case 4:
-    n = n4; std::copy(x4, x4 + n4, x); std::copy(w4, w4 + n4, w);
+    n = n4; std::copy(x4, x4 + 2 * n4, x); std::copy(w4, w4 + n4, w);
     break;
   case 5:
-    n = n5; std::copy(x5, x5 + n5, x); std::copy(w5, w5 + n5, w);
+    n = n5; std::copy(x5, x5 + 2 * n5, x); std::copy(w5, w5 + n5, w);
     break;
   case 6:
-    n = n6; std::copy(x6, x6 + n6, x); std::copy(w6, w6 + n6, w);
+    n = n6; std::copy(x6, x6 + 2 * n6, x); std::copy(w6, w6 + n6, w);
     break;
   case 7:
-    n = n7; std::copy(x7, x7 + n7, x); std::copy(w7, w7 + n7, w);
+    n = n7; std::copy(x7, x7 + 2 * n7, x); std::copy(w7, w7 + n7, w);
     break;
   case 8:
-    n = n8; std::copy(x8, x8 + n8, x); std::copy(w8, w8 + n8, w);
+    n = n8; std::copy(x8, x8 + 2 * n8, x); std::copy(w8, w8 + n8, w);
     break;
   case 9:
-    n = n9; std::copy(x9, x9 + n9, x); std::copy(w9, w9 + n9, w);
+    n = n9; std::copy(x9, x9 + 2 * n9, x); std::copy(w9, w9 + n9, w);
     break;
   case 10:
-    n = n10; std::copy(x10, x10 + n10, x); std::copy(w10, w10 + n10, w);
+    n = n10; std::copy(x10, x10 + 2 * n10, x); std::copy(w10, w10 + n10, w);
     break;
   case 12:
-    n = n12; std::copy(x12, x12 + n12, x); std::copy(w12, w12 + n12, w);
+    n = n12; std::copy(x12, x12 + 2 * n12, x); std::copy(w12, w12 + n12, w);
     break;
   case 13:
-    n = n13; std::copy(x13, x13 + n13, x); std::copy(w13, w13 + n13, w);
+    n = n13; std::copy(x13, x13 + 2 * n13, x); std::copy(w13, w13 + n13, w);
     break;
   case 14:
-    n = n14; std::copy(x14, x14 + n14, x); std::copy(w14, w14 + n14, w);
+    n = n14; std::copy(x14, x14 + 2 * n14, x); std::copy(w14, w14 + n14, w);
     break;
   case 17:
-    n = n17; std::copy(x17, x17 + n17, x); std::copy(w17, w17 + n17, w);
+    n = n17; std::copy(x17, x17 + 2 * n17, x); std::copy(w17, w17 + n17, w);
     break;
   case 19:
-    n = n19; std::copy(x19, x19 + n19, x); std::copy(w19, w19 + n19, w);
+    n = n19; std::copy(x19, x19 + 2 * n19, x); std::copy(w19, w19 + n19, w);
     break;
   default:
     printf("ERROR: Unsupported quadrature order \n");
@@ -642,7 +645,7 @@ std::vector<std::vector<double>> gauss_area_integral(const int& IntOrder){
     for (int i = 0; i < n ; ++i) {
         gauss_quadrature_weights[i][0] = x[ 2 * i ]; // xi coordinates of gauss quadrature
         gauss_quadrature_weights[i][1] = x[ 2 * i + 1]; // eta coordinates of gauss quadrature
-        gauss_quadrature_weights[i][2] = w[ 1 ]; // weight
+        gauss_quadrature_weights[i][2] = w[ i ]; // weight
     }
 
     // return gauss cuadrature information

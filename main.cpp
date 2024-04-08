@@ -5,12 +5,13 @@
 #include "Utilities.H"
 #include "Meshgeneration.H"
 #include "Element.H"
+#include "Quadraturerule.H"
 
 int main(int argc, char* argv[]) {
     
     // read simulation paramaters
     parameters parms = read_input_files(argc, argv);
-    
+
     // generate mesh
     mesh simulation_mesh = generate_mesh(parms);
 
@@ -32,6 +33,22 @@ int main(int argc, char* argv[]) {
         for (int j = 0; j < 11; ++j) {
             std::cout << lines[j] << std::endl;
         }
+    }
+    //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+
+    // generate gauss quadrature for line and area integral
+    std::vector<std::vector<double>> gauss_integral_line = gauss_line_integral(parms.integration_order);
+    std::vector<std::vector<double>> gauss_integral_area = gauss_area_integral(parms.integration_order);
+
+    //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+    int size = gauss_integral_line.size();
+    for (int i = 0; i < size; ++i) {
+        std::cout << "gauss quadrature line : " << i << " , pos : " << gauss_integral_line[i][0] << " , weight : " <<  gauss_integral_line[i][1] << std::endl;
+    }
+
+    int size2 = gauss_integral_area.size();
+    for (int i = 0; i < size2; ++i) {
+        std::cout << "gauss quadrature area : " << i << " , pos : ( " << gauss_integral_area[i][0] << " , " << gauss_integral_area[i][1] << " ) , weight : " <<  gauss_integral_area[i][2] << std::endl;
     }
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
 
@@ -70,11 +87,6 @@ int main(int argc, char* argv[]) {
         }
     }
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
-
-
-
-
-
 
     return 0;
 }
