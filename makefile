@@ -1,9 +1,9 @@
 CC = g++
 CFLAGS = -std=c++11 -Wall
-LDFLAGS = -I/usr/include/hdf5/serial -L/usr/lib/x86_64-linux-gnu/hdf5/serial
+LDFLAGS = -I/usr/include/hdf5/serial -L/usr/lib/x86_64-linux-gnu/hdf5/serial -I/usr/include/eigen3
 LIBS = -lhdf5 -lhdf5_cpp
 
-SRCS = main.cpp Parameters.cpp Utilities.cpp Meshgeneration.cpp Element.cpp Lagrangebasis.cpp Quadraturerule.cpp
+SRCS = main.cpp Parameters.cpp Utilities.cpp Meshgeneration.cpp Element.cpp Lagrangebasis.cpp Quadraturerule.cpp Preevolve.cpp
 OBJS = $(SRCS:.cpp=.o)
 EXEC = Vortex-Transport
 
