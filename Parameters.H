@@ -9,6 +9,7 @@ struct parameters{
     int num_element_in_x;
     int num_element_in_y;
     float perturb_grid;
+    int integration_order;
 
 };
 

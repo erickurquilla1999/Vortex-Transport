@@ -47,6 +47,7 @@ parameters read_input_files(int argc, char* argv[]) {
     params.num_element_in_x = std::stoi(paramMap["num_element_in_x"]);
     params.num_element_in_y = std::stoi(paramMap["num_element_in_y"]);
     params.perturb_grid = std::stoi(paramMap["perturb_grid"]);
+    params.integration_order = std::stoi(paramMap["integration_order"]);
 
     return params;
 }
