@@ -14,7 +14,7 @@ public:
     Element();
  
     // Element default constructor with arguments
-    Element(const int& ele_num, const mesh& mesh_info, const std::vector<std::vector<double>>& nods_ref_spa, const parameters& parms);
+    Element(const int& ele_num, const mesh& mesh_info, const std::vector<std::vector<double>>& nods_ref_spa, const parameters& parms, const std::vector<std::vector<double>>& inv_mass_matrix, const std::vector<std::vector<std::vector<double>>>& stiff_matrix);
 
     // Element properties
     double time; // storage time in the dimulation for each element
@@ -35,8 +35,8 @@ public:
     std::vector<std::vector<double>> inverse_jacobian; // jacobian between transformation from physical space to reference space d vec{xi} / d vec{x} = ( 1 / det( J ) ) * [ [ y3 - y1 , x1 - x3 ] , [ y1 - y2 , x2 - x1 ] ]
     double determinant_inverse_jacobian; // determinant of the inverse of the jacobian
 
-    std::vector<std::vector<double>> inverse_mass_matrix_physical_space; // mass_ij = int in T phi_i phi_j dT . size ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2
-    std::vector<std::vector<std::vector<double>>> stiffness_matrix_physical_space; // S_ij = integral in T of ( Nabla phi_i ) phi_j dT . form :  hat{e}_x * matrix[ ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2 ] + hat{e}_y * matrix[ ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2 ] 
+    std::vector<std::vector<double>> inverse_mass_matrix_physical_space; // mass_ij = int in Omega phi_i phi_j dOmega . Size ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2
+    std::vector<std::vector<std::vector<double>>> stiffness_matrix_physical_space; // S_ij = integral in Omega of ( Nabla phi_i ) phi_j dOmega . form :  hat{e}_x * matrix[ ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2 ] + hat{e}_y * matrix[ ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2 ]. first index run between spacial components in physics space. 0: x and 1 y. second and third index run over matrix inidices of size ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2 ] 
     
     // Element functions
     void initialize_hydrodinamics(const parameters& parms); // initialize the hydronimics quantities u and f

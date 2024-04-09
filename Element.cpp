@@ -9,7 +9,7 @@
 
 Element::Element() {}
 
-Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<std::vector<double>>& nods_ref_spa, const parameters& parms):
+Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<std::vector<double>>& nods_ref_spa, const parameters& parms, const std::vector<std::vector<double>>& inv_mass_matrix, const std::vector<std::vector<std::vector<double>>>& stiff_matrix):
     
     // Initialize element properties    
     time(0.0), // Simulation initial time
@@ -23,10 +23,10 @@ Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<st
     nods_coords_phys_space((parms.p + 1) * (parms.p + 2) / 2, std::vector<double>(2)), // Coordinates of the interior nodes of the element in physical space. The first index is the node number, the second inxed runs between 0 and 1. 0: x and 1: y.
     hidrodynamics_vector_u((parms.p + 1) * (parms.p + 2) / 2, std::vector<double>(4)), // Hidrodynamics: vector u for each interior node. The first index in the node number, the second inxed runs between 0 and 4 for hidrodynamics quantities. 0: rho, 1: rho u, 2: rho v, 3: rho E.
     hidrodynamics_vector_f((parms.p + 1) * (parms.p + 2) / 2, std::vector<std::vector<double>>(2, std::vector<double>(4))), // Hidrodynamics: vector f for each interior node. The first index in the node number. The second index runs between 0 and 1 and represente physical space 0:x and 1: y. The third inxed runs between 0 and 4 for hidrogynamics quantities.
-    jacobian(2,std::vector<double>(2)), // jacobian between transformation from reference space to physical space d vec{x} / d vec{xi} = [ [ x2 - x1 , x3 - x1 ] , [ y2 - y1 , y3 - y1 ] ]    
-    inverse_jacobian(2,std::vector<double>(2)), // jacobian between transformation from physical space to reference space d vec{xi} / d vec{x} = ( 1 / det( J ) ) * [ [ y3 - y1 , x1 - x3 ] , [ y1 - y2 , x2 - x1 ] ]    
-    inverse_mass_matrix_physical_space((parms.p + 1) * (parms.p + 2) / 2 , std::vector<double>((parms.p + 1) * (parms.p + 2) / 2)), // mass_ij = int in T phi_i phi_j dT . size ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2
-    stiffness_matrix_physical_space(2, std::vector<std::vector<double>>( (parms.p + 1) * (parms.p + 2) / 2 , std::vector<double>( (parms.p + 1) * (parms.p + 2) / 2 ))) // S_ij = integral in T of ( Nabla phi_i ) phi_j dT . form :  hat{e}_x * matrix[ ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2 ] + hat{e}_y * matrix[ ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2 ] 
+    jacobian(2,std::vector<double>(2)), // jacobian between transformation from reference space to physical space d vec{x} / d vec{xi} = [ [ x2 - x1 , x3 - x1 ] , [ y2 - y1 , y3 - y1 ] ]
+    inverse_jacobian(2,std::vector<double>(2)), // jacobian between transformation from physical space to reference space d vec{xi} / d vec{x} = ( 1 / det( J ) ) * [ [ y3 - y1 , x1 - x3 ] , [ y1 - y2 , x2 - x1 ] ]
+    inverse_mass_matrix_physical_space((parms.p + 1) * (parms.p + 2) / 2 , std::vector<double>((parms.p + 1) * (parms.p + 2) / 2)), // mass_ij = int in Omega phi_i phi_j dOmega . Size ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2
+    stiffness_matrix_physical_space(2, std::vector<std::vector<double>>( (parms.p + 1) * (parms.p + 2) / 2 , std::vector<double>( (parms.p + 1) * (parms.p + 2) / 2 ))) // S_ij = integral in Omega of ( Nabla phi_i ) phi_j dOmega . form :  hat{e}_x * matrix[ ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2 ] + hat{e}_y * matrix[ ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2 ]. first index run between spacial components in physics space. 0: x and 1 y. second and third index run over matrix inidices of size ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2 ] 
 
     {
     
@@ -52,6 +52,24 @@ Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<st
 
     // compute determinant of inverse jacobian
     this->determinant_inverse_jacobian = this->inverse_jacobian[0][0] * this->inverse_jacobian[1][1] - this->inverse_jacobian[1][0] * this->inverse_jacobian[0][1];
+
+    // compute inverse mass matrix in physical space
+    for (int i = 0; i < (parms.p + 1) * (parms.p + 2) / 2; ++i) {
+        for (int j = 0; j < (parms.p + 1) * (parms.p + 2) / 2; ++j) {
+            this->inverse_mass_matrix_physical_space[i][j] = this->determinant_jacobian * inv_mass_matrix[i][j];     
+        }
+    }
+
+    // compute stiffness matrix in physical space 
+    for (int i = 0; i < (parms.p + 1) * (parms.p + 2) / 2; ++i) {
+        for (int j = 0; j < (parms.p + 1) * (parms.p + 2) / 2; ++j) {
+            this->stiffness_matrix_physical_space[0][i][j] = this->determinant_jacobian * ( stiff_matrix[0][i][j] * this->jacobian[0][0] + stiff_matrix[1][i][j] * this->jacobian[1][0] );     
+            this->stiffness_matrix_physical_space[1][i][j] = this->determinant_jacobian * ( stiff_matrix[0][i][j] * this->jacobian[0][1] + stiff_matrix[1][i][j] * this->jacobian[1][1] );
+        }
+    }
+
+
+
 
 }
 
