@@ -30,6 +30,7 @@ std::vector<std::vector<double>> inverse_mass_matrix_reference_space(const int& 
 
         std::vector<double> phi_in_xi_eta_gauss = lagrange_basis_reference_space( p , xi_eta_gauss ); 
 
+        // evaluate the lagrange polinomial in the quadrature points
         for (int j = 0; j < ( p + 1 ) * ( p + 2 ) / 2; ++j) {
             phi_in_quadrature_points[j][counter] = phi_in_xi_eta_gauss[j];
         }
@@ -74,6 +75,85 @@ std::vector<std::vector<double>> inverse_mass_matrix_reference_space(const int& 
     }
 
     // return inverse mass matrix
+    // size ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2
     return mass_matrix_inverse;
+
+}
+
+
+// compute stiffness matrix in reference space 
+// S_ij = integral in T of ( Nabla phi_i ) phi_j dT
+// T is an triangle in reference space with vertex (0,0), (1,0) and (0,1) in reference space.
+// return a two dimenional vector in reference space xi and eta, the components of xi and eta are matrices of size ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2
+std::vector<std::vector<std::vector<double>>> sitffness_matrix_reference_space(const int& p, const std::vector<std::vector<double>>& gauss_area_int){
+
+    // get size, that is the number of quadrature point for integration
+    int size = gauss_area_int.size();
+
+    // this vector store the values of the lagrange polinomial evaluated in the quadrature points
+    // first index runs over interior nodes number, that is, the lagrange polinimial that is one on this node
+    // second index runs quadrature points
+    std::vector<std::vector<double>> phi_in_quadrature_points( ( p + 1 ) * ( p + 2 ) / 2 , std::vector<double>( size ) );
+
+    // this vector store the values of the gradients of the lagrange polinomial evaluated in the quadrature points
+    // first index runs over interior nodes number, that is, the lagrange polinimial that is one on this node
+    // second index runs quadrature points
+    // third index runs over the x:0 and y:1 component of the gradient of the lagrange poliniam evaluated at the quadrature points
+    std::vector<std::vector<std::vector<double>>> gradient_phi_in_quadrature_points( ( p + 1 ) * ( p + 2 ) / 2 , std::vector<std::vector<double>>( size, std::vector<double>(2)) );
+
+    // initialize counter
+    int counter = 0;
+
+    // evaluate the lagrange polinomial in the quadrature points
+    // evaluate the gradient of the lagrange polinomials in the quadrature points
+    for (int i = 0; i < size; ++i) {
+
+        std::vector<double> xi_eta_gauss(2);
+        xi_eta_gauss[0] = gauss_area_int[i][0];
+        xi_eta_gauss[1] = gauss_area_int[i][1];
+
+        std::vector<double> phi_in_xi_eta_gauss = lagrange_basis_reference_space( p , xi_eta_gauss ); 
+        std::vector<std::vector<double>> gradient_phi_in_xi_eta_gauss = lagrange_basis_gradient_reference_space( p , xi_eta_gauss ); 
+
+        // evaluate the lagrange polinomial in the quadrature points
+        for (int j = 0; j < ( p + 1 ) * ( p + 2 ) / 2; ++j) {
+            phi_in_quadrature_points[j][counter] = phi_in_xi_eta_gauss[j];
+        }
+
+        // evaluate the gradient of the lagrange polinomials in the quadrature points
+        for (int j = 0; j < ( p + 1 ) * ( p + 2 ) / 2; ++j) {
+            gradient_phi_in_quadrature_points[j][counter][0] = gradient_phi_in_xi_eta_gauss[j][0];
+            gradient_phi_in_quadrature_points[j][counter][1] = gradient_phi_in_xi_eta_gauss[j][1];
+        }
+
+        counter++;
+    }
+
+    // define sitffness matrix
+    std::vector<std::vector<std::vector<double>>> stiffness_matrix( 2, std::vector<std::vector<double>>( ( p + 1 ) * ( p + 2 ) / 2 , std::vector<double>( ( p + 1 ) * ( p + 2 ) / 2) ) );
+
+    // integrate stiffness matrix using gauss methods
+    // S_ij = integral in T of ( Nabla phi_i ) phi_j dT
+    for (int i = 0; i < ( p + 1 ) * ( p + 2 ) / 2; ++i) {
+        for (int j = 0; j < ( p + 1 ) * ( p + 2 ) / 2; ++j) {
+            stiffness_matrix[0][i][j] = 0;
+            stiffness_matrix[1][i][j] = 0;
+            for (int n = 0; n < size; ++n) {
+                stiffness_matrix[0][i][j] += gradient_phi_in_quadrature_points[i][n][0] * phi_in_quadrature_points[j][n] * gauss_area_int[n][2];
+                stiffness_matrix[1][i][j] += gradient_phi_in_quadrature_points[i][n][1] * phi_in_quadrature_points[j][n] * gauss_area_int[n][2];
+            }
+        }
+    }
+
+    std::cout << " Stiffness matrix " << std::endl;        
+    for (int i = 0; i < ( p + 1 ) * ( p + 2 ) / 2; ++i) {
+        for (int j = 0; j < ( p + 1 ) * ( p + 2 ) / 2; ++j) {
+        std::cout << i << " , " << j << " : " << stiffness_matrix[0][i][j] << " x + " << stiffness_matrix[1][i][j] << " y " << std::endl;        
+        }
+    } 
+
+    // return stiffness matrix
+    // form :  hat{e}_x * matrix[ ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2 ] + hat{e}_y * matrix[ ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2 ] 
+    return stiffness_matrix;
 
 }

@@ -66,9 +66,8 @@ int main(int argc, char* argv[]) {
     // compute the inverse of the mass matrix in reference space
     std::vector<std::vector<double>> inverse_mass_matrix = inverse_mass_matrix_reference_space(parms.p, gauss_integral_area);
 
-
-
-
+    // compute stiffness matrix in reference space
+    std::vector<std::vector<std::vector<double>>> stiffness_matrix = sitffness_matrix_reference_space(parms.p, gauss_integral_area);
 
     // Define an array of Elements members of the class Elements
     Element* elements = new Element[  2 * parms.num_element_in_x * parms.num_element_in_y  ];
