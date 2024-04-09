@@ -67,10 +67,6 @@ Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<st
             this->stiffness_matrix_physical_space[1][i][j] = this->determinant_jacobian * ( stiff_matrix[0][i][j] * this->jacobian[0][1] + stiff_matrix[1][i][j] * this->jacobian[1][1] );
         }
     }
-
-
-
-
 }
 
 // initialize the hydronimics quantities u and f
@@ -160,7 +156,61 @@ void Element::write_data(const parameters& parms, const int& step_num){
         lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][1][2])+" "; // fy2
         lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][1][3])+" "; // fy3
 
+    }
+
     writeToFile("output/step_" + std::to_string( step_num ) + "/element_" + std::to_string( this->number) + ".txt", lines);
+
+    if ( step_num == 0 ){
+
+        // prepare jacobians and their determinants, inverse mass and stiffness matrix to be saved
+        
+        std::vector<std::string> lines_( 13 + 3 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 );
+        
+        lines_[0]="jacobian";
+        lines_[1]="[ [ " + std::to_string( this->jacobian[0][0] ) + " , " + std::to_string( this->jacobian[0][1] ) + " ] , ";
+        lines_[2]="  [ " + std::to_string( this->jacobian[1][0] ) + " , " + std::to_string( this->jacobian[1][1] ) + " ] ]";
+        lines_[3]="determinant of jacobian";
+        lines_[4]=std::to_string( this->determinant_jacobian );
+        lines_[5]="inverse jacobian";
+        lines_[6]="[ [ " + std::to_string( this->inverse_jacobian[0][0] ) + " , " + std::to_string( this->inverse_jacobian[0][1] ) + " ] , ";
+        lines_[7]="  [ " + std::to_string( this->inverse_jacobian[1][0] ) + " , " + std::to_string( this->inverse_jacobian[1][1] ) + " ] ]";
+        lines_[8]="determinant of inverse jacobian";
+        lines_[9]=std::to_string( this->determinant_inverse_jacobian );
+        lines_[10]="inverse mass matrix";
+        lines_[11]="[ ";
+        for (int i = 0; i < ( parms.p + 1 ) *( parms.p + 2 ) / 2 ; ++i) {
+            lines_[11+i]+="[ " + std::to_string(this->inverse_mass_matrix_physical_space[i][0]);
+            for (int j = 1; j < ( parms.p + 1 ) *( parms.p + 2 ) / 2 ; ++j) {
+                lines_[11+i]+=", " + std::to_string(this->inverse_mass_matrix_physical_space[i][j]);
+            }
+            lines_[11+i]+=" ] ,";
+        }
+        lines_[11 + ( parms.p + 1 ) *( parms.p + 2 ) / 2 -1 ].erase(lines_[11 + ( parms.p + 1 ) *( parms.p + 2 ) / 2 -1 ].size() - 1);
+        lines_[11 + ( parms.p + 1 ) *( parms.p + 2 ) / 2 -1 ] += "]";
+        lines_[11 + ( parms.p + 1 ) *( parms.p + 2 ) / 2]="stiffness matrix : x component";
+        lines_[12 + ( parms.p + 1 ) *( parms.p + 2 ) / 2]="[ ";
+        for (int i = 0; i < ( parms.p + 1 ) *( parms.p + 2 ) / 2 ; ++i) {
+            lines_[12 + ( parms.p + 1 ) *( parms.p + 2 ) / 2 + i]+="[ " + std::to_string(this->stiffness_matrix_physical_space[0][i][0]);
+            for (int j = 1; j < ( parms.p + 1 ) *( parms.p + 2 ) / 2 ; ++j) {
+                lines_[12 + ( parms.p + 1 ) *( parms.p + 2 ) / 2 + i]+=", " + std::to_string(this->stiffness_matrix_physical_space[0][i][j]);
+            }
+            lines_[12 + ( parms.p + 1 ) *( parms.p + 2 ) / 2 + i]+=" ] ,";
+        }
+        lines_[12 + 2 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 - 1 ].erase(lines_[ 12 + 2 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 - 1 ].size() - 1);
+        lines_[12 + 2 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 - 1 ] += "]";
+        lines_[12 + 2 * ( parms.p + 1 ) *( parms.p + 2 ) / 2]="stiffness matrix : y component";
+        lines_[13 + 2 * ( parms.p + 1 ) *( parms.p + 2 ) / 2]="[ ";
+        for (int i = 0; i < ( parms.p + 1 ) *( parms.p + 2 ) / 2 ; ++i) {
+            lines_[13 + 2 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 + i]+="[ " + std::to_string(this->stiffness_matrix_physical_space[1][i][0]);
+            for (int j = 1; j < ( parms.p + 1 ) *( parms.p + 2 ) / 2 ; ++j) {
+                lines_[13 + 2 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 + i]+=", " + std::to_string(this->stiffness_matrix_physical_space[1][i][j]);
+            }
+            lines_[13 + 2 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 + i]+=" ] ,";
+        }
+        lines_[13 + 3 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 - 1 ].erase(lines_[ 13 + 3 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 - 1 ].size() - 1);
+        lines_[13 + 3 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 - 1 ] += "]";
+
+        writeToFile("output/step_" + std::to_string( step_num ) + "/JMS_element_" + std::to_string( this->number) + ".txt", lines_);
 
     }
 
