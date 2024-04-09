@@ -28,7 +28,7 @@ Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<st
     
     // compute interior nodes coordinate in physical space
     for (int i = 0; i < ( parms.p + 1 ) *( parms.p + 2 ) / 2 ; ++i) {
-        nods_coords_phys_space[i] = reference_to_physical_space(nods_coords_refe_space[i], vertices_coords_phys_space);
+        this->nods_coords_phys_space[i] = reference_to_physical_space(nods_coords_refe_space[i], vertices_coords_phys_space);
     }
 
 }
