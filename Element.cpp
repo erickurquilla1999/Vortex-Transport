@@ -160,10 +160,11 @@ void Element::write_data(const parameters& parms, const int& step_num){
 
     writeToFile("output/step_" + std::to_string( step_num ) + "/element_" + std::to_string( this->number) + ".txt", lines);
 
+    // if step is zero it writes the jacobians and their determinants, inverse mass and stiffness matrix
     if ( step_num == 0 ){
 
         // prepare jacobians and their determinants, inverse mass and stiffness matrix to be saved
-        
+
         std::vector<std::string> lines_( 13 + 3 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 );
         
         lines_[0]="jacobian";
