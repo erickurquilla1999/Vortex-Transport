@@ -111,12 +111,16 @@ int main(int argc, char* argv[]) {
     // Initialize Evolve_elements of the array
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
         // Build element
-        evolve_elements[i] = Evolve_element(&elements[i],elements[elements[i].right_element],elements[elements[i].left_element],elements[elements[i].vertical_element]);
+        evolve_elements[i] = Evolve_element(elements[i],elements[elements[i].right_element],elements[elements[i].left_element],elements[elements[i].vertical_element]);
     }
 
 
 
-
+    // Initialize elements of the array
+    for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
+        //write data
+        elements[i].write_data(parms, 0);
+    }
 
 
 
