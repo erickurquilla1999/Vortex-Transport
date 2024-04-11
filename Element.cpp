@@ -63,8 +63,8 @@ Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<st
     // compute stiffness matrix in physical space 
     for (int i = 0; i < (parms.p + 1) * (parms.p + 2) / 2; ++i) {
         for (int j = 0; j < (parms.p + 1) * (parms.p + 2) / 2; ++j) {
-            this->stiffness_matrix_physical_space[0][i][j] = this->determinant_jacobian * ( stiff_matrix[0][i][j] * this->jacobian[0][0] + stiff_matrix[1][i][j] * this->jacobian[1][0] );     
-            this->stiffness_matrix_physical_space[1][i][j] = this->determinant_jacobian * ( stiff_matrix[0][i][j] * this->jacobian[0][1] + stiff_matrix[1][i][j] * this->jacobian[1][1] );
+            this->stiffness_matrix_physical_space[0][i][j] = this->determinant_jacobian * ( stiff_matrix[0][i][j] * this->inverse_jacobian[0][0] + stiff_matrix[1][i][j] * this->inverse_jacobian[1][0] );     
+            this->stiffness_matrix_physical_space[1][i][j] = this->determinant_jacobian * ( stiff_matrix[0][i][j] * this->inverse_jacobian[0][1] + stiff_matrix[1][i][j] * this->inverse_jacobian[1][1] );
         }
     }
 }
