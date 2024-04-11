@@ -69,7 +69,7 @@ Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<st
         }
     }
 
-    // compute units vectors perpendicular to the element edges
+    // compute unit vectors perpendicular to the element edges
     //                                                      (            y2                     -              y1                 ) / (       (             x2                   -           x1                     )^2   +    (             y2                   -           y1                     )^2   )^1/2             
     units_vectors_perpendicular_to_element_boundary[0][0] = ( vertices_coords_phys_space[1][1] - vertices_coords_phys_space[0][1] ) / pow( pow( vertices_coords_phys_space[1][0] - vertices_coords_phys_space[0][0] , 2 ) + pow( vertices_coords_phys_space[1][1] - vertices_coords_phys_space[0][1] , 2 ) , 0.5 );
     units_vectors_perpendicular_to_element_boundary[1][0] = ( vertices_coords_phys_space[2][1] - vertices_coords_phys_space[1][1] ) / pow( pow( vertices_coords_phys_space[2][0] - vertices_coords_phys_space[1][0] , 2 ) + pow( vertices_coords_phys_space[2][1] - vertices_coords_phys_space[1][1] , 2 ) , 0.5 );
@@ -178,7 +178,7 @@ void Element::write_data(const parameters& parms, const int& step_num){
 
         // prepare jacobians and their determinants, inverse mass and stiffness matrix to be saved
 
-        std::vector<std::string> lines_( 13 + 3 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 );
+        std::vector<std::string> lines_( 13 + 3 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 + 3 );
         
         lines_[0]="jacobian";
         lines_[1]="[ [ " + std::to_string( this->jacobian[0][0] ) + " , " + std::to_string( this->jacobian[0][1] ) + " ] , ";
@@ -223,6 +223,10 @@ void Element::write_data(const parameters& parms, const int& step_num){
         }
         lines_[13 + 3 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 - 1 ].erase(lines_[ 13 + 3 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 - 1 ].size() - 1);
         lines_[13 + 3 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 - 1 ] += "]";
+
+        lines_[1 + 13 + 3 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 - 1 ] = "Unit vector perpendicular to edge 1 : [ " + std::to_string( this->units_vectors_perpendicular_to_element_boundary[0][0] ) + " , " + std::to_string( this->units_vectors_perpendicular_to_element_boundary[0][1] ) + " ]";
+        lines_[2 + 13 + 3 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 - 1 ] = "Unit vector perpendicular to edge 2 : [ " + std::to_string( this->units_vectors_perpendicular_to_element_boundary[1][0] ) + " , " + std::to_string( this->units_vectors_perpendicular_to_element_boundary[1][1] ) + " ]";
+        lines_[3 + 13 + 3 * ( parms.p + 1 ) *( parms.p + 2 ) / 2 - 1 ] = "Unit vector perpendicular to edge 3 : [ " + std::to_string( this->units_vectors_perpendicular_to_element_boundary[2][0] ) + " , " + std::to_string( this->units_vectors_perpendicular_to_element_boundary[2][1] ) + " ]";
 
         writeToFile("output/step_" + std::to_string( step_num ) + "/JMS_element_" + std::to_string( this->number) + ".txt", lines_);
 
