@@ -105,22 +105,26 @@ int main(int argc, char* argv[]) {
 
 
 
-    // Define an array of Evolve_elements members of the class Elements
+    // Define an array of Evolve_elements members of the class Evolve_element
     Evolve_element* evolve_elements = new Evolve_element[  2 * parms.num_element_in_x * parms.num_element_in_y  ];
 
-    // Initialize Evolve_elements of the array
+    // Initialize Evolve_element objects in the array above
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
-        // Build element
-        evolve_elements[i] = Evolve_element(elements[i],elements[elements[i].right_element],elements[elements[i].left_element],elements[elements[i].vertical_element]);
+        // Build evolve_elements
+        evolve_elements[i] = Evolve_element(&elements[i],&elements[elements[i].right_element],&elements[elements[i].left_element],&elements[elements[i].vertical_element]);
     }
 
 
 
+
+
+    //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
     // Initialize elements of the array
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
         //write data
         elements[i].write_data(parms, 0);
     }
+    //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
 
 
 
