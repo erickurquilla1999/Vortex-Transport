@@ -41,6 +41,12 @@ public:
     std::vector<std::vector<double>> u_minus_side_2;
     std::vector<std::vector<double>> u_minus_side_3;
 
+    // contains the numerical flux (roe flux) at the quadrature points for sides 1, 2 and 3
+    // first index runs over the gauss quadrature points number, second index runs over 0 and 3 for the hidrodynamics quantities
+    std::vector<std::vector<double>> numerical_flux_side_1;
+    std::vector<std::vector<double>> numerical_flux_side_2;
+    std::vector<std::vector<double>> numerical_flux_side_3;
+
     // Evolve_element functions
     void compute_numerical_flux(); // this function compute the numerical flux on the element boundaries, side 1, 2 and 3. 
     // void integrate_numerical_flux(); // initialize the hydronimics quantities u and f
