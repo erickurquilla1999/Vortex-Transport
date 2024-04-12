@@ -104,14 +104,14 @@ mesh generate_mesh(const parameters& parms){
     std::vector<int> element_left    ( 2 * parms.num_element_in_x * parms.num_element_in_y);
     std::vector<int> element_vertical( 2 * parms.num_element_in_x * parms.num_element_in_y);
     
-    // element to the right
-    for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y; ++i){
-        element_right[i] = (i % ( 2 * parms.num_element_in_x ) == 0 ? i - 1 + 2 * parms.num_element_in_x : i - 1 );
-    }    
-
     // element to the left
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y; ++i){
-        element_left[i] = ( ( i + 1 ) % ( 2 * parms.num_element_in_x ) == 0 ? i + 1 - 2 * parms.num_element_in_x : i + 1 );
+        element_left[i] = (i % ( 2 * parms.num_element_in_x ) == 0 ? i - 1 + 2 * parms.num_element_in_x : i - 1 );
+    }    
+
+    // element to the right
+    for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y; ++i){
+        element_right[i] = ( ( i + 1 ) % ( 2 * parms.num_element_in_x ) == 0 ? i + 1 - 2 * parms.num_element_in_x : i + 1 );
     }
 
     // vertical element: up for even element number and down for odd element number
