@@ -12,9 +12,10 @@ public:
     Evolve_element();
  
     // Element default constructor with arguments
-    Evolve_element(Element* this_elem, Element* right_elem, Element* left_elem, Element* vertical_elem, const std::vector<std::vector<double>>& gau_int_l,  const int& p);
+    Evolve_element(Element* this_elem, Element* right_elem, Element* left_elem, Element* vertical_elem, const std::vector<std::vector<double>>& gau_int_l,  const int& p_parms);
 
     // Evolve_element properties
+    int p;
     Element* this_element;     // this is the element to be evolved in time
     Element* right_element;    // this the element to the right to the element to be evolved in time
     Element* left_element;     // this the element to the left to the element to be evolved in time
@@ -29,10 +30,13 @@ public:
     std::vector<std::vector<double>> phi_in_quadrature_points_side_2;
     std::vector<std::vector<double>> phi_in_quadrature_points_side_3;
 
-    std::vector<std::vector<double>> u_plus_side_1;
+    // to following vectors store the interpolation of the hidrodynamic vector u from the interior nodes of the elements to the quadrature points for the line integrals
+    // first index runs over the quadrature points number, second index runs over 0 and 3 for the hidrodynamics quantities
+    // plus for current element
+    std::vector<std::vector<double>> u_plus_side_1; 
     std::vector<std::vector<double>> u_plus_side_2;
     std::vector<std::vector<double>> u_plus_side_3;
-
+    // minus for elements in the boundaries
     std::vector<std::vector<double>> u_minus_side_1;
     std::vector<std::vector<double>> u_minus_side_2;
     std::vector<std::vector<double>> u_minus_side_3;
