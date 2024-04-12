@@ -48,7 +48,9 @@ public:
     std::vector<std::vector<double>> numerical_flux_side_3;
 
     // Evolve_element functions
+    void evaluate_basis_in_quadrature_poits(); // evaluate lagrande polinomials in the gauss quadrature at the element boundaries
     void compute_numerical_flux(); // this function compute the numerical flux on the element boundaries, side 1, 2 and 3. 
+
     // void integrate_numerical_flux(); // initialize the hydronimics quantities u and f
     // void compute_residual_vector(); // initialize the hydronimics quantities u and f
     // void evolve_time_step(); // initialize the hydronimics quantities u and f

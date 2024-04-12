@@ -46,6 +46,11 @@ Evolve_element::Evolve_element(Element* this_elem, Element* right_elem, Element*
 
     {
 
+}
+
+// this function compute the numerical flux on the element boundaries, side 1, 2 and 3. 
+void Evolve_element::evaluate_basis_in_quadrature_poits(){
+
     // get size, that is the number of quadrature point for line integration
     int size = this->gau_integ_line.size();
 
@@ -57,6 +62,11 @@ Evolve_element::Evolve_element(Element* this_elem, Element* right_elem, Element*
         xi_eta_gauss_side_1[0] = gau_integ_line[i][0];
         xi_eta_gauss_side_1[1] = 0.0;
         
+        std::vector<double> r1 = reference_to_physical_space(xi_eta_gauss_side_1, this->this_element->vertices_coords_phys_space);
+        std::vector<double> r2 = reference_to_physical_space(xi_eta_gauss_side_1, this->vertival_element->vertices_coords_phys_space);
+        std::cout << "This element " << "( " << r1[0] << " , " << r1[1] << " ). Vertical element " << "( " << r2[0] << " , " << r2[1] << " )." << std::endl;
+
+
         // compute the coordinates in the 2d reference space of the quadrature point for the line integral for side 2
         std::vector<double> xi_eta_gauss_side_2(2);
         xi_eta_gauss_side_2[0] = gau_integ_line[i][0];

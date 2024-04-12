@@ -112,6 +112,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
         // Build evolve_elements
         evolve_elements[i] = Evolve_element(&elements[i],&elements[elements[i].right_element],&elements[elements[i].left_element],&elements[elements[i].vertical_element], gauss_integral_line, parms.p);
+        evolve_elements[i].evaluate_basis_in_quadrature_poits();
     }
 
     // Evolve Evolve_element objects in the array evolve_elements
