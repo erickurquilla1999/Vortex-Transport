@@ -26,9 +26,14 @@ public:
     // this vector store the values of the lagrange polinomial in evaluated in the quadrature points
     // first index runs over interior nodes number, that is, the lagrange polinimial that is one on this node
     // second item runs over the evaluation of the lagrange poliniam in the quadrature points
-    std::vector<std::vector<double>> phi_in_quadrature_points_side_1; 
-    std::vector<std::vector<double>> phi_in_quadrature_points_side_2;
-    std::vector<std::vector<double>> phi_in_quadrature_points_side_3;
+    // plus represent this element
+    std::vector<std::vector<double>> plus_phi_in_quadrature_points_side_1; 
+    std::vector<std::vector<double>> plus_phi_in_quadrature_points_side_2;
+    std::vector<std::vector<double>> plus_phi_in_quadrature_points_side_3;
+    // minus represent boundary element
+    std::vector<std::vector<double>> minus_phi_in_quadrature_points_side_1; 
+    std::vector<std::vector<double>> minus_phi_in_quadrature_points_side_2;
+    std::vector<std::vector<double>> minus_phi_in_quadrature_points_side_3;
 
     // to following vectors store the interpolation of the hidrodynamic vector u from the interior nodes of the elements to the quadrature points for the line integrals
     // first index runs over the quadrature points number, second index runs over 0 and 3 for the hidrodynamics quantities
