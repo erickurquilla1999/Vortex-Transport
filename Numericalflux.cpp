@@ -31,9 +31,11 @@ std::vector<double> numerical_flux(const std::vector<double>& u_left, const std:
     double unL = uL * normal_vector[0] + vL * normal_vector[1];
     double qL = pow( pow( u_left[1] , 2 ) + pow( u_left[2] , 2 ) , 0.5 ) / rL;
     double pL = ( gamma - 1 ) * ( u_left[3] - 0.5 * rL * pow( qL , 2 ) );
+    
+    std::cout << " pL : "<< pL << " , rL : " << rL << std::endl;
 
     if ( ( pL <= 0 ) || ( rL <=0 ) ){
-        std::cerr << " Error: Non-physical state! " << std::endl;
+        std::cerr << "1. Error: Non-physical state! " << std::endl;
         exit(EXIT_FAILURE);
     }
     
@@ -57,7 +59,7 @@ std::vector<double> numerical_flux(const std::vector<double>& u_left, const std:
     double pR = ( gamma - 1 ) * ( u_right[3] - 0.5 * rR * pow( qR , 2 ) );
 
     if ( ( pR <= 0 ) || ( rR <=0 ) ){
-        std::cerr << " Error: Non-physical state! " << std::endl;
+        std::cerr << "2. Error: Non-physical state! " << std::endl;
         exit(EXIT_FAILURE);
     }
 
@@ -92,7 +94,7 @@ std::vector<double> numerical_flux(const std::vector<double>& u_left, const std:
     double c2     = gmi * ( Hi - af );
     
     if ( c2 <= 0 ){
-        std::cerr << " Error: Non-physical state! " << std::endl;
+        std::cerr << "3. Error: Non-physical state! " << std::endl;
         exit(EXIT_FAILURE);
     }
 

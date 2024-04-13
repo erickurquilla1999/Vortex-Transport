@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
     // Evolve Evolve_element objects in the array evolve_elements
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
         // compute numerical flux
-        // evolve_elements[i].compute_numerical_flux();
+        evolve_elements[i].compute_numerical_flux();
     }
 
 

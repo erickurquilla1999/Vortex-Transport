@@ -106,7 +106,7 @@ void Evolve_element::evaluate_basis_in_quadrature_poits(){
             this->minus_phi_in_quadrature_points_side_3[j][i] = minus_phi_in_xi_eta_gauss_side_3[j];
         }
     }
-    
+
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
     // test to see if the coordinates in reference space for the boundary elements match the coordinates in physical space
     if (this->this_element->type == 0){
@@ -201,75 +201,79 @@ void Evolve_element::evaluate_basis_in_quadrature_poits(){
 // this function compute the numerical flux on the element boundaries, side 1, 2 and 3. 
 void Evolve_element::compute_numerical_flux(){
 
-    // // get size, that is the number of quadrature point for line integration
-    // int size = this->gau_integ_line.size();
+    // get size, that is the number of quadrature point for line integration
+    int size = this->gau_integ_line.size();
 
-    // // interpolate the u from the nodes to the gauss quadrature for side 1, 2 and 3
+    // interpolate the u from the nodes to the gauss quadrature for side 1, 2 and 3
 
-    // // this loop runs over gauss quadrature points
-    // for (int i = 0; i < size; ++i) {
+    // this loop runs over gauss quadrature points
+    for (int i = 0; i < size; ++i) {
 
-    //     // initialize all the new state vector at the quadrature point in zero to start interpolation
-    //     // this loops runs over hidrodynamic index
-    //     for (int k = 0; k < 3; ++k) {
-    //         // initialize all the new state vector at the quadrature point in zero to start interpolation
-    //         this->u_plus_side_1[i][k] = 0.0;
-    //         this->u_plus_side_2[i][k] = 0.0;
-    //         this->u_plus_side_3[i][k] = 0.0;
-    //         // initialize all the new state vector at the quadrature point in zero to start interpolation
-    //         this->u_minus_side_1[i][k] = 0.0;
-    //         this->u_minus_side_2[i][k] = 0.0;
-    //         this->u_minus_side_3[i][k] = 0.0;
-    //     }
+        // initialize all the new state vector at the quadrature point in zero to start interpolation
+        // this loops runs over hidrodynamic index
+        for (int k = 0; k < 3; ++k) {
+            // initialize all the new state vector at the quadrature point in zero to start interpolation
+            this->u_plus_side_1[i][k] = 0.0;
+            this->u_plus_side_2[i][k] = 0.0;
+            this->u_plus_side_3[i][k] = 0.0;
+            // initialize all the new state vector at the quadrature point in zero to start interpolation
+            this->u_minus_side_1[i][k] = 0.0;
+            this->u_minus_side_2[i][k] = 0.0;
+            this->u_minus_side_3[i][k] = 0.0;
+        }
 
-    //     // this loops runs over hidrodynamic index
-    //     for (int m = 0; m < 3; ++m) {
-    //         // this loop runs over interior nodes
-    //         for (int j = 0; j < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++j) {    
-    //             // do interpolation u = sum phi(x,y) * U 
-    //             // this element
-    //             this->u_plus_side_1[i][m] += this->phi_in_quadrature_points_side_1[j][i] * this->this_element->hidrodynamics_vector_u[j][m];
-    //             this->u_plus_side_2[i][m] += this->phi_in_quadrature_points_side_2[j][i] * this->this_element->hidrodynamics_vector_u[j][m];
-    //             this->u_plus_side_3[i][m] += this->phi_in_quadrature_points_side_3[j][i] * this->this_element->hidrodynamics_vector_u[j][m];
-    //             // boundary elements
-    //             if (this->this_element->type == 0){
-    //                 this->u_minus_side_1[i][m] += this->phi_in_quadrature_points_side_1[j][i] * this->vertival_element->hidrodynamics_vector_u[j][m];
-    //                 this->u_minus_side_2[i][m] += this->phi_in_quadrature_points_side_2[j][i] * this->right_element->hidrodynamics_vector_u[j][m];
-    //                 this->u_minus_side_3[i][m] += this->phi_in_quadrature_points_side_3[j][i] * this->left_element->hidrodynamics_vector_u[j][m];
-    //             }
-    //             else if (this->this_element->type == 1){
-    //                 this->u_minus_side_1[i][m] += this->phi_in_quadrature_points_side_1[j][i] * this->vertival_element->hidrodynamics_vector_u[j][m];
-    //                 this->u_minus_side_2[i][m] += this->phi_in_quadrature_points_side_2[j][i] * this->left_element->hidrodynamics_vector_u[j][m];
-    //                 this->u_minus_side_3[i][m] += this->phi_in_quadrature_points_side_3[j][i] * this->right_element->hidrodynamics_vector_u[j][m];
-    //             }else{
-    //                 std::cerr << " Error: Unsoported element type: it must be 0 or 1! " << std::endl;
-    //                 exit(EXIT_FAILURE);
-    //             }
-    //         }
-    //     }
-    // }
+        // this loops runs over hidrodynamic index
+        for (int m = 0; m < 3; ++m) {
+            // this loop runs over interior nodes
+            for (int j = 0; j < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++j) {    
+                // do interpolation u = sum phi(x,y) * U 
+                // this element
+                this->u_plus_side_1[i][m] += this->plus_phi_in_quadrature_points_side_1[j][i] * this->this_element->hidrodynamics_vector_u[j][m];
+                this->u_plus_side_2[i][m] += this->plus_phi_in_quadrature_points_side_2[j][i] * this->this_element->hidrodynamics_vector_u[j][m];
+                this->u_plus_side_3[i][m] += this->plus_phi_in_quadrature_points_side_3[j][i] * this->this_element->hidrodynamics_vector_u[j][m];
+                // boundary elements
+                if (this->this_element->type == 0){
+                    this->u_minus_side_1[i][m] += this->minus_phi_in_quadrature_points_side_1[j][i] * this->vertival_element->hidrodynamics_vector_u[j][m];
+                    this->u_minus_side_2[i][m] += this->minus_phi_in_quadrature_points_side_2[j][i] * this->right_element->hidrodynamics_vector_u[j][m];
+                    this->u_minus_side_3[i][m] += this->minus_phi_in_quadrature_points_side_3[j][i] * this->left_element->hidrodynamics_vector_u[j][m];
+                }
+                else if (this->this_element->type == 1){
+                    this->u_minus_side_1[i][m] += this->minus_phi_in_quadrature_points_side_1[j][i] * this->vertival_element->hidrodynamics_vector_u[j][m];
+                    this->u_minus_side_2[i][m] += this->minus_phi_in_quadrature_points_side_2[j][i] * this->left_element->hidrodynamics_vector_u[j][m];
+                    this->u_minus_side_3[i][m] += this->minus_phi_in_quadrature_points_side_3[j][i] * this->right_element->hidrodynamics_vector_u[j][m];
+                }else{
+                    std::cerr << " Error: Unsoported element type: it must be 0 or 1! " << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+            }
+        }
+    }
 
-    // // compute the roe flux
-    // // this loop runs over gauss quadrature points
-    // for (int i = 0; i < size; ++i) {
-    //     // initialize the numerical flux at quadrature point in zero
-    //     // this loops runs over hidrodynamic index
-    //     for (int k = 0; k < 3; ++k) {
-    //         this->numerical_flux_side_1[i][k] = 0.0;
-    //         this->numerical_flux_side_2[i][k] = 0.0;
-    //         this->numerical_flux_side_3[i][k] = 0.0;
-    //     }
+    // compute the roe flux
+    // this loop runs over gauss quadrature points
+    for (int i = 0; i < size; ++i) {
+        // initialize the numerical flux at quadrature point in zero
+        // this loops runs over hidrodynamic index
+        for (int k = 0; k < 3; ++k) {
+            this->numerical_flux_side_1[i][k] = 0.0;
+            this->numerical_flux_side_2[i][k] = 0.0;
+            this->numerical_flux_side_3[i][k] = 0.0;
+        }
 
-    //     std::vector<double> num_flux_side_1 = numerical_flux(this->u_plus_side_1[i], this->u_minus_side_1[i], this->this_element->units_vectors_perpendicular_to_element_boundary[0]);
-    //     std::vector<double> num_flux_side_2 = numerical_flux(this->u_plus_side_2[i], this->u_minus_side_2[i], this->this_element->units_vectors_perpendicular_to_element_boundary[1]);
-    //     std::vector<double> num_flux_side_3 = numerical_flux(this->u_plus_side_3[i], this->u_minus_side_3[i], this->this_element->units_vectors_perpendicular_to_element_boundary[2]);
+        for (int a = 0; a < 4; ++a) {
+            std::cout << "This element "<< this->this_element->number << " , hidro indx " << a << " : "<<this->u_plus_side_1[i][a] << " , " << this->u_minus_side_1[i][a] << std::endl;
+        }
+
+        std::vector<double> num_flux_side_1 = numerical_flux(this->u_plus_side_1[i], this->u_minus_side_1[i], this->this_element->units_vectors_perpendicular_to_element_boundary[0]);
+        std::vector<double> num_flux_side_2 = numerical_flux(this->u_plus_side_2[i], this->u_minus_side_2[i], this->this_element->units_vectors_perpendicular_to_element_boundary[1]);
+        std::vector<double> num_flux_side_3 = numerical_flux(this->u_plus_side_3[i], this->u_minus_side_3[i], this->this_element->units_vectors_perpendicular_to_element_boundary[2]);
         
-    //     // save numerical flux in evolve_element object
-    //     // this loops runs over hidrodynamic index
-    //     for (int k = 0; k < 3; ++k) {
-    //         this->numerical_flux_side_1[i][k] = num_flux_side_1[k];
-    //         this->numerical_flux_side_2[i][k] = num_flux_side_2[k];
-    //         this->numerical_flux_side_3[i][k] = num_flux_side_3[k];
-    //     }
-    // }    
+        // save numerical flux in evolve_element object
+        // this loops runs over hidrodynamic index
+        for (int k = 0; k < 3; ++k) {
+            this->numerical_flux_side_1[i][k] = num_flux_side_1[k];
+            this->numerical_flux_side_2[i][k] = num_flux_side_2[k];
+            this->numerical_flux_side_3[i][k] = num_flux_side_3[k];
+        }
+    }    
 }
