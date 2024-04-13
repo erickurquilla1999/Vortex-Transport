@@ -211,7 +211,7 @@ void Evolve_element::compute_numerical_flux(){
 
         // initialize all the new state vector at the quadrature point in zero to start interpolation
         // this loops runs over hidrodynamic index
-        for (int k = 0; k < 3; ++k) {
+        for (int k = 0; k < 4; ++k) {
             // initialize all the new state vector at the quadrature point in zero to start interpolation
             this->u_plus_side_1[i][k] = 0.0;
             this->u_plus_side_2[i][k] = 0.0;
@@ -223,7 +223,7 @@ void Evolve_element::compute_numerical_flux(){
         }
 
         // this loops runs over hidrodynamic index
-        for (int m = 0; m < 3; ++m) {
+        for (int m = 0; m < 4; ++m) {
             // this loop runs over interior nodes
             for (int j = 0; j < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++j) {    
                 // do interpolation u = sum phi(x,y) * U 
@@ -254,14 +254,10 @@ void Evolve_element::compute_numerical_flux(){
     for (int i = 0; i < size; ++i) {
         // initialize the numerical flux at quadrature point in zero
         // this loops runs over hidrodynamic index
-        for (int k = 0; k < 3; ++k) {
+        for (int k = 0; k < 4; ++k) {
             this->numerical_flux_side_1[i][k] = 0.0;
             this->numerical_flux_side_2[i][k] = 0.0;
             this->numerical_flux_side_3[i][k] = 0.0;
-        }
-
-        for (int a = 0; a < 4; ++a) {
-            std::cout << "This element "<< this->this_element->number << " , hidro indx " << a << " : "<<this->u_plus_side_1[i][a] << " , " << this->u_minus_side_1[i][a] << std::endl;
         }
 
         std::vector<double> num_flux_side_1 = numerical_flux(this->u_plus_side_1[i], this->u_minus_side_1[i], this->this_element->units_vectors_perpendicular_to_element_boundary[0]);
