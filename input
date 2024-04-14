@@ -1,5 +1,5 @@
 // lagrange polinomial order
-p=1
+p=3
 
 // physical domain
 domain_x=10 //cm
@@ -10,7 +10,13 @@ num_element_in_x=16
 num_element_in_y=16
 
 // grid perturbation parameter 
-perturb_grid=0
+perturb_grid=1
 
 // gauss integration
-integration_order=10
+integration_order=8
+
+// simulation time
+simulation_time=14.142135
+
+// number of time steps
+number_time_steps=100
