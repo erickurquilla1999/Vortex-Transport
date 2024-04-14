@@ -52,7 +52,8 @@ Evolve_element::Evolve_element(Element* this_elem, Element* right_elem, Element*
     // Discontinuos Galerkin method variables
     DG_numerical_flux_integration( ( this->p + 1 ) * ( this->p + 2 ) / 2 ,  std::vector<double>( 4 ) ), // DG vector that results from the integration of the numerical flux ( integral phi_i hat_{F} dl ). First index runs over interior nodes. Second index runs between 0 and 3 and represend hidrodynamics variables.
     DG_stiffness_vector( ( this->p + 1 ) * ( this->p + 2 ) / 2 ,  std::vector<double>( 4 ) ), // Stiffness vector: DG vector that results from area integral over element of nabla phi_i dot F dOmega. First index runs over interior nodes. Second index runs between 0 and 3 and represend hidrodynamics variables.
-    DG_residual_vector( ( this->p + 1 ) * ( this->p + 2 ) / 2 ,  std::vector<double>( 4 ) ) // residual vector: DG vector that results from stiffness vector minus vector result of the numerical flux integration. First index runs over interior nodes. Second index runs between 0 and 3 and represend hidrodynamics variables.
+    DG_residual_vector( ( this->p + 1 ) * ( this->p + 2 ) / 2 ,  std::vector<double>( 4 ) ), // residual vector: DG vector that results from stiffness vector minus vector result of the numerical flux integration. First index runs over interior nodes. Second index runs between 0 and 3 and represend hidrodynamics variables.
+    DG_time_derivative_U( ( this->p + 1 ) * ( this->p + 2 ) / 2 ,  std::vector<double>( 4 ) ) // Time_derivative of state vector U(t): DG vector that results from dot{U}_{i} = M^{-1}_{ij} R_{j} ---> mass matrix inverse times the residual vector. First index runs over interior nodes. Second index runs between 0 and 3 and represend hidrodynamics variables.
 
     {
 
@@ -382,4 +383,9 @@ void Evolve_element::compute_residual_vector(){
             this->DG_stiffness_vector[i][k] = this->DG_stiffness_vector[i][k] - this->DG_numerical_flux_integration[i][k]; 
         }       
     }
+}
+
+// compute residial vector stiffness vector minus vector result of the numerical flux integration
+void Evolve_element::compute_time_derivative_U(){
+
 }
