@@ -365,4 +365,21 @@ void Evolve_element::compute_stiffness_vector(){
 // compute  residual vector: DG vector that results from stiffness vector minus vector result of the numerical flux integration
 void Evolve_element::compute_residual_vector(){
 
+    // initialize the DG_stiffness_vector[i][j] values to zero
+    // loop over all the interior nodes of this element
+    for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
+        // loop over hidrodynamics indices
+        for (int k = 0; k < 4; ++k) {
+            this->DG_stiffness_vector[i][k] = 0; 
+        }       
+    }
+
+    // compute DG_stiffness_vector[i][j]
+    // loop over all the interior nodes of this element
+    for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
+        // loop over hidrodynamics indices
+        for (int k = 0; k < 4; ++k) {
+            this->DG_stiffness_vector[i][k] = this->DG_stiffness_vector[i][k] - this->DG_numerical_flux_integration[i][k]; 
+        }       
+    }
 }
