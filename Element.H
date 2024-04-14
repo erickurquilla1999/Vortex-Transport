@@ -40,6 +40,8 @@ public:
     
     std::vector<std::vector<double>> units_vectors_perpendicular_to_element_boundary; // contains the units vectors perperdicular to the elements boundary. the first index runs from 0 two 2 and represent the side number. side 1 is the one found going counterclockwise from the initial vextex (square angle vertex), in continuation side 2 and 3 going conter clockwise. the second index runs from 0 to 1, 0 is the x component of the unit vector 1 is the y components.
 
+    std::vector<double> sides_lenght; // contains the element side lenghts, this array contains just three values. 0: side 1, 1: side 2, 2: side 3
+
     // Element functions
     void initialize_hydrodinamics(const parameters& parms); // initialize the hydronimics quantities u and f
     void write_data(const parameters& parms, const int& step_num); // write element data in output directory

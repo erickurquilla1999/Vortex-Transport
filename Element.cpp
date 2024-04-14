@@ -27,7 +27,8 @@ Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<st
     inverse_jacobian(2,std::vector<double>(2)), // jacobian between transformation from physical space to reference space d vec{xi} / d vec{x} = ( 1 / det( J ) ) * [ [ y3 - y1 , x1 - x3 ] , [ y1 - y2 , x2 - x1 ] ]
     inverse_mass_matrix_physical_space((parms.p + 1) * (parms.p + 2) / 2 , std::vector<double>((parms.p + 1) * (parms.p + 2) / 2)), // mass_ij = int in Omega phi_i phi_j dOmega . Size ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2
     stiffness_matrix_physical_space(2, std::vector<std::vector<double>>( (parms.p + 1) * (parms.p + 2) / 2 , std::vector<double>( (parms.p + 1) * (parms.p + 2) / 2 ))), // S_ij = integral in Omega of ( Nabla phi_i ) phi_j dOmega . form :  hat{e}_x * matrix[ ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2 ] + hat{e}_y * matrix[ ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2 ]. first index run between spacial components in physics space. 0: x and 1 y. second and third index run over matrix inidices of size ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2 ] 
-    units_vectors_perpendicular_to_element_boundary(3,std::vector<double>(2)) // contains the units vectors perperdicular to the elements boundary. the first index runs from 0 two 2 and represent the side number. side 1 is the one found going counterclockwise from the initial vextex (square angle vertex), in continuation side 2 and 3 going conter clockwise. the second index runs from 0 to 1, 0 is the x component of the unit vector 1 is the y components.
+    units_vectors_perpendicular_to_element_boundary(3,std::vector<double>(2)), // contains the units vectors perperdicular to the elements boundary. the first index runs from 0 two 2 and represent the side number. side 1 is the one found going counterclockwise from the initial vextex (square angle vertex), in continuation side 2 and 3 going conter clockwise. the second index runs from 0 to 1, 0 is the x component of the unit vector 1 is the y components.
+    sides_lenght(3) // contains the element side lenghts, this array contains just three values. 0: side 1, 1: side 2, 2: side 3
 
     {
     
@@ -79,6 +80,12 @@ Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<st
     units_vectors_perpendicular_to_element_boundary[0][1] = -1 * ( vertices_coords_phys_space[1][0] - vertices_coords_phys_space[0][0] ) / pow( pow( vertices_coords_phys_space[1][0] - vertices_coords_phys_space[0][0] , 2 ) + pow( vertices_coords_phys_space[1][1] - vertices_coords_phys_space[0][1] , 2 ) , 0.5 );
     units_vectors_perpendicular_to_element_boundary[1][1] = -1 * ( vertices_coords_phys_space[2][0] - vertices_coords_phys_space[1][0] ) / pow( pow( vertices_coords_phys_space[2][0] - vertices_coords_phys_space[1][0] , 2 ) + pow( vertices_coords_phys_space[2][1] - vertices_coords_phys_space[1][1] , 2 ) , 0.5 );
     units_vectors_perpendicular_to_element_boundary[2][1] = -1 * ( vertices_coords_phys_space[0][0] - vertices_coords_phys_space[2][0] ) / pow( pow( vertices_coords_phys_space[0][0] - vertices_coords_phys_space[2][0] , 2 ) + pow( vertices_coords_phys_space[0][1] - vertices_coords_phys_space[2][1] , 2 ) , 0.5 );
+
+    // compute the element side lenghts
+    //                   (     (           x2                    -             x1                   )^2   +    (             y2                   -              y1                  )^2   )^0.5      
+    sides_lenght[0] = pow( pow( vertices_coords_phys_space[1][0] - vertices_coords_phys_space[0][0] , 2 ) + pow( vertices_coords_phys_space[1][1] - vertices_coords_phys_space[0][1] , 2 ) , 0.5 ); // side 1
+    sides_lenght[1] = pow( pow( vertices_coords_phys_space[2][0] - vertices_coords_phys_space[1][0] , 2 ) + pow( vertices_coords_phys_space[2][1] - vertices_coords_phys_space[1][1] , 2 ) , 0.5 ); // side 2
+    sides_lenght[2] = pow( pow( vertices_coords_phys_space[0][0] - vertices_coords_phys_space[2][0] , 2 ) + pow( vertices_coords_phys_space[0][1] - vertices_coords_phys_space[2][1] , 2 ) , 0.5 ); // side 3
 
 }
 
