@@ -359,5 +359,4 @@ void Evolve_element::compute_stiffness_vector(){
             }       
         }
     }
-
 }
