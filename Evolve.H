@@ -62,12 +62,17 @@ public:
     // First index runs over interior nodes. 
     // Second index runs between 0 and 3 and represend hidrodynamics variables.
     std::vector<std::vector<double>> DG_stiffness_vector; 
+    // residual vector: DG vector that results from stiffness vector minus vector result of the numerical flux integration
+    // First index runs over interior nodes. 
+    // Second index runs between 0 and 3 and represend hidrodynamics variables.
+    std::vector<std::vector<double>> DG_residual_vector; 
 
     // Evolve_element functions
     void evaluate_basis_in_quadrature_poits(); // evaluate lagrande polinomials in the gauss quadrature at the element boundaries
     void compute_numerical_flux(); // this function compute the numerical flux on the element boundaries, side 1, 2 and 3. 
     void integrate_numerical_flux(); // this function create the DG vector that results from the integration of the numerical flux ( integral phi_i hat_{F} dl ), this function fill the vector DG_numerical_flux_integration.
     void compute_stiffness_vector(); // compute stiffness vector (area integral over element of nabla phi_i dot F dOmega)
+    void compute_residual_vector(); // compute residial vector stiffness vector minus vector result of the numerical flux integration
 
 };
 

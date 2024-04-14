@@ -121,6 +121,7 @@ int main(int argc, char* argv[]) {
         evolve_elements[i].compute_numerical_flux();
         evolve_elements[i].integrate_numerical_flux();
         evolve_elements[i].compute_stiffness_vector();
+        evolve_elements[i].compute_residual_vector();
     }
 
 
