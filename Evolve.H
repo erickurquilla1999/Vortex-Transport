@@ -53,7 +53,11 @@ public:
     std::vector<std::vector<double>> numerical_flux_side_3;
 
     // Discontinuos Galerkin method variables
-    std::vector<std::vector<double>> DG_numerical_flux_integration; // DG vector that results from the integration of the numerical flux ( integral phi_i hat_{F} dl ). First index runs over interior nodes. Second index runs between 0 and 3 and represend hidrodynamics variables.
+
+    // DG vector that results from the integration of the numerical flux ( integral phi_i hat_{F} dl ). 
+    // First index runs over interior nodes. 
+    // Second index runs between 0 and 3 and represend hidrodynamics variables.
+    std::vector<std::vector<double>> DG_numerical_flux_integration; 
 
     // Evolve_element functions
     void evaluate_basis_in_quadrature_poits(); // evaluate lagrande polinomials in the gauss quadrature at the element boundaries
