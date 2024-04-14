@@ -12,7 +12,7 @@ struct parameters{
     int integration_order;
     float simulation_time;
     int number_time_steps;
-    float time_step; 
+    double time_step; 
 };
 
 // this function reads the input parameter script and return an struct of the type parameters with all of them
