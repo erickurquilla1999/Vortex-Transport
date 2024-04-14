@@ -289,7 +289,7 @@ void Evolve_element::compute_numerical_flux(){
         
         // save numerical flux in evolve_element object
         // this loops runs over hidrodynamic index
-        for (int k = 0; k < 3; ++k) {
+        for (int k = 0; k < 4; ++k) {
             // contains the numerical flux (roe flux) at the quadrature points for sides 1, 2 and 3
             // first index runs over the gauss quadrature points number, second index runs over 0 and 3 for the hidrodynamics quantities
             this->numerical_flux_side_1[i][k] = num_flux_side_1[k]; // side 1
@@ -445,7 +445,7 @@ void Evolve_element::compute_new_U_and_F(double& time_step){
         this->this_element->hidrodynamics_vector_f[i][1][2] = rho * pow( v , 2 ) + p;
         this->this_element->hidrodynamics_vector_f[i][1][3] = rho * v * H;
     }
-    
+
     // advance in time 
     this->this_element->time += time_step;
 }
