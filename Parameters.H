@@ -11,7 +11,8 @@ struct parameters{
     float perturb_grid;
     int integration_order;
     float simulation_time;
-    int number_time_steps; 
+    int number_time_steps;
+    float time_step; 
 };
 
 // this function reads the input parameter script and return an struct of the type parameters with all of them

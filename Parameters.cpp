@@ -50,6 +50,7 @@ parameters read_input_files(int argc, char* argv[]) {
     params.integration_order = std::stoi(paramMap["integration_order"]);
     params.simulation_time = std::stof(paramMap["simulation_time"]);
     params.number_time_steps = std::stoi(paramMap["number_time_steps"]);
+    params.time_step = std::stof(paramMap["simulation_time"]) / std::stof(paramMap["number_time_steps"]);
 
     return params;
 }
