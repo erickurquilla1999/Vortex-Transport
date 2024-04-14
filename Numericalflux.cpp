@@ -35,7 +35,7 @@ std::vector<double> numerical_flux(const std::vector<double>& u_left, const std:
     if ( ( pL <= 0 ) || ( rL <=0 ) ){
         std::cerr << "1. Error: Non-physical state! " << std::endl;
         std::cout << " pL : "<< pL << " , rL : " << rL << ", not satified ( pL <= 0 ) || ( rL <=0 )" << std::endl;
-        // exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
     
     double rHL = u_left[3] + pL;
@@ -60,7 +60,7 @@ std::vector<double> numerical_flux(const std::vector<double>& u_left, const std:
     if ( ( pR <= 0 ) || ( rR <=0 ) ){
         std::cerr << "2. Error: Non-physical state! " << std::endl;
         std::cout << " pR : "<< pR << " , rR : " << rR << ", not satified ( pR <= 0 ) || ( rR <=0 )" << std::endl;
-        // exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
 
     double rHR = u_right[3] + pR;
@@ -96,7 +96,7 @@ std::vector<double> numerical_flux(const std::vector<double>& u_left, const std:
     if ( c2 <= 0 ){
         std::cerr << "3. Error: Non-physical state! " << std::endl;
         std::cout << " c2 : "<< pR << " , not satified ( c2 <= 0 )" << std::endl;
-        // exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
 
     double ci     = pow( c2 , 2 );
