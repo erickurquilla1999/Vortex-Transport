@@ -53,7 +53,7 @@ Evolve_element::Evolve_element(Element* this_elem, Element* right_elem, Element*
 
 }
 
-// this function compute the numerical flux on the element boundaries, side 1, 2 and 3. 
+// this function evaluate lagrande polinomials in the gauss quadrature at the element boundaries
 void Evolve_element::evaluate_basis_in_quadrature_poits(){
 
     // this is the number of quadrature point for line integration
@@ -62,48 +62,51 @@ void Evolve_element::evaluate_basis_in_quadrature_poits(){
     // evaluate the lagrange polinomial in the quadrature points for line integral
     for (int i = 0; i < num_gauss_quad_pnts; ++i) {
 
-        std::vector<double> plus_xi_eta_gauss_side_1(2);
-        std::vector<double> minus_xi_eta_gauss_side_1(2);
-        plus_xi_eta_gauss_side_1[0]  = gau_integ_line[i][0];
-        plus_xi_eta_gauss_side_1[1]  = 0.0;
-        minus_xi_eta_gauss_side_1[0] = 1 - gau_integ_line[i][0];
-        minus_xi_eta_gauss_side_1[1] = 0.0;
+        // Side 1. This is the first side going counterclockwise from the square angle vertex of the element
+        std::vector<double> plus_xi_eta_gauss_side_1(2);  // Cordinates in the 2d reference space ( xi(xi') , eta(xi') ) of the gauss quadrature xi' that is inside [0, 1] for this element
+        std::vector<double> minus_xi_eta_gauss_side_1(2); // Cordinates in the 2d reference space ( xi(xi') , eta(xi') ) of the gauss quadrature xi' that is inside [0, 1] for the in the boundary of side one
+        plus_xi_eta_gauss_side_1[0]  = gau_integ_line[i][0];     // xi = xi'
+        plus_xi_eta_gauss_side_1[1]  = 0.0;                      // eta = 0
+        minus_xi_eta_gauss_side_1[0] = 1 - gau_integ_line[i][0]; // xi = 1 - xi'
+        minus_xi_eta_gauss_side_1[1] = 0.0;                      // eta = 0
 
-        std::vector<double> plus_xi_eta_gauss_side_2(2);
-        std::vector<double> minus_xi_eta_gauss_side_2(2);
-        plus_xi_eta_gauss_side_2[0]  = 1 - gau_integ_line[i][0];
-        plus_xi_eta_gauss_side_2[1]  = gau_integ_line[i][0];
-        minus_xi_eta_gauss_side_2[0] = gau_integ_line[i][0];
-        minus_xi_eta_gauss_side_2[1] = 1 - gau_integ_line[i][0];
+        // Side 2. This is the second side going counterclockwise from the square angle vertex of the element
+        std::vector<double> plus_xi_eta_gauss_side_2(2);  // Cordinates in the 2d reference space ( xi(xi') , eta(xi') ) of the gauss quadrature xi' that is inside [0, 1] for this element
+        std::vector<double> minus_xi_eta_gauss_side_2(2); // Cordinates in the 2d reference space ( xi(xi') , eta(xi') ) of the gauss quadrature xi' that is inside [0, 1] for the in the boundary of side one
+        plus_xi_eta_gauss_side_2[0]  = 1 - gau_integ_line[i][0]; // xi = 1 - xi'
+        plus_xi_eta_gauss_side_2[1]  = gau_integ_line[i][0];     // eta = xi'
+        minus_xi_eta_gauss_side_2[0] = gau_integ_line[i][0];     // xi = xi'
+        minus_xi_eta_gauss_side_2[1] = 1 - gau_integ_line[i][0]; // eta = 1 - xi'
 
-        std::vector<double> plus_xi_eta_gauss_side_3(2);
-        std::vector<double> minus_xi_eta_gauss_side_3(2);
-        plus_xi_eta_gauss_side_3[0]  = 0.0;
-        plus_xi_eta_gauss_side_3[1]  = 1-gau_integ_line[i][0];
-        minus_xi_eta_gauss_side_3[0] = 0.0;
-        minus_xi_eta_gauss_side_3[1] = gau_integ_line[i][0];
+        // Side 3. This is the third side going counterclockwise from the square angle vertex of the element
+        std::vector<double> plus_xi_eta_gauss_side_3(2);  // Cordinates in the 2d reference space ( xi(xi') , eta(xi') ) of the gauss quadrature xi' that is inside [0, 1] for this element
+        std::vector<double> minus_xi_eta_gauss_side_3(2); // Cordinates in the 2d reference space ( xi(xi') , eta(xi') ) of the gauss quadrature xi' that is inside [0, 1] for the in the boundary of side one
+        plus_xi_eta_gauss_side_3[0]  = 0.0;                    // xi = 0
+        plus_xi_eta_gauss_side_3[1]  = 1-gau_integ_line[i][0]; // eta = 1 - xi'
+        minus_xi_eta_gauss_side_3[0] = 0.0;                    // xi = 0
+        minus_xi_eta_gauss_side_3[1] = gau_integ_line[i][0];   // eta = xi'
     
-        // evaluate the lagrange polinomial in the quadrature points for line integral
-        std::vector<double> plus_phi_in_xi_eta_gauss_side_1 = lagrange_basis_reference_space( this->p , plus_xi_eta_gauss_side_1 ); 
-        std::vector<double> plus_phi_in_xi_eta_gauss_side_2 = lagrange_basis_reference_space( this->p , plus_xi_eta_gauss_side_2 ); 
-        std::vector<double> plus_phi_in_xi_eta_gauss_side_3 = lagrange_basis_reference_space( this->p , plus_xi_eta_gauss_side_3 ); 
+        // evaluate the lagrange polinomial in the quadrature points for line integral for this element
+        std::vector<double> plus_phi_in_xi_eta_gauss_side_1 = lagrange_basis_reference_space( this->p , plus_xi_eta_gauss_side_1 ); // side 1
+        std::vector<double> plus_phi_in_xi_eta_gauss_side_2 = lagrange_basis_reference_space( this->p , plus_xi_eta_gauss_side_2 ); // side 2 
+        std::vector<double> plus_phi_in_xi_eta_gauss_side_3 = lagrange_basis_reference_space( this->p , plus_xi_eta_gauss_side_3 ); // side 3 
 
-        // evaluate the lagrange polinomial in the quadrature points for line integral
-        std::vector<double> minus_phi_in_xi_eta_gauss_side_1 = lagrange_basis_reference_space( this->p , minus_xi_eta_gauss_side_1 ); 
-        std::vector<double> minus_phi_in_xi_eta_gauss_side_2 = lagrange_basis_reference_space( this->p , minus_xi_eta_gauss_side_2 ); 
-        std::vector<double> minus_phi_in_xi_eta_gauss_side_3 = lagrange_basis_reference_space( this->p , minus_xi_eta_gauss_side_3 ); 
+        // evaluate the lagrange polinomial in the quadrature points for line integral for the bournady element
+        std::vector<double> minus_phi_in_xi_eta_gauss_side_1 = lagrange_basis_reference_space( this->p , minus_xi_eta_gauss_side_1 ); // side 1
+        std::vector<double> minus_phi_in_xi_eta_gauss_side_2 = lagrange_basis_reference_space( this->p , minus_xi_eta_gauss_side_2 ); // side 2
+        std::vector<double> minus_phi_in_xi_eta_gauss_side_3 = lagrange_basis_reference_space( this->p , minus_xi_eta_gauss_side_3 ); // side 3 
 
         // save the phi(xi,eta) in the class variables
         for (int j = 0; j < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++j) {
             // this vector store the values of the lagrange polinomial in evaluated in the quadrature points
             // first index runs over interior nodes number, that is, the lagrange polinimial that is one on this node
             // second item runs over the evaluation of the lagrange poliniam in the quadrature points
-            this->plus_phi_in_quadrature_points_side_1[j][i] = plus_phi_in_xi_eta_gauss_side_1[j];
-            this->plus_phi_in_quadrature_points_side_2[j][i] = plus_phi_in_xi_eta_gauss_side_2[j];
-            this->plus_phi_in_quadrature_points_side_3[j][i] = plus_phi_in_xi_eta_gauss_side_3[j];
-            this->minus_phi_in_quadrature_points_side_1[j][i] = minus_phi_in_xi_eta_gauss_side_1[j];
-            this->minus_phi_in_quadrature_points_side_2[j][i] = minus_phi_in_xi_eta_gauss_side_2[j];
-            this->minus_phi_in_quadrature_points_side_3[j][i] = minus_phi_in_xi_eta_gauss_side_3[j];
+            this->plus_phi_in_quadrature_points_side_1[j][i] = plus_phi_in_xi_eta_gauss_side_1[j];   // this element side 1
+            this->plus_phi_in_quadrature_points_side_2[j][i] = plus_phi_in_xi_eta_gauss_side_2[j];   // this element side 2
+            this->plus_phi_in_quadrature_points_side_3[j][i] = plus_phi_in_xi_eta_gauss_side_3[j];   // this element side 3
+            this->minus_phi_in_quadrature_points_side_1[j][i] = minus_phi_in_xi_eta_gauss_side_1[j]; // boundary element side 1
+            this->minus_phi_in_quadrature_points_side_2[j][i] = minus_phi_in_xi_eta_gauss_side_2[j]; // boundary element side 2
+            this->minus_phi_in_quadrature_points_side_3[j][i] = minus_phi_in_xi_eta_gauss_side_3[j]; // boundary element side 3
         }
     }
 
