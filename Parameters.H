@@ -10,7 +10,8 @@ struct parameters{
     int num_element_in_y;
     float perturb_grid;
     int integration_order;
-
+    float simulation_time;
+    int number_time_steps; 
 };
 
 // this function reads the input parameter script and return an struct of the type parameters with all of them
