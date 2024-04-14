@@ -405,7 +405,7 @@ void Evolve_element::compute_time_derivative_U(){
             // loop over all the interior nodes of this element
             for (int j = 0; j < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++j) {
                 //         dU_i/d_t              = sum_j                M^{-1}_{ij}                             *            R_{j}  
-                this->DG_time_derivative_U[i][k] = this->this_element->inverse_mass_matrix_physical_space[i][j] * this->DG_residual_vector[j][k]; 
+                this->DG_time_derivative_U[i][k] += this->this_element->inverse_mass_matrix_physical_space[i][j] * this->DG_residual_vector[j][k]; 
             }
         }       
     }
