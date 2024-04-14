@@ -15,7 +15,7 @@ public:
     Evolve_element(Element* this_elem, Element* right_elem, Element* left_elem, Element* vertical_elem, const std::vector<std::vector<double>>& gau_int_l,  const int& p_parms);
 
     // Evolve_element properties
-    int p;
+    int p; // lagrange polinomial order
     Element* this_element;     // this is the element to be evolved in time
     Element* right_element;    // this the element to the right to the element to be evolved in time
     Element* left_element;     // this the element to the left to the element to be evolved in time

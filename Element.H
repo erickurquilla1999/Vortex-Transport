@@ -18,6 +18,7 @@ public:
 
     // Element properties
     double time; // storage time in the dimulation for each element
+    int p; // lagrange polinomial order
     int number; // element number
     int type; // element type 0 of squere angle is down and 1 if up
     int right_element; // elemnt to the right
