@@ -299,4 +299,35 @@ void Evolve_element::compute_numerical_flux(){
 // this function create the DG vector that results from the integration of the numerical flux ( integral phi_i hat_{F} dl )
 void Evolve_element::integrate_numerical_flux(){
 
+    // get size, that is the number of quadrature point for line integration
+    int num_gauss_quad_pnts = this->gau_integ_line.size();
+
+    // loop over all the interior nodes of this element
+    for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {    
+        
+        // contains integral over sides 1, 2 and 3
+        std::vector<double> integral_side_1(4, 0.0);
+        std::vector<double> integral_side_2(4, 0.0);
+        std::vector<double> integral_side_3(4, 0.0);
+
+        // loop over hidrodynamics index
+        for (int k = 0; k < 4; ++k) {
+            // loop over the quadrature point 
+            for (int j = 0; j < num_gauss_quad_pnts; ++j) {
+                //                 +=           w(xi')           * (                    phi(xi')                      *             \hat_{f}              )
+                integral_side_1[k] += this->gau_integ_line[j][1] * ( this->plus_phi_in_quadrature_points_side_1[i][j] * this->numerical_flux_side_1[j][k] );
+                integral_side_2[k] += this->gau_integ_line[j][1] * ( this->plus_phi_in_quadrature_points_side_2[i][j] * this->numerical_flux_side_2[j][k] );
+                integral_side_3[k] += this->gau_integ_line[j][1] * ( this->plus_phi_in_quadrature_points_side_3[i][j] * this->numerical_flux_side_3[j][k] );
+            }
+        }
+
+        // loop over hidrodynamics index
+        for (int k = 0; k < 4; ++k) {
+            // sum the integrals over the three side of the element
+            this->DG_numerical_flux_integration[i][k] = this->this_element->sides_lenght[0] * integral_side_1[k] + this->this_element->sides_lenght[1] * integral_side_2[k] + this->this_element->sides_lenght[2] * integral_side_3[k];
+            // DG_numerical_flux_integration is the DG vector that results from the integration of the numerical flux ( integral phi_i hat_{F} dl ). 
+            // First index runs over interior nodes. 
+            // Second index runs between 0 and 3 and represend hidrodynamics variables.
+        }
+    }
 }
