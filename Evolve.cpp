@@ -423,13 +423,13 @@ void Evolve_element::compute_new_U_and_F(double& time_step){
     for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
         // loop over hidrodynamics indices
         for (int k = 0; k < 4; ++k) {
-            this->this_element->hidrodynamics_vector_u[i][k] = time_step * DG_time_derivative_U[i][k]; 
+            this->this_element->hidrodynamics_vector_u[i][k] = this->this_element->hidrodynamics_vector_u[i][k] + time_step * DG_time_derivative_U[i][k]; 
         }
 
         rho = this->this_element->hidrodynamics_vector_u[i][0]; // density
         u   = this->this_element->hidrodynamics_vector_u[i][1] / rho; // horizontal velocity
         v   = this->this_element->hidrodynamics_vector_u[i][2] / rho; // vertical velocity
-        E   = this->this_element->hidrodynamics_vector_u[i][2] / rho; // energy
+        E   = this->this_element->hidrodynamics_vector_u[i][3] / rho; // energy
         p   = rho * ( gamma - 1 ) * ( E - ( pow( u , 2) + pow( v , 2) ) / 2 ); // pressure
         H   = E + p / rho; // Entalpy
 
