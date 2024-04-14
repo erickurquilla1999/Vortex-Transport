@@ -47,7 +47,10 @@ Evolve_element::Evolve_element(Element* this_elem, Element* right_elem, Element*
     // first index runs over the gauss quadrature points number, second index runs over 0 and 3 for the hidrodynamics quantities
     numerical_flux_side_1( this->gau_integ_line.size() , std::vector<double>( 4 ) ),
     numerical_flux_side_2( this->gau_integ_line.size() , std::vector<double>( 4 ) ),
-    numerical_flux_side_3( this->gau_integ_line.size() , std::vector<double>( 4 ) )
+    numerical_flux_side_3( this->gau_integ_line.size() , std::vector<double>( 4 ) ),
+
+    // Discontinuos Galerkin method variables
+    DG_numerical_flux_integration( ( this->p + 1 ) * ( this->p + 2 ) / 2 ,  std::vector<double>( 4 ) ) // DG vector that results from the integration of the numerical flux ( integral phi_i hat_{F} dl ). First index runs over interior nodes. Second index runs between 0 and 3 and represend hidrodynamics variables.
 
     {
 
@@ -291,4 +294,9 @@ void Evolve_element::compute_numerical_flux(){
             this->numerical_flux_side_3[i][k] = num_flux_side_3[k]; // side 3
         }
     }    
+}
+
+// this function create the DG vector that results from the integration of the numerical flux ( integral phi_i hat_{F} dl )
+void Evolve_element::integrate_numerical_flux(){
+
 }
