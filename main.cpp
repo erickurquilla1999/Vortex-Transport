@@ -115,19 +115,20 @@ int main(int argc, char* argv[]) {
         evolve_elements[i].evaluate_basis_in_quadrature_poits();
     }
 
-    // Evolve Evolve_element objects in the array evolve_elements
+    // Compute require quantities for time evolution of Evolve_element objects in the array evolve_elements
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
-        // compute numerical flux
-        evolve_elements[i].compute_numerical_flux();
-        evolve_elements[i].integrate_numerical_flux();
-        evolve_elements[i].compute_stiffness_vector();
-        evolve_elements[i].compute_residual_vector();
-        evolve_elements[i].compute_time_derivative_U();
-        evolve_elements[i].compute_new_U_and_F(parms.time_step);
-
+        evolve_elements[i].compute_numerical_flux();    // compute numerical flux
+        evolve_elements[i].integrate_numerical_flux();  // compute the vector result of integrating the numerical flux
+        evolve_elements[i].compute_stiffness_vector();  // compute sitffness vector
+        evolve_elements[i].compute_residual_vector();   // compute residual vector
+        evolve_elements[i].compute_time_derivative_U(); // compute time derivative of U
     }
 
+    // Compute new state vectors U and F
+    for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
+        evolve_elements[i].compute_new_U_and_F(parms.time_step); // Compute new state vectors U and F
 
+    }
 
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
     // Initialize elements of the array

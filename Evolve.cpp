@@ -415,4 +415,37 @@ void Evolve_element::compute_time_derivative_U(){
 // compute new vectors U and F
 void Evolve_element::compute_new_U_and_F(double& time_step){
 
+    double rho, u, v, E, H, p;
+    double gamma = 1.4;
+
+    // Euler time stepping
+    // loop over all the interior nodes of this element
+    for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
+        // loop over hidrodynamics indices
+        for (int k = 0; k < 4; ++k) {
+            this->this_element->hidrodynamics_vector_u[i][k] = time_step * DG_time_derivative_U[i][k]; 
+        }
+
+        rho = this->this_element->hidrodynamics_vector_u[i][0]; // density
+        u   = this->this_element->hidrodynamics_vector_u[i][1] / rho; // horizontal velocity
+        v   = this->this_element->hidrodynamics_vector_u[i][2] / rho; // vertical velocity
+        E   = this->this_element->hidrodynamics_vector_u[i][2] / rho; // energy
+        p   = rho * ( gamma - 1 ) * ( E - ( pow( u , 2) + pow( v , 2) ) / 2 ); // pressure
+        H   = E + p / rho; // Entalpy
+
+        // initialize the hidrodinamic vector f, x component  
+        this->this_element->hidrodynamics_vector_f[i][0][0] = rho * u;
+        this->this_element->hidrodynamics_vector_f[i][0][1] = rho * pow( u , 2 ) + p;
+        this->this_element->hidrodynamics_vector_f[i][0][2] = rho * u * v;
+        this->this_element->hidrodynamics_vector_f[i][0][3] = rho * u * H;
+
+        // initialize the hidrodinamic vector f, y component  
+        this->this_element->hidrodynamics_vector_f[i][1][0] = rho * v;
+        this->this_element->hidrodynamics_vector_f[i][1][1] = rho * u * v;
+        this->this_element->hidrodynamics_vector_f[i][1][2] = rho * pow( v , 2 ) + p;
+        this->this_element->hidrodynamics_vector_f[i][1][3] = rho * v * H;
+    }
+    
+    // advance in time 
+    this->this_element->time += time_step;
 }
