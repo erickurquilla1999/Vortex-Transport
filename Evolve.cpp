@@ -205,12 +205,12 @@ void Evolve_element::evaluate_basis_in_quadrature_poits(){
 void Evolve_element::compute_numerical_flux(){
 
     // get size, that is the number of quadrature point for line integration
-    int size = this->gau_integ_line.size();
+    int num_gauss_quad_pnts = this->gau_integ_line.size();
 
     // interpolate the u from the nodes to the gauss quadrature for side 1, 2 and 3
 
     // this loop runs over gauss quadrature points
-    for (int i = 0; i < size; ++i) {
+    for (int i = 0; i < num_gauss_quad_pnts; ++i) {
 
         // initialize all the new state vector at the quadrature point in zero to start interpolation
         // this loops runs over hidrodynamic index
@@ -254,7 +254,7 @@ void Evolve_element::compute_numerical_flux(){
 
     // compute the roe flux
     // this loop runs over gauss quadrature points
-    for (int i = 0; i < size; ++i) {
+    for (int i = 0; i < num_gauss_quad_pnts; ++i) {
         // initialize the numerical flux at quadrature point in zero
         // this loops runs over hidrodynamic index
         for (int k = 0; k < 4; ++k) {
