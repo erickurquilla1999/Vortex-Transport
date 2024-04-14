@@ -50,8 +50,9 @@ Evolve_element::Evolve_element(Element* this_elem, Element* right_elem, Element*
     numerical_flux_side_3( this->gau_integ_line.size() , std::vector<double>( 4 ) ),
 
     // Discontinuos Galerkin method variables
-    DG_numerical_flux_integration( ( this->p + 1 ) * ( this->p + 2 ) / 2 ,  std::vector<double>( 4 ) ) // DG vector that results from the integration of the numerical flux ( integral phi_i hat_{F} dl ). First index runs over interior nodes. Second index runs between 0 and 3 and represend hidrodynamics variables.
-
+    DG_numerical_flux_integration( ( this->p + 1 ) * ( this->p + 2 ) / 2 ,  std::vector<double>( 4 ) ), // DG vector that results from the integration of the numerical flux ( integral phi_i hat_{F} dl ). First index runs over interior nodes. Second index runs between 0 and 3 and represend hidrodynamics variables.
+    DG_stiffness_vector( ( this->p + 1 ) * ( this->p + 2 ) / 2 ,  std::vector<double>( 4 ) ) // Stiffness vector: DG vector that results from area integral over element of nabla phi_i dot F dOmega. First index runs over interior nodes. Second index runs between 0 and 3 and represend hidrodynamics variables.
+    
     {
 
 }
@@ -330,4 +331,9 @@ void Evolve_element::integrate_numerical_flux(){
             // Second index runs between 0 and 3 and represend hidrodynamics variables.
         }
     }
+}
+
+// compute stiffness vector (area integral over element of nabla phi_i dot F dOmega)
+void Evolve_element::compute_stiffness_vector(){
+
 }

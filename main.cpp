@@ -120,6 +120,7 @@ int main(int argc, char* argv[]) {
         // compute numerical flux
         evolve_elements[i].compute_numerical_flux();
         evolve_elements[i].integrate_numerical_flux();
+        evolve_elements[i].compute_stiffness_vector();
     }
 
 
