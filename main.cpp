@@ -123,6 +123,8 @@ int main(int argc, char* argv[]) {
         evolve_elements[i].compute_stiffness_vector();
         evolve_elements[i].compute_residual_vector();
         evolve_elements[i].compute_time_derivative_U();
+        evolve_elements[i].compute_new_U_and_F(parms.time_step);
+
     }
 
 
