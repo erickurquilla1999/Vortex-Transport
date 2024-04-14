@@ -124,10 +124,13 @@ int main(int argc, char* argv[]) {
         evolve_elements[i].compute_time_derivative_U(); // compute time derivative of U
     }
 
+    // Create the output/step_1 directory
+    clean_create_directory("output/step_1");
+
     // Compute new state vectors U and F
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
         evolve_elements[i].compute_new_U_and_F(parms.time_step); // Compute new state vectors U and F
-
+        elements[i].write_data(parms, 1); // write data of time step 1
     }
 
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
