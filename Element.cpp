@@ -37,6 +37,10 @@ Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<st
     for (int i = 0; i < ( this->p + 1 ) *( this->p + 2 ) / 2 ; ++i) {
         this->nods_coords_phys_space[i] = reference_to_physical_space(nods_coords_refe_space[i], vertices_coords_phys_space);
     }
+}
+
+// compute jacobians to connetc referece space to physical space and viceversa for each element
+void Element::build_jacobians(){
 
     // compute jacobian between transformation from reference space to physical space d vec{x} / d vec{xi} = [ [ x2 - x1 , x3 - x1 ] , [ y2 - y1 , y3 - y1 ] ] 
     this->jacobian[0][0] = this->vertices_coords_phys_space[1][0] - this->vertices_coords_phys_space[0][0];
