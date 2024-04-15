@@ -91,9 +91,9 @@ Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<st
 }
 
 // initialize the hydronimics quantities u and f
-void Element::initialize_hydrodinamics(const parameters& parms){
+void Element::initialize_hydrodinamics(){
 
-    for (int i = 0; i < ( parms.p + 1 ) *( parms.p + 2 ) / 2 ; ++i) {
+    for (int i = 0; i < ( this->p + 1 ) *( this->p + 2 ) / 2 ; ++i) {
 
         double x, y, t;
         x = this->nods_coords_phys_space[i][0]; // x position of node i

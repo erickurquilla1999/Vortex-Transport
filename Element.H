@@ -44,7 +44,7 @@ public:
     std::vector<double> sides_lenght; // contains the element side lenghts, this array contains just three values. 0: side 1, 1: side 2, 2: side 3
 
     // Element functions
-    void initialize_hydrodinamics(const parameters& parms); // initialize the hydronimics quantities u and f
+    void initialize_hydrodinamics(); // initialize the hydronimics quantities u and f
     void write_data(const parameters& parms, const int& step_num); // write element data in output directory
 
 };

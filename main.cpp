@@ -82,7 +82,7 @@ int main(int argc, char* argv[]) {
         // Build element
         elements[i] = Element(i, simulation_mesh, nodes_reference_space, parms, inverse_mass_matrix, stiffness_matrix);
         //Initialize hidrodynamic quanities
-        elements[i].initialize_hydrodinamics(parms);
+        elements[i].initialize_hydrodinamics();
         //write data
         elements[i].write_data(parms, 0);
     }
