@@ -56,13 +56,6 @@ Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<st
     // compute determinant of inverse jacobian
     this->determinant_inverse_jacobian = this->inverse_jacobian[0][0] * this->inverse_jacobian[1][1] - this->inverse_jacobian[1][0] * this->inverse_jacobian[0][1];
 
-    // compute inverse mass matrix in physical space
-    for (int i = 0; i < (this->p + 1) * (this->p + 2) / 2; ++i) {
-        for (int j = 0; j < (this->p + 1) * (this->p + 2) / 2; ++j) {
-            this->inverse_mass_matrix_physical_space[i][j] = this->determinant_jacobian * inv_mass_matrix[i][j];     
-        }
-    }
-
     // compute stiffness matrix in physical space 
     for (int i = 0; i < (this->p + 1) * (this->p + 2) / 2; ++i) {
         for (int j = 0; j < (this->p + 1) * (this->p + 2) / 2; ++j) {
@@ -88,6 +81,16 @@ Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<st
     sides_lenght[1] = pow( pow( vertices_coords_phys_space[2][0] - vertices_coords_phys_space[1][0] , 2 ) + pow( vertices_coords_phys_space[2][1] - vertices_coords_phys_space[1][1] , 2 ) , 0.5 ); // side 2
     sides_lenght[2] = pow( pow( vertices_coords_phys_space[0][0] - vertices_coords_phys_space[2][0] , 2 ) + pow( vertices_coords_phys_space[0][1] - vertices_coords_phys_space[2][1] , 2 ) , 0.5 ); // side 3
 
+}
+
+// builds mass matrix inverse from referece space to physical space for each element
+void Element::build_mass_matrix_inverse(const std::vector<std::vector<double>>& inv_mass_matrix){
+    // compute inverse mass matrix in physical space
+    for (int i = 0; i < (this->p + 1) * (this->p + 2) / 2; ++i) {
+        for (int j = 0; j < (this->p + 1) * (this->p + 2) / 2; ++j) {
+            this->inverse_mass_matrix_physical_space[i][j] = this->determinant_jacobian * inv_mass_matrix[i][j];     
+        }
+    }
 }
 
 // initialize the hydronimics quantities u and f

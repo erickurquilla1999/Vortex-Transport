@@ -46,6 +46,8 @@ public:
     // Element functions
     void initialize_hydrodinamics(); // initialize the hydronimics quantities u and f
     void write_data(const int& step_num); // write element data in output directory
+    void build_mass_matrix_inverse(const std::vector<std::vector<double>>& inv_mass_matrix); // builds mass matrix inverse from referece space to physical space for each element
+    void build_stiffness_matrix(const std::vector<std::vector<std::vector<double>>>& stiff_matrix); // builds stiffness matrix from referece space to physical space for each element
 
 };
 
