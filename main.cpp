@@ -79,14 +79,11 @@ int main(int argc, char* argv[]) {
 
     // Initialize elements of the array
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
-        // Build element
-        elements[i] = Element(i, simulation_mesh, nodes_reference_space, parms.p, stiffness_matrix);
-        // Build mass matrix
-        elements[i].build_mass_matrix_inverse(inverse_mass_matrix);
-        //Initialize hidrodynamic quanities
-        elements[i].initialize_hydrodinamics();
-        //write data
-        elements[i].write_data(0);
+        elements[i] = Element(i, simulation_mesh, nodes_reference_space, parms.p); // Initilize element objects and compute interior nodes coordinate in physical space
+        elements[i].build_mass_matrix_inverse(inverse_mass_matrix); // Build mass matrix
+        elements[i].build_stiffness_matrix(stiffness_matrix); // builds stiffness matrix from referece space to physical space for each element
+        elements[i].initialize_hydrodinamics(); //Initialize hidrodynamic quanities
+        elements[i].write_data(0); //write data
     }
 
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd

@@ -9,7 +9,7 @@
 
 Element::Element() {}
 
-Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<std::vector<double>>& nods_ref_spa, const int& p_lagrange, const std::vector<std::vector<std::vector<double>>>& stiff_matrix):
+Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<std::vector<double>>& nods_ref_spa, const int& p_lagrange):
     
     // Initialize element properties    
     time(0.0), // Simulation initial time
@@ -56,14 +56,6 @@ Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<st
     // compute determinant of inverse jacobian
     this->determinant_inverse_jacobian = this->inverse_jacobian[0][0] * this->inverse_jacobian[1][1] - this->inverse_jacobian[1][0] * this->inverse_jacobian[0][1];
 
-    // compute stiffness matrix in physical space 
-    for (int i = 0; i < (this->p + 1) * (this->p + 2) / 2; ++i) {
-        for (int j = 0; j < (this->p + 1) * (this->p + 2) / 2; ++j) {
-            this->stiffness_matrix_physical_space[0][i][j] = this->determinant_jacobian * ( stiff_matrix[0][i][j] * this->inverse_jacobian[0][0] + stiff_matrix[1][i][j] * this->inverse_jacobian[1][0] );     
-            this->stiffness_matrix_physical_space[1][i][j] = this->determinant_jacobian * ( stiff_matrix[0][i][j] * this->inverse_jacobian[0][1] + stiff_matrix[1][i][j] * this->inverse_jacobian[1][1] );
-        }
-    }
-
     // compute unit vectors perpendicular to the element edges
     //                                                      (            y2                     -              y1                 ) / (       (             x2                   -           x1                     )^2   +    (             y2                   -           y1                     )^2   )^1/2             
     units_vectors_perpendicular_to_element_boundary[0][0] = ( vertices_coords_phys_space[1][1] - vertices_coords_phys_space[0][1] ) / pow( pow( vertices_coords_phys_space[1][0] - vertices_coords_phys_space[0][0] , 2 ) + pow( vertices_coords_phys_space[1][1] - vertices_coords_phys_space[0][1] , 2 ) , 0.5 );
@@ -89,6 +81,17 @@ void Element::build_mass_matrix_inverse(const std::vector<std::vector<double>>& 
     for (int i = 0; i < (this->p + 1) * (this->p + 2) / 2; ++i) {
         for (int j = 0; j < (this->p + 1) * (this->p + 2) / 2; ++j) {
             this->inverse_mass_matrix_physical_space[i][j] = this->determinant_jacobian * inv_mass_matrix[i][j];     
+        }
+    }
+}
+
+// builds stiffness matrix from referece space to physical space for each element
+void Element::build_stiffness_matrix(const std::vector<std::vector<std::vector<double>>>& stiff_matrix){
+    // compute stiffness matrix in physical space 
+    for (int i = 0; i < (this->p + 1) * (this->p + 2) / 2; ++i) {
+        for (int j = 0; j < (this->p + 1) * (this->p + 2) / 2; ++j) {
+            this->stiffness_matrix_physical_space[0][i][j] = this->determinant_jacobian * ( stiff_matrix[0][i][j] * this->inverse_jacobian[0][0] + stiff_matrix[1][i][j] * this->inverse_jacobian[1][0] );     
+            this->stiffness_matrix_physical_space[1][i][j] = this->determinant_jacobian * ( stiff_matrix[0][i][j] * this->inverse_jacobian[0][1] + stiff_matrix[1][i][j] * this->inverse_jacobian[1][1] );
         }
     }
 }
