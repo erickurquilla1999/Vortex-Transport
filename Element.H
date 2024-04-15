@@ -14,7 +14,7 @@ public:
     Element();
  
     // Element default constructor with arguments
-    Element(const int& ele_num, const mesh& mesh_info, const std::vector<std::vector<double>>& nods_ref_spa, const int& p_lagrange, const std::vector<std::vector<double>>& inv_mass_matrix, const std::vector<std::vector<std::vector<double>>>& stiff_matrix);
+    Element(const int& ele_num, const mesh& mesh_info, const std::vector<std::vector<double>>& nods_ref_spa, const int& p_lagrange, const std::vector<std::vector<std::vector<double>>>& stiff_matrix);
 
     // Element properties
     double time; // storage time in the dimulation for each element

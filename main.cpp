@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
     // Initialize elements of the array
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
         // Build element
-        elements[i] = Element(i, simulation_mesh, nodes_reference_space, parms.p, inverse_mass_matrix, stiffness_matrix);
+        elements[i] = Element(i, simulation_mesh, nodes_reference_space, parms.p, stiffness_matrix);
         // Build mass matrix
         elements[i].build_mass_matrix_inverse(inverse_mass_matrix);
         //Initialize hidrodynamic quanities

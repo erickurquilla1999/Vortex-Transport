@@ -9,7 +9,7 @@
 
 Element::Element() {}
 
-Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<std::vector<double>>& nods_ref_spa, const int& p_lagrange, const std::vector<std::vector<double>>& inv_mass_matrix, const std::vector<std::vector<std::vector<double>>>& stiff_matrix):
+Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<std::vector<double>>& nods_ref_spa, const int& p_lagrange, const std::vector<std::vector<std::vector<double>>>& stiff_matrix):
     
     // Initialize element properties    
     time(0.0), // Simulation initial time
