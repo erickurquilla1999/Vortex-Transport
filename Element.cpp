@@ -13,6 +13,7 @@ Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<st
     
     // Initialize element properties    
     time(0.0), // Simulation initial time
+    p(parms.p), // lagrange polinomial order
     number(ele_num), // Element number
     type(mesh_info.element_type[ele_num]), // Element type 0 of squere angle is down and 1 if up
     right_element(mesh_info.elements_at_boundary[ele_num][0]), // Elemnt to the right
