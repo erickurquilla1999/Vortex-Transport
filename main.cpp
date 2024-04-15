@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
         //Initialize hidrodynamic quanities
         elements[i].initialize_hydrodinamics();
         //write data
-        elements[i].write_data(parms, 0);
+        elements[i].write_data(0);
     }
 
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
@@ -139,7 +139,7 @@ int main(int argc, char* argv[]) {
             // write data
             if (a % parms.write_every_steps == 0) {
                 // write data
-                elements[i].write_data(parms, a); 
+                elements[i].write_data(a); 
             }
         }
     }
