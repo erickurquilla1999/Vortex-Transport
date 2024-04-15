@@ -51,6 +51,7 @@ parameters read_input_files(int argc, char* argv[]) {
     params.simulation_time = std::stof(paramMap["simulation_time"]);
     params.number_time_steps = std::stoi(paramMap["number_time_steps"]);
     params.time_step = std::stod(paramMap["simulation_time"]) / std::stod(paramMap["number_time_steps"]);
+    params.write_every_steps = std::stoi(paramMap["write_every_steps"]);
 
     return params;
 }
