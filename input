@@ -10,13 +10,16 @@ num_element_in_x=16
 num_element_in_y=16
 
 // grid perturbation parameter 
-perturb_grid=1
+perturb_grid=0
 
 // gauss integration
-integration_order=8
+integration_order=19
 
 // simulation time
-simulation_time=14.142135
+simulation_time=15
 
 // number of time steps
-number_time_steps=100
+number_time_steps=2000
+
+// write data
+write_every_steps=25
