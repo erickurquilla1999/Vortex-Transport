@@ -17,6 +17,23 @@ int main(int argc, char* argv[]) {
     // generate mesh
     mesh simulation_mesh = generate_mesh(parms);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
     // print mesh information
     std::vector<std::string> lines(11);
@@ -38,9 +55,35 @@ int main(int argc, char* argv[]) {
     }
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
 
+    
+    
+    
+    
+    
+    
+
+
+
+    
+    
     // generate gauss quadrature for line and area integral
     std::vector<std::vector<double>> gauss_integral_line = gauss_line_integral(parms.integration_order);
     std::vector<std::vector<double>> gauss_integral_area = gauss_area_integral(parms.integration_order);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
     int size = gauss_integral_line.size();
@@ -54,8 +97,35 @@ int main(int argc, char* argv[]) {
     }
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // generate elements interior nodes in reference space
     std::vector<std::vector<double>> nodes_reference_space = generate_nodes_reference_space(parms);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
     std::cout << "\nInterior nodes in reference space ( xi , eta ) for p = " << parms.p << std::endl;
@@ -63,6 +133,22 @@ int main(int argc, char* argv[]) {
         std::cout << i << " : ( " << nodes_reference_space[i][0] << " , " << nodes_reference_space[i][1] << " )" << std::endl;        
     }
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // compute the inverse of the mass matrix in reference space
     std::vector<std::vector<double>> inverse_mass_matrix = inverse_mass_matrix_reference_space(parms.p, gauss_integral_area);
@@ -87,6 +173,24 @@ int main(int argc, char* argv[]) {
         elements[i].write_data(0); //write data
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
     // Access and print elements of the array
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
@@ -95,6 +199,9 @@ int main(int argc, char* argv[]) {
         }
     }
     //ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+
+
+
 
 
 
@@ -143,18 +250,6 @@ int main(int argc, char* argv[]) {
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
