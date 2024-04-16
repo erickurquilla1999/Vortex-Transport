@@ -380,8 +380,8 @@ void Evolve_element::compute_residual_vector(){
     for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
         // loop over hidrodynamics indices
         for (int k = 0; k < 4; ++k) {
-            //           R_i                 =               S_i               -            int num F_i
-            this->DG_residual_vector[i][k] += this->DG_stiffness_vector[i][k] - this->DG_numerical_flux_integration[i][k]; 
+            //           R_i               =               S_i               -            int num F_i
+            this->DG_residual_vector[i][k] = this->DG_stiffness_vector[i][k] - this->DG_numerical_flux_integration[i][k]; 
         }       
     }
 }
@@ -423,7 +423,7 @@ void Evolve_element::compute_new_U_and_F(double& time_step){
     for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
         // loop over hidrodynamics indices
         for (int k = 0; k < 4; ++k) {
-            this->this_element->hidrodynamics_vector_u[i][k] = this->this_element->hidrodynamics_vector_u[i][k] + time_step * DG_time_derivative_U[i][k]; 
+            this->this_element->hidrodynamics_vector_u[i][k] += time_step * this->DG_time_derivative_U[i][k]; 
         }
 
         rho = this->this_element->hidrodynamics_vector_u[i][0]; // density
