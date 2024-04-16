@@ -114,13 +114,9 @@ std::vector<std::vector<std::vector<double>>> sitffness_matrix_reference_space(c
         std::vector<double> phi_in_xi_eta_gauss = lagrange_basis_reference_space( p , xi_eta_gauss ); 
         std::vector<std::vector<double>> gradient_phi_in_xi_eta_gauss = lagrange_basis_gradient_reference_space( p , xi_eta_gauss ); 
 
-        // evaluate the lagrange polinomial in the quadrature points
+        // save the lagrange polinomials the their gradient in the quadrature points in class variables
         for (int j = 0; j < ( p + 1 ) * ( p + 2 ) / 2; ++j) {
             phi_in_quadrature_points[j][i] = phi_in_xi_eta_gauss[j];
-        }
-
-        // evaluate the gradient of the lagrange polinomials in the quadrature points
-        for (int j = 0; j < ( p + 1 ) * ( p + 2 ) / 2; ++j) {
             gradient_phi_in_quadrature_points[j][i][0] = gradient_phi_in_xi_eta_gauss[j][0];
             gradient_phi_in_quadrature_points[j][i][1] = gradient_phi_in_xi_eta_gauss[j][1];
         }
