@@ -103,9 +103,6 @@ std::vector<std::vector<std::vector<double>>> sitffness_matrix_reference_space(c
     // third index runs over the x:0 and y:1 component of the gradient of the lagrange poliniam evaluated at the quadrature points
     std::vector<std::vector<std::vector<double>>> gradient_phi_in_quadrature_points( ( p + 1 ) * ( p + 2 ) / 2 , std::vector<std::vector<double>>( size, std::vector<double>(2)) );
 
-    // initialize counter
-    int counter = 0;
-
     // evaluate the lagrange polinomial in the quadrature points
     // evaluate the gradient of the lagrange polinomials in the quadrature points
     for (int i = 0; i < size; ++i) {
@@ -119,16 +116,14 @@ std::vector<std::vector<std::vector<double>>> sitffness_matrix_reference_space(c
 
         // evaluate the lagrange polinomial in the quadrature points
         for (int j = 0; j < ( p + 1 ) * ( p + 2 ) / 2; ++j) {
-            phi_in_quadrature_points[j][counter] = phi_in_xi_eta_gauss[j];
+            phi_in_quadrature_points[j][i] = phi_in_xi_eta_gauss[j];
         }
 
         // evaluate the gradient of the lagrange polinomials in the quadrature points
         for (int j = 0; j < ( p + 1 ) * ( p + 2 ) / 2; ++j) {
-            gradient_phi_in_quadrature_points[j][counter][0] = gradient_phi_in_xi_eta_gauss[j][0];
-            gradient_phi_in_quadrature_points[j][counter][1] = gradient_phi_in_xi_eta_gauss[j][1];
+            gradient_phi_in_quadrature_points[j][i][0] = gradient_phi_in_xi_eta_gauss[j][0];
+            gradient_phi_in_quadrature_points[j][i][1] = gradient_phi_in_xi_eta_gauss[j][1];
         }
-
-        counter++;
     }
 
     // define sitffness matrix
