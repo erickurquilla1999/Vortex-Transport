@@ -164,6 +164,79 @@ void Element::initialize_hydrodinamics(){
 // write element data in output directory
 void Element::write_data(const int& step_num){
 
+    if ( this->number == 0 ){
+        std::cout << "\nnumber : " << this->number << std::endl;
+        std::cout << "time : " << this->time << std::endl;
+        std::cout << "type : " << this->type << std::endl;
+        std::cout << "right_element : " << this->right_element << std::endl;
+        std::cout << "left_element : " << this->left_element << std::endl;
+        std::cout << "vertical_element : " << this->vertical_element << std::endl;
+        std::cout << "vertices_coords_phys_space[0][0] : " << this->vertices_coords_phys_space[0][0] << std::endl;
+        std::cout << "vertices_coords_phys_space[0][1] : " << this->vertices_coords_phys_space[0][1] << std::endl;
+        std::cout << "vertices_coords_phys_space[1][0] : " << this->vertices_coords_phys_space[1][0] << std::endl;
+        std::cout << "vertices_coords_phys_space[1][1] : " << this->vertices_coords_phys_space[1][1] << std::endl;
+        std::cout << "vertices_coords_phys_space[2][0] : " << this->vertices_coords_phys_space[2][0] << std::endl;
+        std::cout << "vertices_coords_phys_space[2][1] : " << this->vertices_coords_phys_space[2][1] << std::endl;
+        for (int i = 0; i < ( this->p + 1 ) *( this->p + 2 ) / 2 ; ++i) {
+        std::cout << "nods_coords_refe_space["<<i<<"][0]: " << this->nods_coords_refe_space[i][0] << std::endl;
+        std::cout << "nods_coords_refe_space["<<i<<"][1]: " << this->nods_coords_refe_space[i][1] << std::endl;
+        }
+        for (int i = 0; i < ( this->p + 1 ) *( this->p + 2 ) / 2 ; ++i) {
+        std::cout << "nods_coords_phys_space["<<i<<"][0]: " << this->nods_coords_phys_space[i][0] << std::endl;
+        std::cout << "nods_coords_phys_space["<<i<<"][1]: " << this->nods_coords_phys_space[i][1] << std::endl;
+        }
+        std::cout << "units_vectors_perpendicular_to_element_boundary[0][0] : " << this->units_vectors_perpendicular_to_element_boundary[0][0] << std::endl;
+        std::cout << "units_vectors_perpendicular_to_element_boundary[0][1] : " << this->units_vectors_perpendicular_to_element_boundary[0][1] << std::endl;
+        std::cout << "units_vectors_perpendicular_to_element_boundary[1][0] : " << this->units_vectors_perpendicular_to_element_boundary[1][0] << std::endl;
+        std::cout << "units_vectors_perpendicular_to_element_boundary[1][1] : " << this->units_vectors_perpendicular_to_element_boundary[1][1] << std::endl;
+        std::cout << "units_vectors_perpendicular_to_element_boundary[2][0] : " << this->units_vectors_perpendicular_to_element_boundary[2][0] << std::endl;
+        std::cout << "units_vectors_perpendicular_to_element_boundary[2][1] : " << this->units_vectors_perpendicular_to_element_boundary[2][1] << std::endl;
+        std::cout << "sides_lenght[0] : " << this->sides_lenght[0] << std::endl;
+        std::cout << "sides_lenght[1] : " << this->sides_lenght[1] << std::endl;
+        std::cout << "sides_lenght[2] : " << this->sides_lenght[2] << std::endl;
+        std::cout << "jacobian[0][0] : " << this->jacobian[0][0] << std::endl;
+        std::cout << "jacobian[0][1] : " << this->jacobian[0][1] << std::endl;
+        std::cout << "jacobian[1][0] : " << this->jacobian[1][0] << std::endl;
+        std::cout << "jacobian[1][1] : " << this->jacobian[1][1] << std::endl;
+        std::cout << "determinant_jacobian : " << this->determinant_jacobian << std::endl;
+        std::cout << "inverse_jacobian[0][0] : " << this->inverse_jacobian[0][0] << std::endl;
+        std::cout << "inverse_jacobian[0][1] : " << this->inverse_jacobian[0][1] << std::endl;
+        std::cout << "inverse_jacobian[1][0] : " << this->inverse_jacobian[1][0] << std::endl;
+        std::cout << "inverse_jacobian[1][1] : " << this->inverse_jacobian[1][1] << std::endl;
+        std::cout << "determinant_inverse_jacobian : " << this->determinant_inverse_jacobian << std::endl;
+        for (int i = 0; i < ( this->p + 1 ) *( this->p + 2 ) / 2 ; ++i) {
+            for (int j = 0; j < ( this->p + 1 ) *( this->p + 2 ) / 2 ; ++j) {
+                std::cout << "inverse_mass_matrix_physical_space["<<i<<"]["<<j<<"] : " << this->inverse_mass_matrix_physical_space[i][j] << std::endl;
+            }
+        }
+        for (int i = 0; i < ( this->p + 1 ) *( this->p + 2 ) / 2 ; ++i) {
+            for (int j = 0; j < ( this->p + 1 ) *( this->p + 2 ) / 2 ; ++j) {
+                std::cout << "stiffness_matrix_physical_space[0]["<<i<<"]["<<j<<"] : " << this->stiffness_matrix_physical_space[0][i][j] << std::endl;
+            }
+        }
+        for (int i = 0; i < ( this->p + 1 ) *( this->p + 2 ) / 2 ; ++i) {
+            for (int j = 0; j < ( this->p + 1 ) *( this->p + 2 ) / 2 ; ++j) {
+                std::cout << "stiffness_matrix_physical_space[1]["<<i<<"]["<<j<<"] : " << this->stiffness_matrix_physical_space[1][i][j] << std::endl;
+            }
+        }
+        for (int i = 0; i < ( this->p + 1 ) *( this->p + 2 ) / 2 ; ++i) {
+        std::cout << "hidrodynamics_vector_u["<<i<<"][0]: " << this->hidrodynamics_vector_u[i][0] << std::endl;
+        std::cout << "hidrodynamics_vector_u["<<i<<"][1]: " << this->hidrodynamics_vector_u[i][1] << std::endl;
+        std::cout << "hidrodynamics_vector_u["<<i<<"][2]: " << this->hidrodynamics_vector_u[i][2] << std::endl;
+        std::cout << "hidrodynamics_vector_u["<<i<<"][3]: " << this->hidrodynamics_vector_u[i][3] << std::endl;
+        }
+        for (int i = 0; i < ( this->p + 1 ) *( this->p + 2 ) / 2 ; ++i) {
+        std::cout << "hidrodynamics_vector_f["<<i<<"][0][0]: " << this->hidrodynamics_vector_f[i][0][0] << std::endl;
+        std::cout << "hidrodynamics_vector_f["<<i<<"][0][1]: " << this->hidrodynamics_vector_f[i][0][1] << std::endl;
+        std::cout << "hidrodynamics_vector_f["<<i<<"][0][2]: " << this->hidrodynamics_vector_f[i][0][2] << std::endl;
+        std::cout << "hidrodynamics_vector_f["<<i<<"][0][3]: " << this->hidrodynamics_vector_f[i][0][3] << std::endl;
+        std::cout << "hidrodynamics_vector_f["<<i<<"][1][0]: " << this->hidrodynamics_vector_f[i][1][0] << std::endl;
+        std::cout << "hidrodynamics_vector_f["<<i<<"][1][1]: " << this->hidrodynamics_vector_f[i][1][1] << std::endl;
+        std::cout << "hidrodynamics_vector_f["<<i<<"][1][2]: " << this->hidrodynamics_vector_f[i][1][2] << std::endl;
+        std::cout << "hidrodynamics_vector_f["<<i<<"][1][3]: " << this->hidrodynamics_vector_f[i][1][3] << std::endl;
+        }
+    }
+    
     // prepare data to be saved
     std::vector<std::string> lines( 1 + ( this->p + 1 ) *( this->p + 2 ) / 2 );
     lines[0]="node_number time x y u0 u1 u2 u3 fx0 fx1 fx2 fx3 fy0 fy1 fy2 fy3";
