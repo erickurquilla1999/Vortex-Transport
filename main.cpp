@@ -72,6 +72,7 @@ int main(int argc, char* argv[]) {
         // Create the output/step_a directory
         if (a % parms.write_every_steps == 0) {
             clean_create_directory("output/step_" + std::to_string(a));        
+            std::cout << "Step : " << a << std::endl;
         }
 
         // Compute new state vectors U and F
