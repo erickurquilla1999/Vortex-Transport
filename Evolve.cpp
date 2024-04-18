@@ -32,7 +32,29 @@ Evolve_element::Evolve_element(Element* this_elem, Element* right_elem, Element*
     minus_phi_in_quadrature_points_side_2( ( this->p + 1 ) * ( this->p + 2 ) / 2 , std::vector<double>( this->gau_integ_line.size() ) ),
     minus_phi_in_quadrature_points_side_3( ( this->p + 1 ) * ( this->p + 2 ) / 2 , std::vector<double>( this->gau_integ_line.size() ) ),
 
-    // to following vectors store the interpolation of the hidrodynamic vector u from the interior nodes of the elements to the quadrature points for the line integrals
+    // the following vectors store the quadrature points for the line integrals in reference space
+    // first index runs over the quadrature point number, second index runs from 0 to 1 | 0 represent xi and 1 represent eta
+    // plus means this element
+    // minus means boundary elements
+    ref_coords_plus_side_1( this->gau_integ_line.size() , std::vector<double>( 2 ) ),
+    ref_coords_plus_side_2( this->gau_integ_line.size() , std::vector<double>( 2 ) ),
+    ref_coords_plus_side_3( this->gau_integ_line.size() , std::vector<double>( 2 ) ),
+    ref_coords_minus_side_1( this->gau_integ_line.size() , std::vector<double>( 2 ) ),
+    ref_coords_minus_side_2( this->gau_integ_line.size() , std::vector<double>( 2 ) ),
+    ref_coords_minus_side_3( this->gau_integ_line.size() , std::vector<double>( 2 ) ),
+
+    // the following vectors store the quadrature points for the line integrals in physical space
+    // first index runs over the quadrature point number, second index runs from 0 to 1 | 0 represent x and 1 represent y
+    // plus means this element
+    // minus means boundary elements
+    phy_coords_plus_side_1( this->gau_integ_line.size() , std::vector<double>( 2 ) ),
+    phy_coords_plus_side_2( this->gau_integ_line.size() , std::vector<double>( 2 ) ),
+    phy_coords_plus_side_3( this->gau_integ_line.size() , std::vector<double>( 2 ) ),
+    phy_coords_minus_side_1( this->gau_integ_line.size() , std::vector<double>( 2 ) ),
+    phy_coords_minus_side_2( this->gau_integ_line.size() , std::vector<double>( 2 ) ),
+    phy_coords_minus_side_3( this->gau_integ_line.size() , std::vector<double>( 2 ) ),
+
+    // the following vectors store the interpolation of the hidrodynamic vector u from the interior nodes of the elements to the quadrature points for the line integrals
     // first index runs over the quadrature points number, second index runs over 0 and 3 for the hidrodynamics quantities
     // plus for current element
     u_plus_side_1( this->gau_integ_line.size() , std::vector<double>( 4 ) ),
