@@ -117,9 +117,9 @@ void Element::initialize_hydrodinamics(){
         epsilon = 0.3;
         gamma = 1.4;
         M_infty = 0.5;
-        p_infty = 20 / 7;
-        U_infty = 1 / pow( 2 , 0.5);
-        V_infty = 1 / pow( 2 , 0.5);
+        p_infty = 20.0 / 7.0;
+        U_infty = 1.0 / pow( 2.0 , 0.5);
+        V_infty = 1.0 / pow( 2.0 , 0.5);
         x0 = 0.0;
         y0 = 0.0;
 
