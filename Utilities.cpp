@@ -54,7 +54,7 @@ void clean_create_directory(const std::string& dirname){
     int status = system(command.c_str());
 
     if (status == 0) {
-        std::cout << "Directory cleaned successfully: " << dirPath << std::endl;
+        // std::cout << "Directory cleaned successfully: " << dirPath << std::endl;
     } else {
         std::cerr << "Failed to clean directory: " << dirPath << std::endl;
         exit(EXIT_FAILURE);
@@ -65,7 +65,7 @@ void clean_create_directory(const std::string& dirname){
     status = system(command.c_str());
 
     if (status == 0) {
-        std::cout << "Directory created successfully: " << dirPath << std::endl;
+        // std::cout << "Directory created successfully: " << dirPath << std::endl;
     } else {
         std::cerr << "Failed to create directory: " << dirPath << std::endl;
         exit(EXIT_FAILURE);

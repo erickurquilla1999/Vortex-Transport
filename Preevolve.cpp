@@ -62,10 +62,6 @@ std::vector<std::vector<double>> inverse_mass_matrix_reference_space(const int& 
     // Compute the inverse of the mass matrix using Eigen
     Eigen::MatrixXd inv_matrix = eigen_mass_matrix.inverse();
 
-    // Output mass matrix and its inverse
-    std::cout << "Mass matrix:" << std::endl << eigen_mass_matrix << std::endl;
-    std::cout << "Inverse mass matrix:" << std::endl << inv_matrix << std::endl;
-
     // Convert the inv_matrix to an vector matrix to return the right function type
     std::vector<std::vector<double>> mass_matrix_inverse( ( p + 1 ) * ( p + 2 ) / 2 , std::vector<double>( ( p + 1 ) * ( p + 2 ) / 2 ) );
     for (int i = 0; i <  ( p + 1 ) * ( p + 2 ) / 2 ; ++i) {
@@ -137,13 +133,6 @@ std::vector<std::vector<std::vector<double>>> sitffness_matrix_reference_space(c
             }
         }
     }
-
-    std::cout << " Stiffness matrix " << std::endl;        
-    for (int i = 0; i < ( p + 1 ) * ( p + 2 ) / 2; ++i) {
-        for (int j = 0; j < ( p + 1 ) * ( p + 2 ) / 2; ++j) {
-        std::cout << i << " , " << j << " : " << stiffness_matrix[0][i][j] << " x + " << stiffness_matrix[1][i][j] << " y " << std::endl;        
-        }
-    } 
 
     // return stiffness matrix
     // form :  hat{e}_xi * matrix[ ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2 ] + hat{e}_eta * matrix[ ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2 ]     
