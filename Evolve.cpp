@@ -253,7 +253,7 @@ void Evolve_element::compute_stiffness_vector(){
     for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
         // loop over hidrodynamics indices
         for (int j = 0; j < 4; ++j) {
-            this->DG_stiffness_vector[i][j] = 0; 
+            this->DG_stiffness_vector[i][j] = 0.0; 
         }       
     }
 
@@ -281,7 +281,7 @@ void Evolve_element::compute_residual_vector(){
     for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
         // loop over hidrodynamics indices
         for (int k = 0; k < 4; ++k) {
-            this->DG_residual_vector[i][k] = 0; 
+            this->DG_residual_vector[i][k] = 0.0; 
         }       
     }
 
@@ -304,7 +304,7 @@ void Evolve_element::compute_time_derivative_U(){
     for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
         // loop over hidrodynamics indices
         for (int k = 0; k < 4; ++k) {
-            this->DG_time_derivative_U[i][k] = 0; 
+            this->DG_time_derivative_U[i][k] = 0.0; 
         }       
     }
 
