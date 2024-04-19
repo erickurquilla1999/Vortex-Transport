@@ -408,21 +408,13 @@ void Evolve_element::compute_residual_vector(){
 
 // compute residial vector stiffness vector minus vector result of the numerical flux integration
 void Evolve_element::compute_time_derivative_U(){
-
-    // initialize the DG_time_derivative_U[i][j] values to zero
-    // loop over all the interior nodes of this element
-    for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
-        // loop over hidrodynamics indices
-        for (int k = 0; k < 4; ++k) {
-            this->DG_time_derivative_U[i][k] = 0.0; 
-        }       
-    }
-
     // compute DG_time_derivative_U[i][j]
     // loop over all the interior nodes of this element
     for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
         // loop over hidrodynamics indices
         for (int k = 0; k < 4; ++k) {
+            // initialize the DG_time_derivative_U[i][j] values to zero
+            this->DG_time_derivative_U[i][k] = 0.0; 
             // loop over all the interior nodes of this element
             for (int j = 0; j < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++j) {
                 //         dU_i/d_t              = sum_j                M^{-1}_{ij}                             *            R_{j}  
