@@ -356,8 +356,8 @@ void Evolve_element::compute_stiffness_vector(){
     // loop over all the interior nodes of this element
     for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
         // loop over hidrodynamics indices
-        for (int j = 0; j < 4; ++j) {
-            this->DG_stiffness_vector[i][j] = 0.0; 
+        for (int k = 0; k < 4; ++k) {
+            this->DG_stiffness_vector[i][k] = 0.0; 
         }       
     }
 
