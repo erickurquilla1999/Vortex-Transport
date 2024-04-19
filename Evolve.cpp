@@ -376,19 +376,12 @@ void Evolve_element::integrate_numerical_flux(){
 // compute stiffness vector (area integral over element of nabla phi_i dot F dOmega)
 void Evolve_element::compute_stiffness_vector(){
 
-    // initialize the DG_stiffness_vector[i][j] values to zero
     // loop over all the interior nodes of this element
     for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
         // loop over hidrodynamics indices
         for (int k = 0; k < 4; ++k) {
-            this->DG_stiffness_vector[i][k] = 0.0; 
-        }       
-    }
-
-    // loop over all the interior nodes of this element
-    for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
-        // loop over hidrodynamics indices
-        for (int k = 0; k < 4; ++k) {
+            // initialize the DG_stiffness_vector[i][j] values to zero
+            this->DG_stiffness_vector[i][k] = 0.0;
             // loop over all the interior nodes of this element    
             for (int j = 0; j < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++j) {
                 //             S_i              +=                             S^{x}_{ij}                       *               f^{x}_{j}                             +                             S^{y}_{ij}                       *               f^{y}_{j}
