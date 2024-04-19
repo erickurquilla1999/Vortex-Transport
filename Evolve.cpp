@@ -87,6 +87,111 @@ void Evolve_element::evaluate_basis_in_quadrature_poits(){
     // this is the number of quadrature point for line integration
     int num_gauss_quad_pnts = this->gau_integ_line.size();
 
+    // physical space coordinates (temporary data)
+    std::vector<double> coords_phy_spa = {0.0, 0.0};
+
+    for (int i = 0; i < num_gauss_quad_pnts; ++i) {
+
+        // Side 1. This is the first side going counterclockwise from the square angle vertex of the element
+        // 
+        // For this element : cordinates in the 2d reference space ( xi(xi') , eta(xi') ) of the gauss quadrature xi'
+        this->ref_coords_plus_side_1[i][0]  = gau_integ_line[i][0];     // xi = xi'
+        this->ref_coords_plus_side_1[i][1]  = 0.0;                      // eta = 0
+        //  For this element : cordinates in the physical space ( x , y ) of the gauss quadrature xi'
+        coords_phy_spa = reference_to_physical_space(ref_coords_plus_side_1[i], this->this_element->vertices_coords_phys_space);
+        this->phy_coords_plus_side_1[i][0] = coords_phy_spa[0];
+        this->phy_coords_plus_side_1[i][1] = coords_phy_spa[1];
+        //
+        // For the element at the boundary of side 1 : coordinates in the reference space ( xi(xi') , eta(xi') ) of the gauss quadrature xi'     
+        this->ref_coords_minus_side_1[i][0] = 1 - gau_integ_line[i][0]; // xi = 1 - xi'
+        this->ref_coords_minus_side_1[i][1] = 0.0;                      // eta = 0
+        // For the element at the boundary of side 1 : coordinates in the physical space ( x , y ) of the gauss quadrature xi'
+        coords_phy_spa = reference_to_physical_space(ref_coords_minus_side_1[i], this->vertival_element->vertices_coords_phys_space);
+        this->phy_coords_minus_side_1[i][0] = coords_phy_spa[0];
+        this->phy_coords_minus_side_1[i][1] = coords_phy_spa[1];
+
+        // Side 2. This is the second side going counterclockwise from the square angle vertex of the element
+        //
+        // For this element : cordinates in the reference space ( xi(xi') , eta(xi') ) of the gauss quadrature xi'
+        this->ref_coords_plus_side_2[i][0] = 1 - gau_integ_line[i][0]; // xi = 1 - xi'
+        this->ref_coords_plus_side_2[i][1] = gau_integ_line[i][0];     // eta = xi'
+        //  For this element : cordinates in the physical space ( x , y ) of the gauss quadrature xi'
+        coords_phy_spa = reference_to_physical_space(ref_coords_plus_side_2[i], this->this_element->vertices_coords_phys_space);
+        this->phy_coords_plus_side_2[i][0] = coords_phy_spa[0];
+        this->phy_coords_plus_side_2[i][1] = coords_phy_spa[1];
+        //
+        // For the element at the boundary of side 2 : coordinates in the reference space ( xi(xi') , eta(xi') ) of the gauss quadrature xi'     
+        this->ref_coords_minus_side_2[i][0] = gau_integ_line[i][0];     // xi = xi'
+        this->ref_coords_minus_side_2[i][1] = 1 - gau_integ_line[i][0]; // eta = 1 - xi'
+        // For the element at the boundary of side 2 : coordinates in the physical space ( x , y ) of the gauss quadrature xi'
+        if (this->this_element->type == 0 ){ 
+            // if element is of type 0 the element on the boundary of side 2 is the right element
+            coords_phy_spa = reference_to_physical_space(ref_coords_minus_side_2[i], this->right_element->vertices_coords_phys_space);
+            this->phy_coords_minus_side_2[i][0] = coords_phy_spa[0];
+            this->phy_coords_minus_side_2[i][1] = coords_phy_spa[1];
+        } else if (this->this_element->type == 1 ){ 
+            // if element is of type 1 the element on the boundary of side 2 is the left element
+            coords_phy_spa = reference_to_physical_space(ref_coords_minus_side_2[i], this->left_element->vertices_coords_phys_space);
+            this->phy_coords_minus_side_2[i][0] = coords_phy_spa[0];
+            this->phy_coords_minus_side_2[i][1] = coords_phy_spa[1];
+        }
+
+        // Side 3. This is the third side going counterclockwise from the square angle vertex of the element
+        //
+        // For this element : cordinates in the reference space ( xi(xi') , eta(xi') ) of the gauss quadrature xi'
+        this->ref_coords_plus_side_3[i][0]  = 0.0;                    // xi = 0
+        this->ref_coords_plus_side_3[i][1]  = 1-gau_integ_line[i][0]; // eta = 1 - xi'
+        //  For this element : cordinates in the physical space ( x , y ) of the gauss quadrature xi'
+        coords_phy_spa = reference_to_physical_space(ref_coords_plus_side_3[i], this->this_element->vertices_coords_phys_space);
+        this->phy_coords_plus_side_3[i][0] = coords_phy_spa[0];
+        this->phy_coords_plus_side_3[i][1] = coords_phy_spa[1];
+        //
+        // For the element at the boundary of side 3 : coordinates in the reference space ( xi(xi') , eta(xi') ) of the gauss quadrature xi'     
+        this->ref_coords_minus_side_3[i][0] = 0.0;                    // xi = 0
+        this->ref_coords_minus_side_3[i][1] = gau_integ_line[i][0];   // eta = xi'
+        // For the element at the boundary of side 3 : coordinates in the physical space ( x , y ) of the gauss quadrature xi'
+        if (this->this_element->type == 0 ){
+            // if element is of type 1 the element on the boundary of side 3 is the left element
+            coords_phy_spa = reference_to_physical_space(ref_coords_minus_side_3[i], this->left_element->vertices_coords_phys_space);
+            this->phy_coords_minus_side_3[i][0] = coords_phy_spa[0];
+            this->phy_coords_minus_side_3[i][1] = coords_phy_spa[1];
+        } else if (this->this_element->type == 1 ){
+            // if element is of type 1 the element on the boundary of side 3 is the right element
+            coords_phy_spa = reference_to_physical_space(ref_coords_minus_side_3[i], this->right_element->vertices_coords_phys_space);
+            this->phy_coords_minus_side_3[i][0] = coords_phy_spa[0];
+            this->phy_coords_minus_side_3[i][1] = coords_phy_spa[1];
+        }
+
+    }
+
+    int elem_number = 6;
+    if (this->this_element->number==elem_number){
+        std::cout << "\nside 1 : reference space " << std::endl;
+        for (int i = 0; i < num_gauss_quad_pnts; ++i) {
+            std::cout << " xi -> ( " << this->ref_coords_plus_side_1[i][0] << " , " << this->ref_coords_minus_side_1[i][0] << " ) . eta -> ( " << this->ref_coords_plus_side_1[i][1] << " , " << this->ref_coords_minus_side_1[i][1] << " )" << std::endl;
+        }
+        std::cout << "\nside 1 : physical space " << std::endl;
+        for (int i = 0; i < num_gauss_quad_pnts; ++i) {
+            std::cout << " x -> ( " << this->phy_coords_plus_side_1[i][0] << " , " << this->phy_coords_minus_side_1[i][0] << " ) . y -> ( " << this->phy_coords_plus_side_1[i][1] << " , " << this->phy_coords_minus_side_1[i][1] << " )" << std::endl;
+        }
+        std::cout << "\nside 2 : reference space " << std::endl;
+        for (int i = 0; i < num_gauss_quad_pnts; ++i) {
+            std::cout << " xi -> ( " << this->ref_coords_plus_side_2[i][0] << " , " << this->ref_coords_minus_side_2[i][0] << " ) . eta -> ( " << this->ref_coords_plus_side_2[i][1] << " , " << this->ref_coords_minus_side_2[i][1] << " )" << std::endl;
+        }
+        std::cout << "\nside 2 : physical space " << std::endl;
+        for (int i = 0; i < num_gauss_quad_pnts; ++i) {
+            std::cout << " x -> ( " << this->phy_coords_plus_side_2[i][0] << " , " << this->phy_coords_minus_side_2[i][0] << " ) . y -> ( " << this->phy_coords_plus_side_2[i][1] << " , " << this->phy_coords_minus_side_2[i][1] << " )" << std::endl;
+        }
+        std::cout << "\nside 3 : reference space " << std::endl;
+        for (int i = 0; i < num_gauss_quad_pnts; ++i) {
+            std::cout << " xi -> ( " << this->ref_coords_plus_side_3[i][0] << " , " << this->ref_coords_minus_side_3[i][0] << " ) . eta -> ( " << this->ref_coords_plus_side_3[i][1] << " , " << this->ref_coords_minus_side_3[i][1] << " )" << std::endl;
+        }
+        std::cout << "\nside 3 : physical space " << std::endl;
+        for (int i = 0; i < num_gauss_quad_pnts; ++i) {
+            std::cout << " x -> ( " << this->phy_coords_plus_side_3[i][0] << " , " << this->phy_coords_minus_side_3[i][0] << " ) . y -> ( " << this->phy_coords_plus_side_3[i][1] << " , " << this->phy_coords_minus_side_3[i][1] << " )" << std::endl;
+        }
+    }
+
     // evaluate the lagrange polinomial in the quadrature points for line integral
     for (int i = 0; i < num_gauss_quad_pnts; ++i) {
 
