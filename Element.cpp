@@ -84,7 +84,7 @@ void Element::build_mass_matrix_inverse(const std::vector<std::vector<double>>& 
     // compute inverse mass matrix in physical space
     for (int i = 0; i < (this->p + 1) * (this->p + 2) / 2; ++i) {
         for (int j = 0; j < (this->p + 1) * (this->p + 2) / 2; ++j) {
-            this->inverse_mass_matrix_physical_space[i][j] = this->determinant_jacobian * inv_mass_matrix[i][j];     
+            this->inverse_mass_matrix_physical_space[i][j] = inv_mass_matrix[i][j] / this->determinant_jacobian;     
         }
     }
 }
