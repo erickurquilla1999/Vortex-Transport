@@ -90,6 +90,7 @@ void Evolve_element::evaluate_basis_in_quadrature_poits(){
     // physical space coordinates (temporary data)
     std::vector<double> coords_phy_spa = {0.0, 0.0};
 
+    // compute the coordinates in the reference space of the quadrature points for line integral over the element boundary
     for (int i = 0; i < num_gauss_quad_pnts; ++i) {
 
         // Side 1. This is the first side going counterclockwise from the square angle vertex of the element
