@@ -375,7 +375,6 @@ void Evolve_element::integrate_numerical_flux(){
 
 // compute stiffness vector (area integral over element of nabla phi_i dot F dOmega)
 void Evolve_element::compute_stiffness_vector(){
-
     // loop over all the interior nodes of this element
     for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
         // loop over hidrodynamics indices
@@ -396,16 +395,6 @@ void Evolve_element::compute_stiffness_vector(){
 
 // compute  residual vector: DG vector that results from stiffness vector minus vector result of the numerical flux integration
 void Evolve_element::compute_residual_vector(){
-
-    // initialize the DG_residual_vector[i][j] values to zero
-    // loop over all the interior nodes of this element
-    for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
-        // loop over hidrodynamics indices
-        for (int k = 0; k < 4; ++k) {
-            this->DG_residual_vector[i][k] = 0.0; 
-        }       
-    }
-
     // compute DG_residual_vector[i][j]
     // loop over all the interior nodes of this element
     for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
