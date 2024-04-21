@@ -28,8 +28,8 @@ public:
     std::vector<std::vector<double>> nods_coords_refe_space; // coordinates of the interior nodes of the element in reference space
     std::vector<std::vector<double>> nods_coords_phys_space; // coordinates of the interior nodes of the element in physical space
 
-    std::vector<std::vector<double>> hidrodynamics_vector_u; // containg the hydrodinamics vecto u for each interior node
-    std::vector<std::vector<std::vector<double>>> hidrodynamics_vector_f; // containg the hydrodinamics vecto f for each interior node
+    std::vector<std::vector<double>> hidrodynamics_vector_F; // containg the hydrodinamics vecto U for each interior node
+    std::vector<std::vector<std::vector<double>>> hidrodynamics_vector_U; // containg the hydrodinamics vecto F for each interior node
 
     std::vector<std::vector<double>> jacobian; // jacobian between transformation from reference space to physical space d vec{x} / d vec{xi} = [ [ x2 - x1 , x3 - x1 ] , [ y2 - y1 , y3 - y1 ] ]
     double determinant_jacobian; // determinant of jacobian

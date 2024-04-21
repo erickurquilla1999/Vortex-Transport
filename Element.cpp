@@ -22,8 +22,8 @@ Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<st
     vertices_coords_phys_space(mesh_info.element_coordinates[ele_num]), // Coordinates of the verctices of the element in physical space. First index represent vertices of the element (run between 0 and 2): 0 is the vertice at the square angle, 1 and 2 are the other vertices going counter clock wise. Second index represent x:0 and y:1 position
     nods_coords_refe_space(nods_ref_spa), // Coordinates of the interior nodes of the element in reference space. The first index in the node number, the second inxed runs between 0 and 1. 0: xi and 1: eta.
     nods_coords_phys_space((this->p + 1) * (this->p + 2) / 2, std::vector<double>(2)), // Coordinates of the interior nodes of the element in physical space. The first index is the node number, the second inxed runs between 0 and 1. 0: x and 1: y.
-    hidrodynamics_vector_u((this->p + 1) * (this->p + 2) / 2, std::vector<double>(4)), // Hidrodynamics: vector u for each interior node. The first index in the node number, the second inxed runs between 0 and 4 for hidrodynamics quantities. 0: rho, 1: rho u, 2: rho v, 3: rho E.
-    hidrodynamics_vector_f((this->p + 1) * (this->p + 2) / 2, std::vector<std::vector<double>>(2, std::vector<double>(4))), // Hidrodynamics: vector f for each interior node. The first index in the node number. The second index runs between 0 and 1 and represente physical space 0:x and 1: y. The third inxed runs between 0 and 4 for hidrogynamics quantities.
+    hidrodynamics_vector_U((this->p + 1) * (this->p + 2) / 2, std::vector<double>(4)), // Hidrodynamics: vector u for each interior node. The first index in the node number, the second inxed runs between 0 and 4 for hidrodynamics quantities. 0: rho, 1: rho u, 2: rho v, 3: rho E.
+    hidrodynamics_vector_F((this->p + 1) * (this->p + 2) / 2, std::vector<std::vector<double>>(2, std::vector<double>(4))), // Hidrodynamics: vector f for each interior node. The first index in the node number. The second index runs between 0 and 1 and represente physical space 0:x and 1: y. The third inxed runs between 0 and 4 for hidrogynamics quantities.
     jacobian(2,std::vector<double>(2)), // jacobian between transformation from reference space to physical space d vec{x} / d vec{xi} = [ [ x2 - x1 , x3 - x1 ] , [ y2 - y1 , y3 - y1 ] ]
     inverse_jacobian(2,std::vector<double>(2)), // jacobian between transformation from physical space to reference space d vec{xi} / d vec{x} = ( 1 / det( J ) ) * [ [ y3 - y1 , x1 - x3 ] , [ y1 - y2 , x2 - x1 ] ]
     inverse_mass_matrix_physical_space((this->p + 1) * (this->p + 2) / 2 , std::vector<double>((this->p + 1) * (this->p + 2) / 2)), // mass_ij = int in Omega phi_i phi_j dOmega . Size ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2
@@ -149,22 +149,22 @@ void Element::initialize_hydrodinamics(){
 
 
         // initialize the hidrodinamic vector u  
-        this->hidrodynamics_vector_u[i][0] = rho;
-        this->hidrodynamics_vector_u[i][1] = rho * u;
-        this->hidrodynamics_vector_u[i][2] = rho * v;
-        this->hidrodynamics_vector_u[i][3] = rho * E;
+        this->hidrodynamics_vector_U[i][0] = rho;
+        this->hidrodynamics_vector_U[i][1] = rho * u;
+        this->hidrodynamics_vector_U[i][2] = rho * v;
+        this->hidrodynamics_vector_U[i][3] = rho * E;
 
         // initialize the hidrodinamic vector f, x component  
-        this->hidrodynamics_vector_f[i][0][0] = rho * u;
-        this->hidrodynamics_vector_f[i][0][1] = rho * pow( u , 2 ) + p;
-        this->hidrodynamics_vector_f[i][0][2] = rho * u * v;
-        this->hidrodynamics_vector_f[i][0][3] = rho * u * H;
+        this->hidrodynamics_vector_F[i][0][0] = rho * u;
+        this->hidrodynamics_vector_F[i][0][1] = rho * pow( u , 2 ) + p;
+        this->hidrodynamics_vector_F[i][0][2] = rho * u * v;
+        this->hidrodynamics_vector_F[i][0][3] = rho * u * H;
 
         // initialize the hidrodinamic vector f, y component  
-        this->hidrodynamics_vector_f[i][1][0] = rho * v;
-        this->hidrodynamics_vector_f[i][1][1] = rho * u * v;
-        this->hidrodynamics_vector_f[i][1][2] = rho * pow( v , 2 ) + p;
-        this->hidrodynamics_vector_f[i][1][3] = rho * v * H;
+        this->hidrodynamics_vector_F[i][1][0] = rho * v;
+        this->hidrodynamics_vector_F[i][1][1] = rho * u * v;
+        this->hidrodynamics_vector_F[i][1][2] = rho * pow( v , 2 ) + p;
+        this->hidrodynamics_vector_F[i][1][3] = rho * v * H;
 
     }
 
@@ -229,20 +229,20 @@ void Element::write_data(const int& step_num){
         //     }
         // }
         for (int i = 0; i < ( this->p + 1 ) *( this->p + 2 ) / 2 ; ++i) {
-        std::cout << "hidrodynamics_vector_u["<<i<<"][0]: " << this->hidrodynamics_vector_u[i][0] << std::endl;
-        std::cout << "hidrodynamics_vector_u["<<i<<"][1]: " << this->hidrodynamics_vector_u[i][1] << std::endl;
-        std::cout << "hidrodynamics_vector_u["<<i<<"][2]: " << this->hidrodynamics_vector_u[i][2] << std::endl;
-        std::cout << "hidrodynamics_vector_u["<<i<<"][3]: " << this->hidrodynamics_vector_u[i][3] << std::endl;
+        std::cout << "hidrodynamics_vector_U["<<i<<"][0]: " << this->hidrodynamics_vector_U[i][0] << std::endl;
+        std::cout << "hidrodynamics_vector_U["<<i<<"][1]: " << this->hidrodynamics_vector_U[i][1] << std::endl;
+        std::cout << "hidrodynamics_vector_U["<<i<<"][2]: " << this->hidrodynamics_vector_U[i][2] << std::endl;
+        std::cout << "hidrodynamics_vector_U["<<i<<"][3]: " << this->hidrodynamics_vector_U[i][3] << std::endl;
         }
         for (int i = 0; i < ( this->p + 1 ) *( this->p + 2 ) / 2 ; ++i) {
-        std::cout << "hidrodynamics_vector_f["<<i<<"][0][0]: " << this->hidrodynamics_vector_f[i][0][0] << std::endl;
-        std::cout << "hidrodynamics_vector_f["<<i<<"][0][1]: " << this->hidrodynamics_vector_f[i][0][1] << std::endl;
-        std::cout << "hidrodynamics_vector_f["<<i<<"][0][2]: " << this->hidrodynamics_vector_f[i][0][2] << std::endl;
-        std::cout << "hidrodynamics_vector_f["<<i<<"][0][3]: " << this->hidrodynamics_vector_f[i][0][3] << std::endl;
-        std::cout << "hidrodynamics_vector_f["<<i<<"][1][0]: " << this->hidrodynamics_vector_f[i][1][0] << std::endl;
-        std::cout << "hidrodynamics_vector_f["<<i<<"][1][1]: " << this->hidrodynamics_vector_f[i][1][1] << std::endl;
-        std::cout << "hidrodynamics_vector_f["<<i<<"][1][2]: " << this->hidrodynamics_vector_f[i][1][2] << std::endl;
-        std::cout << "hidrodynamics_vector_f["<<i<<"][1][3]: " << this->hidrodynamics_vector_f[i][1][3] << std::endl;
+        std::cout << "hidrodynamics_vector_F["<<i<<"][0][0]: " << this->hidrodynamics_vector_F[i][0][0] << std::endl;
+        std::cout << "hidrodynamics_vector_F["<<i<<"][0][1]: " << this->hidrodynamics_vector_F[i][0][1] << std::endl;
+        std::cout << "hidrodynamics_vector_F["<<i<<"][0][2]: " << this->hidrodynamics_vector_F[i][0][2] << std::endl;
+        std::cout << "hidrodynamics_vector_F["<<i<<"][0][3]: " << this->hidrodynamics_vector_F[i][0][3] << std::endl;
+        std::cout << "hidrodynamics_vector_F["<<i<<"][1][0]: " << this->hidrodynamics_vector_F[i][1][0] << std::endl;
+        std::cout << "hidrodynamics_vector_F["<<i<<"][1][1]: " << this->hidrodynamics_vector_F[i][1][1] << std::endl;
+        std::cout << "hidrodynamics_vector_F["<<i<<"][1][2]: " << this->hidrodynamics_vector_F[i][1][2] << std::endl;
+        std::cout << "hidrodynamics_vector_F["<<i<<"][1][3]: " << this->hidrodynamics_vector_F[i][1][3] << std::endl;
         }
     }
     
@@ -256,18 +256,18 @@ void Element::write_data(const int& step_num){
         lines[i+1]+=std::to_string(this->time)+" "; // time
         lines[i+1]+=std::to_string(this->nods_coords_phys_space[i][0])+" "; // x
         lines[i+1]+=std::to_string(this->nods_coords_phys_space[i][1])+" "; // y 
-        lines[i+1]+=std::to_string(this->hidrodynamics_vector_u[i][0])+" "; // u0
-        lines[i+1]+=std::to_string(this->hidrodynamics_vector_u[i][1])+" "; // u1
-        lines[i+1]+=std::to_string(this->hidrodynamics_vector_u[i][2])+" "; // u2
-        lines[i+1]+=std::to_string(this->hidrodynamics_vector_u[i][3])+" "; // u3
-        lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][0][0])+" "; // fx0
-        lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][0][1])+" "; // fx1
-        lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][0][2])+" "; // fx2
-        lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][0][3])+" "; // fx3
-        lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][1][0])+" "; // fy0
-        lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][1][1])+" "; // fy1
-        lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][1][2])+" "; // fy2
-        lines[i+1]+=std::to_string(this->hidrodynamics_vector_f[i][1][3])+" "; // fy3
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_U[i][0])+" "; // u0
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_U[i][1])+" "; // u1
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_U[i][2])+" "; // u2
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_U[i][3])+" "; // u3
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_F[i][0][0])+" "; // fx0
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_F[i][0][1])+" "; // fx1
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_F[i][0][2])+" "; // fx2
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_F[i][0][3])+" "; // fx3
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_F[i][1][0])+" "; // fy0
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_F[i][1][1])+" "; // fy1
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_F[i][1][2])+" "; // fy2
+        lines[i+1]+=std::to_string(this->hidrodynamics_vector_F[i][1][3])+" "; // fy3
 
     }
 
