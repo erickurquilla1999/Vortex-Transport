@@ -19,7 +19,7 @@ public:
     Element* this_element;     // this is the element to be evolved in time
     Element* right_element;    // this the element to the right to the element to be evolved in time
     Element* left_element;     // this the element to the left to the element to be evolved in time
-    Element* vertival_element; // this the element in the vertical direction to the element to be evolved in time
+    Element* vertical_element; // this the element in the vertical direction to the element to be evolved in time
     std::vector<std::vector<double>> gau_integ_line; // contains gauss quadrature information for line integral, first index in the gauss quadrature coordinate number, second index runs from 0 to 1. 0 is xi coordinate. 1 is weight.
 
     // save the lagrange polinomial function evaluated in the quadrature point for the line integral for side 1, 2 and 3

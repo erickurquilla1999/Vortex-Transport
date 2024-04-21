@@ -17,7 +17,7 @@ Evolve_element::Evolve_element(Element* this_elem, Element* right_elem, Element*
     this_element(this_elem),            // this is the element to be evolved in time
     right_element(right_elem),          // this the element to the right to the element to be evolved in time
     left_element(left_elem),            // this the element to the left to the element to be evolved in time
-    vertival_element(vertical_elem),    // this the element in the vertical direction to the element to be evolved in time
+    vertical_element(vertical_elem),    // this the element in the vertical direction to the element to be evolved in time
     gau_integ_line(gau_int_l),           // contains gauss quadrature information for line integral, first index in the gauss quadrature coordinate number, second index runs from 0 to 1. 0 is xi coordinate. 1 is weight.
 
     // this vector store the values of the lagrange polinomial in evaluated in the quadrature points for side 1, 2 and 3
@@ -116,20 +116,55 @@ void Evolve_element::evaluate_basis_in_quadrature_poits(){
 // this function compute the hidrodynamic vector U on the element boundaries, side 1, 2 and 3. 
 void Evolve_element::compute_U_plus_minus(){
 
+    // number of quadrature points
+    int number_quadrature_points = this->gau_integ_line.size();
+
+    // loop over quadrature points
+    for (int i = 0; i < number_quadrature_points; ++i) {
+
+        U_plus_side_1[i]  = { 0.0 , 0.0, 0.0, 0.0 };
+        U_plus_side_2[i]  = { 0.0 , 0.0, 0.0, 0.0 };
+        U_plus_side_3[i]  = { 0.0 , 0.0, 0.0, 0.0 };
+        U_minus_side_1[i] = { 0.0 , 0.0, 0.0, 0.0 };
+        U_minus_side_2[i] = { 0.0 , 0.0, 0.0, 0.0 };
+        U_minus_side_3[i] = { 0.0 , 0.0, 0.0, 0.0 };
+
+        // loop over hidrodynamics indices
+        for (int k = 0; k < 4; ++k) {
+            // loop over all interior nodes
+            for (int j = 0; j < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++j) {
+                U_plus_side_1[i][k] += plus_phi_in_quadrature_points_side_1[j][i] * this->this_element->hidrodynamics_vector_U[j][k];
+                U_plus_side_2[i][k] += plus_phi_in_quadrature_points_side_2[j][i] * this->this_element->hidrodynamics_vector_U[j][k];
+                U_plus_side_3[i][k] += plus_phi_in_quadrature_points_side_3[j][i] * this->this_element->hidrodynamics_vector_U[j][k];
+            }
+        }
+
+        if ( this->this_element->type == 0 ) {
+            // loop over hidrodynamics indices            
+            for (int k = 0; k < 4; ++k) {
+                // loop over all interior nodes
+                for (int j = 0; j < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++j) {
+                    U_minus_side_1[i][k] += minus_phi_in_quadrature_points_side_1[j][i] * this->vertical_element->hidrodynamics_vector_U[j][k];
+                    U_minus_side_2[i][k] += minus_phi_in_quadrature_points_side_2[j][i] * this->right_element->hidrodynamics_vector_U[j][k];
+                    U_minus_side_3[i][k] += minus_phi_in_quadrature_points_side_3[j][i] * this->left_element->hidrodynamics_vector_U[j][k];
+
+                }
+            }
+        } 
+        
+        if ( this->this_element->type == 1 ) {
+            // loop over hidrodynamics indices
+            for (int k = 0; k < 4; ++k) {
+                // loop over all interior nodes
+                for (int j = 0; j < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++j) {
+                    U_minus_side_1[i][k] += minus_phi_in_quadrature_points_side_1[j][i] * this->vertical_element->hidrodynamics_vector_U[j][k];
+                    U_minus_side_2[i][k] += minus_phi_in_quadrature_points_side_2[j][i] * this->left_element->hidrodynamics_vector_U[j][k];
+                    U_minus_side_3[i][k] += minus_phi_in_quadrature_points_side_3[j][i] * this->right_element->hidrodynamics_vector_U[j][k];
+                }
+            }
+        }
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // this function compute the numerical flux on the element boundaries, side 1, 2 and 3. 
 void Evolve_element::compute_numerical_flux(){
@@ -152,7 +187,7 @@ void Evolve_element::compute_stiffness_vector(){
             // loop over all the interior nodes of this element    
             for (int j = 0; j < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++j) {
                 //             S_i              +=                             S^{x}_{ij}                       *               f^{x}_{j}                             +                             S^{y}_{ij}                       *               f^{y}_{j}
-                this->DG_stiffness_vector[i][k] += this->this_element->stiffness_matrix_physical_space[0][i][j] * this->this_element->hidrodynamics_vector_f[j][0][k] + this->this_element->stiffness_matrix_physical_space[1][i][j] * this->this_element->hidrodynamics_vector_f[j][1][k];
+                this->DG_stiffness_vector[i][k] += this->this_element->stiffness_matrix_physical_space[0][i][j] * this->this_element->hidrodynamics_vector_F[j][0][k] + this->this_element->stiffness_matrix_physical_space[1][i][j] * this->this_element->hidrodynamics_vector_F[j][1][k];
                 // Stiffness vector: DG vector that results from area integral over element of nabla phi_i dot F dOmega.
                 // First index runs over interior nodes. 
                 // Second index runs between 0 and 3 and represend hidrodynamics variables.
@@ -233,27 +268,27 @@ void Evolve_element::compute_new_U_and_F(double& time_step){
     for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
         // loop over hidrodynamics indices
         for (int k = 0; k < 4; ++k) {
-            this->this_element->hidrodynamics_vector_u[i][k] += time_step * this->DG_time_derivative_U[i][k]; 
+            this->this_element->hidrodynamics_vector_U[i][k] += time_step * this->DG_time_derivative_U[i][k]; 
         }
 
-        rho = this->this_element->hidrodynamics_vector_u[i][0]; // density
-        u   = this->this_element->hidrodynamics_vector_u[i][1] / rho; // horizontal velocity
-        v   = this->this_element->hidrodynamics_vector_u[i][2] / rho; // vertical velocity
-        E   = this->this_element->hidrodynamics_vector_u[i][3] / rho; // energy
+        rho = this->this_element->hidrodynamics_vector_U[i][0]; // density
+        u   = this->this_element->hidrodynamics_vector_U[i][1] / rho; // horizontal velocity
+        v   = this->this_element->hidrodynamics_vector_U[i][2] / rho; // vertical velocity
+        E   = this->this_element->hidrodynamics_vector_U[i][3] / rho; // energy
         p   = rho * ( gamma - 1 ) * ( E - ( pow( u , 2) + pow( v , 2) ) / 2 ); // pressure
         H   = E + p / rho; // Entalpy
 
         // initialize the hidrodinamic vector f, x component  
-        this->this_element->hidrodynamics_vector_f[i][0][0] = rho * u;
-        this->this_element->hidrodynamics_vector_f[i][0][1] = rho * pow( u , 2 ) + p;
-        this->this_element->hidrodynamics_vector_f[i][0][2] = rho * u * v;
-        this->this_element->hidrodynamics_vector_f[i][0][3] = rho * u * H;
+        this->this_element->hidrodynamics_vector_F[i][0][0] = rho * u;
+        this->this_element->hidrodynamics_vector_F[i][0][1] = rho * pow( u , 2 ) + p;
+        this->this_element->hidrodynamics_vector_F[i][0][2] = rho * u * v;
+        this->this_element->hidrodynamics_vector_F[i][0][3] = rho * u * H;
 
         // initialize the hidrodinamic vector f, y component  
-        this->this_element->hidrodynamics_vector_f[i][1][0] = rho * v;
-        this->this_element->hidrodynamics_vector_f[i][1][1] = rho * u * v;
-        this->this_element->hidrodynamics_vector_f[i][1][2] = rho * pow( v , 2 ) + p;
-        this->this_element->hidrodynamics_vector_f[i][1][3] = rho * v * H;
+        this->this_element->hidrodynamics_vector_F[i][1][0] = rho * v;
+        this->this_element->hidrodynamics_vector_F[i][1][1] = rho * u * v;
+        this->this_element->hidrodynamics_vector_F[i][1][2] = rho * pow( v , 2 ) + p;
+        this->this_element->hidrodynamics_vector_F[i][1][3] = rho * v * H;
     }
 
     // advance in time 
