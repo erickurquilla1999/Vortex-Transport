@@ -221,17 +221,6 @@ void Evolve_element::compute_stiffness_vector(){
             }       
         }
     }
-
-    
-    int elem_number = 0;
-    if ( this->this_element->number == elem_number ){
-        for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
-            for (int k = 0; k < 4; ++k) {
-                std::cout << " DG_stiffness_vector["<< i <<"]["<< k <<"] = " << this->DG_stiffness_vector[i][k] << std::endl;
-            }    
-        }
-    }
-
 }
 
 // compute  residual vector: DG vector that results from stiffness vector minus vector result of the numerical flux integration
@@ -245,15 +234,6 @@ void Evolve_element::compute_residual_vector(){
             // this->DG_residual_vector[i][k] =  (this->DG_stiffness_vector[i][k] - this->DG_numerical_flux_integration[i][k] < 1.0e-8 ? 0 : this->DG_stiffness_vector[i][k] - this->DG_numerical_flux_integration[i][k]); 
             this->DG_residual_vector[i][k] = this->DG_stiffness_vector[i][k] - this->DG_numerical_flux_integration[i][k]; 
         }       
-    }
-
-    int elem_number = 0;
-    if ( this->this_element->number == elem_number ){
-        for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
-            for (int k = 0; k < 4; ++k) {
-                std::cout << " DG_residual_vector["<< i <<"]["<< k <<"] = " << this->DG_residual_vector[i][k] << std::endl;
-            }    
-        }
     }
 }
 
@@ -272,15 +252,6 @@ void Evolve_element::compute_time_derivative_U(){
                 this->DG_time_derivative_U[i][k] += this->this_element->inverse_mass_matrix_physical_space[i][j] * this->DG_residual_vector[j][k]; 
             }
         }       
-    }
-
-    int elem_number = 0;
-    if ( this->this_element->number == elem_number ){
-        for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
-            for (int k = 0; k < 4; ++k) {
-                std::cout << " DG_time_derivative_U["<< i <<"]["<< k <<"] = " << this->DG_time_derivative_U[i][k] << std::endl;
-            }    
-        }
     }
 }
 
