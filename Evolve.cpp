@@ -183,6 +183,24 @@ void Evolve_element::compute_numerical_flux(){
 // this function create the DG vector that results from the integration of the numerical flux ( integral phi_i hat_{F} dl )
 void Evolve_element::integrate_numerical_flux(){
 
+    // number of quadrature points
+    int number_quadrature_points = this->gau_integ_line.size();
+
+    // loop over all interior nodes
+    for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
+
+        DG_numerical_flux_integration[i] = { 0.0 , 0.0, 0.0 , 0.0 };
+        
+        // loop over hidrodynamics indices
+        for (int k = 0; k < 4; ++k) {
+            // loop over quadrature points
+            for (int j = 0; j < number_quadrature_points; ++j) {
+                DG_numerical_flux_integration[i][k] += this->this_element->sides_lenght[0] * plus_phi_in_quadrature_points_side_1[i][j] * numerical_flux_side_1[j][k] * this->gau_integ_line[j][1];
+                DG_numerical_flux_integration[i][k] += this->this_element->sides_lenght[1] * plus_phi_in_quadrature_points_side_2[i][j] * numerical_flux_side_2[j][k] * this->gau_integ_line[j][1];
+                DG_numerical_flux_integration[i][k] += this->this_element->sides_lenght[2] * plus_phi_in_quadrature_points_side_3[i][j] * numerical_flux_side_3[j][k] * this->gau_integ_line[j][1];
+            }
+        }
+    }
 }
 
 // compute stiffness vector (area integral over element of nabla phi_i dot F dOmega)
