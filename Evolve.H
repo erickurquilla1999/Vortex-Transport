@@ -35,38 +35,16 @@ public:
     std::vector<std::vector<double>> minus_phi_in_quadrature_points_side_2;
     std::vector<std::vector<double>> minus_phi_in_quadrature_points_side_3;
 
-    // the following vectors store the quadrature points for the line integrals in reference space
-    // first index runs over the quadrature point number, second index runs from 0 to 1 | 0 represent xi and 1 represent eta
-    // plus means this element
-    std::vector<std::vector<double>> ref_coords_plus_side_1; 
-    std::vector<std::vector<double>> ref_coords_plus_side_2; 
-    std::vector<std::vector<double>> ref_coords_plus_side_3; 
-    // minus means boundary elements
-    std::vector<std::vector<double>> ref_coords_minus_side_1; 
-    std::vector<std::vector<double>> ref_coords_minus_side_2; 
-    std::vector<std::vector<double>> ref_coords_minus_side_3;
-
-    // the following vectors store the quadrature points for the line integrals in physical space
-    // first index runs over the quadrature point number, second index runs from 0 to 1 | 0 represent x and 1 represent y
-    // plus means this element
-    std::vector<std::vector<double>> phy_coords_plus_side_1; 
-    std::vector<std::vector<double>> phy_coords_plus_side_2; 
-    std::vector<std::vector<double>> phy_coords_plus_side_3; 
-    // minus means boundary elements
-    std::vector<std::vector<double>> phy_coords_minus_side_1; 
-    std::vector<std::vector<double>> phy_coords_minus_side_2; 
-    std::vector<std::vector<double>> phy_coords_minus_side_3;  
-
     // the following vectors store the interpolation of the hidrodynamic vector u from the interior nodes of the elements to the quadrature points for the line integrals
     // first index runs over the quadrature points number, second index runs over 0 and 3 for the hidrodynamics quantities
     // plus for current element
-    std::vector<std::vector<double>> u_plus_side_1; 
-    std::vector<std::vector<double>> u_plus_side_2;
-    std::vector<std::vector<double>> u_plus_side_3;
+    std::vector<std::vector<double>> U_plus_side_1; 
+    std::vector<std::vector<double>> U_plus_side_2;
+    std::vector<std::vector<double>> U_plus_side_3;
     // minus for elements in the boundaries
-    std::vector<std::vector<double>> u_minus_side_1;
-    std::vector<std::vector<double>> u_minus_side_2;
-    std::vector<std::vector<double>> u_minus_side_3;
+    std::vector<std::vector<double>> U_minus_side_1;
+    std::vector<std::vector<double>> U_minus_side_2;
+    std::vector<std::vector<double>> U_minus_side_3;
 
     // contains the numerical flux (roe flux) at the quadrature points for sides 1, 2 and 3
     // first index runs over the gauss quadrature points number, second index runs over 0 and 3 for the hidrodynamics quantities
