@@ -164,8 +164,7 @@ void Evolve_element::evaluate_basis_in_quadrature_poits(){
         }
 
     }
-
-    int elem_number = 6;
+    int elem_number = 0;
     if (this->this_element->number==elem_number){
         std::cout << "\nside 1 : reference space " << std::endl;
         for (int i = 0; i < num_gauss_quad_pnts; ++i) {
@@ -309,6 +308,42 @@ void Evolve_element::compute_numerical_flux(){
         exit(EXIT_FAILURE);
     }
 
+    int elem_number = 0;
+    if ( this->this_element->number == elem_number ){
+        for (int i = 0; i < num_gauss_quad_pnts; ++i) {
+            for (int k = 0; k < 4; ++k) {
+                std::cout << " u_plus_side_1["<< i <<"]["<< k <<"] = " << this->u_plus_side_1[i][k] << std::endl;
+            }    
+        }
+        for (int i = 0; i < num_gauss_quad_pnts; ++i) {
+            for (int k = 0; k < 4; ++k) {
+                std::cout << " u_minus_side_1["<< i <<"]["<< k <<"] = " << this->u_minus_side_1[i][k] << std::endl;
+            }    
+        }
+
+        for (int i = 0; i < num_gauss_quad_pnts; ++i) {
+            for (int k = 0; k < 4; ++k) {
+                std::cout << " u_plus_side_2["<< i <<"]["<< k <<"] = " << this->u_plus_side_2[i][k] << std::endl;
+            }    
+        }
+        for (int i = 0; i < num_gauss_quad_pnts; ++i) {
+            for (int k = 0; k < 4; ++k) {
+                std::cout << " u_minus_side_2["<< i <<"]["<< k <<"] = " << this->u_minus_side_2[i][k] << std::endl;
+            }    
+        }
+
+            for (int i = 0; i < num_gauss_quad_pnts; ++i) {
+            for (int k = 0; k < 4; ++k) {
+                std::cout << " u_plus_side_3["<< i <<"]["<< k <<"] = " << this->u_plus_side_3[i][k] << std::endl;
+            }    
+        }
+        for (int i = 0; i < num_gauss_quad_pnts; ++i) {
+            for (int k = 0; k < 4; ++k) {
+                std::cout << " u_minus_side_3["<< i <<"]["<< k <<"] = " << this->u_minus_side_3[i][k] << std::endl;
+            }    
+        }
+    }
+
     // the following arrays temporary store the numerical fluxes that then will be storage in the class arrays: numerical_flux_side_1, numerical_flux_side_2 and numerical_flux_side_3
     std::vector<double> num_flux_side_1 = {0.0, 0.0, 0.0, 0.0};
     std::vector<double> num_flux_side_2 = {0.0, 0.0, 0.0, 0.0};
@@ -322,7 +357,16 @@ void Evolve_element::compute_numerical_flux(){
         num_flux_side_1 = numerical_flux(this->u_plus_side_1[i], this->u_minus_side_1[i], this->this_element->units_vectors_perpendicular_to_element_boundary[0]); // side 1
         num_flux_side_2 = numerical_flux(this->u_plus_side_2[i], this->u_minus_side_2[i], this->this_element->units_vectors_perpendicular_to_element_boundary[1]); // side 2
         num_flux_side_3 = numerical_flux(this->u_plus_side_3[i], this->u_minus_side_3[i], this->this_element->units_vectors_perpendicular_to_element_boundary[2]); // side 3
-        
+
+        // num_flux_side_1 = numerical_flux(this->u_plus_side_1[i], this->u_plus_side_1[i], this->this_element->units_vectors_perpendicular_to_element_boundary[0]); // side 1
+        // num_flux_side_2 = numerical_flux(this->u_plus_side_2[i], this->u_plus_side_2[i], this->this_element->units_vectors_perpendicular_to_element_boundary[1]); // side 2
+        // num_flux_side_3 = numerical_flux(this->u_plus_side_3[i], this->u_plus_side_3[i], this->this_element->units_vectors_perpendicular_to_element_boundary[2]); // side 3
+
+
+        // num_flux_side_1 = numerical_flux(this->u_minus_side_1[i], this->u_minus_side_1[i], this->this_element->units_vectors_perpendicular_to_element_boundary[0]); // side 1
+        // num_flux_side_2 = numerical_flux(this->u_minus_side_2[i], this->u_minus_side_2[i], this->this_element->units_vectors_perpendicular_to_element_boundary[1]); // side 2
+        // num_flux_side_3 = numerical_flux(this->u_minus_side_3[i], this->u_minus_side_3[i], this->this_element->units_vectors_perpendicular_to_element_boundary[2]); // side 3
+
         // save numerical flux in evolve_element object
         // this loops runs over hidrodynamic index
         for (int k = 0; k < 4; ++k) {
@@ -332,7 +376,25 @@ void Evolve_element::compute_numerical_flux(){
             this->numerical_flux_side_2[i][k] = num_flux_side_2[k]; // side 2
             this->numerical_flux_side_3[i][k] = num_flux_side_3[k]; // side 3
         }
-    }    
+    }   
+
+    if ( this->this_element->number == elem_number ){
+        for (int i = 0; i < num_gauss_quad_pnts; ++i) {
+            for (int k = 0; k < 4; ++k) {
+                std::cout << " numerical_flux_side_1["<< i <<"]["<< k <<"] = " << this->numerical_flux_side_1[i][k] << std::endl;
+            }    
+        }
+        for (int i = 0; i < num_gauss_quad_pnts; ++i) {
+            for (int k = 0; k < 4; ++k) {
+                std::cout << " numerical_flux_side_2["<< i <<"]["<< k <<"] = " << this->numerical_flux_side_2[i][k] << std::endl;
+            }    
+        }
+        for (int i = 0; i < num_gauss_quad_pnts; ++i) {
+            for (int k = 0; k < 4; ++k) {
+                std::cout << " numerical_flux_side_3["<< i <<"]["<< k <<"] = " << this->numerical_flux_side_3[i][k] << std::endl;
+            }    
+        }
+    }
 }
 
 // this function create the DG vector that results from the integration of the numerical flux ( integral phi_i hat_{F} dl )
@@ -371,6 +433,16 @@ void Evolve_element::integrate_numerical_flux(){
             // Second index runs between 0 and 3 and represend hidrodynamics variables.
         }
     }
+
+    int elem_number = 0;
+    if ( this->this_element->number == elem_number ){
+        for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
+            for (int k = 0; k < 4; ++k) {
+                std::cout << " DG_numerical_flux_integration["<< i <<"]["<< k <<"] = " << this->DG_numerical_flux_integration[i][k] << std::endl;
+            }    
+        }
+    }
+
 }
 
 // compute stiffness vector (area integral over element of nabla phi_i dot F dOmega)
@@ -391,6 +463,17 @@ void Evolve_element::compute_stiffness_vector(){
             }       
         }
     }
+
+    
+    int elem_number = 0;
+    if ( this->this_element->number == elem_number ){
+        for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
+            for (int k = 0; k < 4; ++k) {
+                std::cout << " DG_stiffness_vector["<< i <<"]["<< k <<"] = " << this->DG_stiffness_vector[i][k] << std::endl;
+            }    
+        }
+    }
+
 }
 
 // compute  residual vector: DG vector that results from stiffness vector minus vector result of the numerical flux integration
@@ -401,8 +484,18 @@ void Evolve_element::compute_residual_vector(){
         // loop over hidrodynamics indices
         for (int k = 0; k < 4; ++k) {
             //           R_i               =               S_i               -            int num F_i
+            // this->DG_residual_vector[i][k] =  (this->DG_stiffness_vector[i][k] - this->DG_numerical_flux_integration[i][k] < 1.0e-8 ? 0 : this->DG_stiffness_vector[i][k] - this->DG_numerical_flux_integration[i][k]); 
             this->DG_residual_vector[i][k] = this->DG_stiffness_vector[i][k] - this->DG_numerical_flux_integration[i][k]; 
         }       
+    }
+
+    int elem_number = 0;
+    if ( this->this_element->number == elem_number ){
+        for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
+            for (int k = 0; k < 4; ++k) {
+                std::cout << " DG_residual_vector["<< i <<"]["<< k <<"] = " << this->DG_residual_vector[i][k] << std::endl;
+            }    
+        }
     }
 }
 
@@ -421,6 +514,15 @@ void Evolve_element::compute_time_derivative_U(){
                 this->DG_time_derivative_U[i][k] += this->this_element->inverse_mass_matrix_physical_space[i][j] * this->DG_residual_vector[j][k]; 
             }
         }       
+    }
+
+    int elem_number = 0;
+    if ( this->this_element->number == elem_number ){
+        for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
+            for (int k = 0; k < 4; ++k) {
+                std::cout << " DG_time_derivative_U["<< i <<"]["<< k <<"] = " << this->DG_time_derivative_U[i][k] << std::endl;
+            }    
+        }
     }
 }
 
