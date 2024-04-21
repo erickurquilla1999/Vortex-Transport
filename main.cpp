@@ -58,7 +58,9 @@ int main(int argc, char* argv[]) {
     }
 
     for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
-        evolve_elements[i].compute_U_plus_minus();
+        evolve_elements[i].compute_U_plus_minus();      // compute U on the element boundaries
+        evolve_elements[i].compute_numerical_flux();    // compute numerical flux
+
     }
 
     // // time stepping loop

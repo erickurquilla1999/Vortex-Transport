@@ -169,6 +169,15 @@ void Evolve_element::compute_U_plus_minus(){
 // this function compute the numerical flux on the element boundaries, side 1, 2 and 3. 
 void Evolve_element::compute_numerical_flux(){
 
+    // number of quadrature points
+    int number_quadrature_points = this->gau_integ_line.size();
+
+    // loop over quadrature points
+    for (int i = 0; i < number_quadrature_points; ++i) {
+        numerical_flux_side_1[i]  = numerical_flux(U_plus_side_1[i], U_minus_side_1[i], this->this_element->units_vectors_perpendicular_to_element_boundary[0]);
+        numerical_flux_side_2[i]  = numerical_flux(U_plus_side_2[i], U_minus_side_2[i], this->this_element->units_vectors_perpendicular_to_element_boundary[1]);
+        numerical_flux_side_3[i]  = numerical_flux(U_plus_side_3[i], U_minus_side_3[i], this->this_element->units_vectors_perpendicular_to_element_boundary[2]);
+    }
 }
 
 // this function create the DG vector that results from the integration of the numerical flux ( integral phi_i hat_{F} dl )
