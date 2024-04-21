@@ -150,14 +150,26 @@ import glob
 dir_names = glob.glob("output/step_*")
 dir_names = sorted(dir_names, key=lambda x: int(x.lstrip("output/step_")))
 
+
+time = []
+u_nod_1 = []
+u_nod_2 = []
+u_nod_3 = []
+
 # Loop through each frame
-for i in range(len(dir_names))[::20]:
+for i in range(len(dir_names)):
 
     print(dir_names[i])
 
     # Load data for the current frame
     file_names = glob.glob(dir_names[i] + "/element_*.txt")
+    # dir_names = sorted(file_names, key=lambda x: int(x.lstrip(dir_names[i] + "/element_").rstrip(".txt")))
+    file_names = sorted(file_names, key=lambda x: int(x.split("/element_")[1].rstrip(".txt")))
+
     x, y, u1, u2, u3, u4, t = [], [], [], [], [], [], []
+
+    r=0
+
     for dire in file_names:
         df = pd.read_csv(dire, sep='\s+')
         x.append(df['x'])
@@ -167,6 +179,16 @@ for i in range(len(dir_names))[::20]:
         u3.append(df['u2'])
         u4.append(df['u3'])
         t.append(list(df['time'])[0])
+
+        if r==0:
+            print(dire)
+            # Create the color plot
+            u_nod_1.append(np.array(df['u1'])[0])
+            u_nod_2.append(np.array(df['u1'])[1])
+            u_nod_3.append(np.array(df['u1'])[2])
+            time.append(list(df['time'])[0])
+
+        r=r+1
 
     # Flatten the data
     x = np.array(x).flatten()
@@ -219,10 +241,18 @@ for i in range(len(dir_names))[::20]:
     plt.close(fig)
 
 
-
-
-
-
+plt.plot(time, u_nod_1, label='node 1', linestyle='solid')
+plt.plot(time, u_nod_2, label='node 2', linestyle='dashed')
+plt.plot(time, u_nod_3, label='node 3', linestyle='dotted')
+plt.xlabel(r'$t$')
+plt.ylabel(r'$\rho u $')
+plt.title('Element 0')
+plt.legend()
+# plt.yscale('log')
+# plt.xlim(-5,5)
+# plt.ylim(-5,5)
+plt.savefig('plotttools/elementnodesvalues.pdf',bbox_inches='tight')
+plt.clf()
 
 
 
@@ -281,7 +311,7 @@ dir_names = sorted(dir_names, key=lambda x: int(x.lstrip("output/step_")))
 fig = plt.figure()
 
 # Create the animation
-ani = animation.FuncAnimation(fig, update, frames=len(dir_names), interval=100)
+ani = animation.FuncAnimation(fig, update, frames=len(dir_names), interval=400)
 
 # Save the animation as a video file
 ani.save('plotttools/animation.mp4', writer='ffmpeg')
