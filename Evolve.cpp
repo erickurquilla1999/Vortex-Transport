@@ -62,7 +62,57 @@ Evolve_element::Evolve_element(Element* this_elem, Element* right_elem, Element*
 // this function evaluate lagrande polinomials in the gauss quadrature at the element boundaries
 void Evolve_element::evaluate_basis_in_quadrature_poits(){
 
+    // number of quadrature points
+    int number_quadrature_points = this->gau_integ_line.size(); 
+
+    std::vector<double> quadrature_point_reference_space(2);
+    std::vector<double> plus_phi_side_1( ( this->p + 1 ) * ( this->p + 2 ) / 2 );
+    std::vector<double> plus_phi_side_2( ( this->p + 1 ) * ( this->p + 2 ) / 2 );
+    std::vector<double> plus_phi_side_3( ( this->p + 1 ) * ( this->p + 2 ) / 2 );
+    std::vector<double> minus_phi_side_1( ( this->p + 1 ) * ( this->p + 2 ) / 2 );
+    std::vector<double> minus_phi_side_2( ( this->p + 1 ) * ( this->p + 2 ) / 2 );
+    std::vector<double> minus_phi_side_3( ( this->p + 1 ) * ( this->p + 2 ) / 2 );
+
+    // loop over quadrature points
+    for (int i = 0; i < number_quadrature_points; ++i) {
+
+        // side 1
+        //                                 (                    sigma  , 0.0 )
+        quadrature_point_reference_space = { this->gau_integ_line[i][0], 0.0 };
+        plus_phi_side_1 = lagrange_basis_reference_space(this->p, quadrature_point_reference_space);
+        //                                 (                    1.0 - sigma  , 0.0 )
+        quadrature_point_reference_space = { 1.0 - this->gau_integ_line[i][0], 0.0 };
+        minus_phi_side_1 = lagrange_basis_reference_space(this->p, quadrature_point_reference_space);
+
+        // side 2
+        //                                 (                     1.0 - sigma , sigma )
+        quadrature_point_reference_space = { 1.0 - this->gau_integ_line[i][0], this->gau_integ_line[i][0] };
+        plus_phi_side_2 = lagrange_basis_reference_space(this->p, quadrature_point_reference_space);
+        //                                 (                    sigma  , 1.0 - sigma )
+        quadrature_point_reference_space = { this->gau_integ_line[i][0], 1.0 - this->gau_integ_line[i][0] };
+        minus_phi_side_2 = lagrange_basis_reference_space(this->p, quadrature_point_reference_space);
+
+        // side 3
+        //                                 ( 0.0  , 1.0 - sigma )
+        quadrature_point_reference_space = { 0.0 , 1.0 - this->gau_integ_line[i][0] };
+        plus_phi_side_3 = lagrange_basis_reference_space(this->p, quadrature_point_reference_space);
+        //                                 ( 0.0  , sigma )
+        quadrature_point_reference_space = { 0.0 , this->gau_integ_line[i][0] };
+        minus_phi_side_3 = lagrange_basis_reference_space(this->p, quadrature_point_reference_space);
+
+        for (int j = 0; j < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++j) {
+            
+            plus_phi_in_quadrature_points_side_1[j][i]  = plus_phi_side_1[j];
+            plus_phi_in_quadrature_points_side_2[j][i]  = plus_phi_side_2[j];
+            plus_phi_in_quadrature_points_side_3[j][i]  = plus_phi_side_3[j];
+            minus_phi_in_quadrature_points_side_1[j][i] = minus_phi_side_1[j];
+            minus_phi_in_quadrature_points_side_2[j][i] = minus_phi_side_2[j];
+            minus_phi_in_quadrature_points_side_3[j][i] = minus_phi_side_3[j];
+        
+        }
+    }
 }
+
 
 
 
