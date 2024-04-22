@@ -194,6 +194,7 @@ void Evolve_element::compute_numerical_flux(){
 
     // loop over quadrature points
     for (int i = 0; i < number_quadrature_points; ++i) {
+        // call the function numerical_flux in the Numericalflux.cpp file
         numerical_flux_side_1[i]  = numerical_flux(U_plus_side_1[i], U_minus_side_1[i], this->element_this->units_vectors_perpendicular_to_element_boundary[0]);
         numerical_flux_side_2[i]  = numerical_flux(U_plus_side_2[i], U_minus_side_2[i], this->element_this->units_vectors_perpendicular_to_element_boundary[1]);
         numerical_flux_side_3[i]  = numerical_flux(U_plus_side_3[i], U_minus_side_3[i], this->element_this->units_vectors_perpendicular_to_element_boundary[2]);
@@ -209,6 +210,7 @@ void Evolve_element::integrate_numerical_flux(){
     // loop over all interior nodes
     for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
 
+        // initialize the numerical flux integration at zero
         DG_numerical_flux_integration[i] = { 0.0 , 0.0, 0.0 , 0.0 };
         
         // loop over hidrodynamics indices
@@ -218,6 +220,9 @@ void Evolve_element::integrate_numerical_flux(){
                 DG_numerical_flux_integration[i][k] += this->element_this->sides_lenght[0] * plus_phi_in_quadrature_points_side_1[i][j] * numerical_flux_side_1[j][k] * this->gau_integ_line[j][1];
                 DG_numerical_flux_integration[i][k] += this->element_this->sides_lenght[1] * plus_phi_in_quadrature_points_side_2[i][j] * numerical_flux_side_2[j][k] * this->gau_integ_line[j][1];
                 DG_numerical_flux_integration[i][k] += this->element_this->sides_lenght[2] * plus_phi_in_quadrature_points_side_3[i][j] * numerical_flux_side_3[j][k] * this->gau_integ_line[j][1];
+                // DG_numerical_flux_integration is the DG vector that results from the integration of the numerical flux ( integral phi_i hat_{F} dl ). 
+                // First index runs over interior nodes. 
+                // Second index runs between 0 and 3 and represend hidrodynamics variables.
             }
         }
     }
