@@ -201,6 +201,16 @@ for i in range(len(dir_names)):
     p = rho * (gamma - 1) * (E - (u**2 + v**2) / 2)
     H = E + p / rho
 
+    # # Create the color plot
+    # plt.scatter(x, y,  s=10, marker='s', c=rho, cmap='viridis')
+    # plt.colorbar(label=r'$\rho$')
+    # plt.xlabel(r'$x$')
+    # plt.ylabel(r'$y$')
+    # # plt.xlim(-5,5)
+    # # plt.ylim(-5,5)
+    # plt.savefig('plotttools/scatter_' + dir_names[i].lstrip("output/step_") + '.pdf',bbox_inches='tight')
+    # plt.clf()
+
     # Create the triangular mesh
     triangles = tri.Triangulation(x, y)
 
