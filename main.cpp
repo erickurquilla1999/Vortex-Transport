@@ -57,12 +57,6 @@ int main(int argc, char* argv[]) {
         evolve_elements[i].evaluate_basis_in_quadrature_poits();
     }
 
-    // for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
-    //     evolve_elements[i].compute_U_plus_minus();      // compute U on the element boundaries
-    //     evolve_elements[i].compute_numerical_flux();    // compute numerical flux
-    //     evolve_elements[i].integrate_numerical_flux();  // compute the vector result of integrating the numerical flux
-    // }
-
     // time stepping loop
     for (int a = 1; a < parms.number_time_steps + 1; ++a) {
 
