@@ -125,18 +125,18 @@ void Element::initialize_hydrodinamics(){
 
         double f0, f1, f2;
 
-        f0 = 1 - ( pow ( x - x0 - U_infty * t , 2 ) + pow ( y - y0 - V_infty * t , 2 ) ) / pow ( rc , 2 );
-        f1 = 1 - pow ( epsilon , 2 ) * ( gamma -1 ) * pow ( M_infty , 2) * exp( f0 ) / ( 8 * pow ( M_PI , 2 ) );
-        f2 = epsilon * ( pow( U_infty , 2) + pow( V_infty , 2) ) * exp( f0 / 2 ) / ( 2 * M_PI * rc );
+        f0 = 1.0 - ( pow ( x - x0 - U_infty * t , 2.0 ) + pow ( y - y0 - V_infty * t , 2.0 ) ) / pow ( rc , 2.0 );
+        f1 = 1.0 - pow ( epsilon , 2.0 ) * ( gamma -1 ) * pow ( M_infty , 2.0) * exp( f0 ) / ( 8.0 * pow ( M_PI , 2.0 ) );
+        f2 = epsilon * ( pow( U_infty , 2.0) + pow( V_infty , 2.0) ) * exp( f0 / 2.0 ) / ( 2.0 * M_PI * rc );
  
         // hidrodynamic quantities 
         double rho, u, v, p, E, H;
 
-        rho = rho_infty * pow( f1 , 1 / ( gamma - 1 ) ); // density
+        rho = rho_infty * pow( f1 , 1.0 / ( gamma - 1.0 ) ); // density
         u   = U_infty - f2 * ( y - y0 - V_infty * t ); // horizontal velocity
-        v   = V_infty - f2 * ( x - x0 - U_infty * t ); // vertical velocity
-        p   = p_infty * pow( f1 , gamma / ( gamma - 1 ) ); // pressure
-        E   = p / ( rho * ( gamma -1 ) ) + ( pow( u , 2) + pow( v , 2) ) / 2; // Energy
+        v   = V_infty + f2 * ( x - x0 - U_infty * t ); // vertical velocity
+        p   = p_infty * pow( f1 , gamma / ( gamma - 1.0 ) ); // pressure
+        E   = p / ( rho * ( gamma - 1.0 ) ) + ( pow( u , 2.0) + pow( v , 2.0) ) / 2.0; // Energy
         H   = E + p / rho; // Entalpy
 
     
