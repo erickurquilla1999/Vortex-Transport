@@ -73,42 +73,43 @@ void Evolve_element::evaluate_basis_in_quadrature_poits(){
     std::vector<double> minus_phi_side_2( ( this->p + 1 ) * ( this->p + 2 ) / 2 );
     std::vector<double> minus_phi_side_3( ( this->p + 1 ) * ( this->p + 2 ) / 2 );
 
-    // loop over quadrature points
+    // loop over quadrature points : sigma -> [ 0 , 1]
     for (int i = 0; i < number_quadrature_points; ++i) {
 
-        // side 1
-        //                                 (                    sigma  , 0.0 )
+        // Side 1. This is the first side going counterclockwise from the square angle vertex of the element
+        //                  ( xi , eta ) = (                    sigma  , 0.0 )
         quadrature_point_reference_space = { this->gau_integ_line[i][0], 0.0 };
         plus_phi_side_1 = lagrange_basis_reference_space(this->p, quadrature_point_reference_space);
-        //                                 (                    1.0 - sigma  , 0.0 )
+        //                  ( xi , eta ) = (                    1.0 - sigma  , 0.0 )
         quadrature_point_reference_space = { 1.0 - this->gau_integ_line[i][0], 0.0 };
         minus_phi_side_1 = lagrange_basis_reference_space(this->p, quadrature_point_reference_space);
 
-        // side 2
-        //                                 (                     1.0 - sigma , sigma )
+        // Side 2. This is the second side going counterclockwise from the square angle vertex of the element
+        //                  ( xi , eta ) = (                     1.0 - sigma , sigma )
         quadrature_point_reference_space = { 1.0 - this->gau_integ_line[i][0], this->gau_integ_line[i][0] };
         plus_phi_side_2 = lagrange_basis_reference_space(this->p, quadrature_point_reference_space);
-        //                                 (                    sigma  , 1.0 - sigma )
+        //                  ( xi , eta ) = (                    sigma  , 1.0 - sigma )
         quadrature_point_reference_space = { this->gau_integ_line[i][0], 1.0 - this->gau_integ_line[i][0] };
         minus_phi_side_2 = lagrange_basis_reference_space(this->p, quadrature_point_reference_space);
 
-        // side 3
-        //                                 ( 0.0  , 1.0 - sigma )
+        // Side 3. This is the third side going counterclockwise from the square angle vertex of the element
+        //                  ( xi , eta ) = ( 0.0  , 1.0 - sigma )
         quadrature_point_reference_space = { 0.0 , 1.0 - this->gau_integ_line[i][0] };
         plus_phi_side_3 = lagrange_basis_reference_space(this->p, quadrature_point_reference_space);
-        //                                 ( 0.0  , sigma )
+        //                 v( xi , eta ) = ( 0.0  , sigma )
         quadrature_point_reference_space = { 0.0 , this->gau_integ_line[i][0] };
         minus_phi_side_3 = lagrange_basis_reference_space(this->p, quadrature_point_reference_space);
 
         for (int j = 0; j < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++j) {
-            
+            // this vector store the values of the lagrange polinomial in evaluated in the quadrature points
+            // first index runs over interior nodes number, that is, the lagrange polinimial that is one on this node
+            // second item runs over the evaluation of the lagrange poliniam in the quadrature points
             plus_phi_in_quadrature_points_side_1[j][i]  = plus_phi_side_1[j];
             plus_phi_in_quadrature_points_side_2[j][i]  = plus_phi_side_2[j];
             plus_phi_in_quadrature_points_side_3[j][i]  = plus_phi_side_3[j];
             minus_phi_in_quadrature_points_side_1[j][i] = minus_phi_side_1[j];
             minus_phi_in_quadrature_points_side_2[j][i] = minus_phi_side_2[j];
             minus_phi_in_quadrature_points_side_3[j][i] = minus_phi_side_3[j];
-        
         }
     }
 }
