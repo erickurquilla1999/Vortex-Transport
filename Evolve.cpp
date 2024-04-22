@@ -164,47 +164,6 @@ void Evolve_element::compute_U_plus_minus(){
             }
         }
     }
-
-
-
-    int elem_number = 0;
-    if ( this->element_this->number == elem_number ){
-        for (int i = 0; i < number_quadrature_points; ++i) {
-            for (int k = 0; k < 4; ++k) {
-                std::cout << " U_plus_side_1["<< i <<"]["<< k <<"] = " << this->U_plus_side_1[i][k] << std::endl;
-            }    
-        }
-        for (int i = 0; i < number_quadrature_points; ++i) {
-            for (int k = 0; k < 4; ++k) {
-                std::cout << " U_minus_side_1["<< i <<"]["<< k <<"] = " << this->U_minus_side_1[i][k] << std::endl;
-            }    
-        }
-
-        for (int i = 0; i < number_quadrature_points; ++i) {
-            for (int k = 0; k < 4; ++k) {
-                std::cout << " U_plus_side_2["<< i <<"]["<< k <<"] = " << this->U_plus_side_2[i][k] << std::endl;
-            }    
-        }
-        for (int i = 0; i < number_quadrature_points; ++i) {
-            for (int k = 0; k < 4; ++k) {
-                std::cout << " U_minus_side_2["<< i <<"]["<< k <<"] = " << this->U_minus_side_2[i][k] << std::endl;
-            }    
-        }
-
-            for (int i = 0; i < number_quadrature_points; ++i) {
-            for (int k = 0; k < 4; ++k) {
-                std::cout << " U_plus_side_3["<< i <<"]["<< k <<"] = " << this->U_plus_side_3[i][k] << std::endl;
-            }    
-        }
-        for (int i = 0; i < number_quadrature_points; ++i) {
-            for (int k = 0; k < 4; ++k) {
-                std::cout << " U_minus_side_3["<< i <<"]["<< k <<"] = " << this->U_minus_side_3[i][k] << std::endl;
-            }    
-        }
-    }
-
-
-
 }
 
 // this function compute the numerical flux on the element boundaries, side 1, 2 and 3. 
@@ -219,38 +178,6 @@ void Evolve_element::compute_numerical_flux(){
         numerical_flux_side_2[i]  = numerical_flux(U_plus_side_2[i], U_minus_side_2[i], this->element_this->units_vectors_perpendicular_to_element_boundary[1]);
         numerical_flux_side_3[i]  = numerical_flux(U_plus_side_3[i], U_minus_side_3[i], this->element_this->units_vectors_perpendicular_to_element_boundary[2]);
     }
-
-
-
-
-
-   int elem_number = 0;
-    if ( this->element_this->number == elem_number ){
-        for (int i = 0; i < number_quadrature_points; ++i) {
-            for (int k = 0; k < 4; ++k) {
-                std::cout << " numerical_flux_side_1["<< i <<"]["<< k <<"] = " << this->numerical_flux_side_1[i][k] << std::endl;
-            }    
-        }
-        for (int i = 0; i < number_quadrature_points; ++i) {
-            for (int k = 0; k < 4; ++k) {
-                std::cout << " numerical_flux_side_2["<< i <<"]["<< k <<"] = " << this->numerical_flux_side_2[i][k] << std::endl;
-            }    
-        }
-        for (int i = 0; i < number_quadrature_points; ++i) {
-            for (int k = 0; k < 4; ++k) {
-                std::cout << " numerical_flux_side_3["<< i <<"]["<< k <<"] = " << this->numerical_flux_side_3[i][k] << std::endl;
-            }    
-        }
-    }
-
-
-
-
-
-
-
-
-
 }
 
 // this function create the DG vector that results from the integration of the numerical flux ( integral phi_i hat_{F} dl )
@@ -274,28 +201,6 @@ void Evolve_element::integrate_numerical_flux(){
             }
         }
     }
-
-
-
-
-
- 
-
-    int elem_number = 0;
-    if ( this->element_this->number == elem_number ){
-        for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
-            for (int k = 0; k < 4; ++k) {
-                std::cout << " DG_numerical_flux_integration["<< i <<"]["<< k <<"] = " << this->DG_numerical_flux_integration[i][k] << std::endl;
-            }    
-        }
-    }
-
-
-
-
-
-
-
 }
 
 // compute stiffness vector (area integral over element of nabla phi_i dot F dOmega)
@@ -316,17 +221,6 @@ void Evolve_element::compute_stiffness_vector(){
             }       
         }
     }
-
-
-    int elem_number = 0;
-    if ( this->element_this->number == elem_number ){
-        for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
-            for (int k = 0; k < 4; ++k) {
-                std::cout << " DG_stiffness_vector["<< i <<"]["<< k <<"] = " << this->DG_stiffness_vector[i][k] << std::endl;
-            }    
-        }
-    }
-
 }
 
 // compute  residual vector: DG vector that results from stiffness vector minus vector result of the numerical flux integration
@@ -341,17 +235,6 @@ void Evolve_element::compute_residual_vector(){
             this->DG_residual_vector[i][k] = this->DG_stiffness_vector[i][k] - this->DG_numerical_flux_integration[i][k]; 
         }       
     }
-
-
-    int elem_number = 0;
-    if ( this->element_this->number == elem_number ){
-        for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
-            for (int k = 0; k < 4; ++k) {
-                std::cout << " DG_residual_vector["<< i <<"]["<< k <<"] = " << this->DG_residual_vector[i][k] << std::endl;
-            }    
-        }
-    }
-
 }
 
 // compute residial vector stiffness vector minus vector result of the numerical flux integration
@@ -372,16 +255,6 @@ void Evolve_element::compute_time_derivative_U(){
             }
         }       
     }
-
-    int elem_number = 0;
-    if ( this->element_this->number == elem_number ){
-        for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
-            for (int k = 0; k < 4; ++k) {
-                std::cout << " DG_time_derivative_U["<< i <<"]["<< k <<"] = " << this->DG_time_derivative_U[i][k] << std::endl;
-            }    
-        }
-    }
-
 }
 
 // compute new vectors U and F
