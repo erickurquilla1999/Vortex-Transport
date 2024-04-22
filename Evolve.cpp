@@ -65,7 +65,9 @@ void Evolve_element::evaluate_basis_in_quadrature_poits(){
     // number of quadrature points
     int number_quadrature_points = this->gau_integ_line.size(); 
 
+    // reference space coordintates
     std::vector<double> quadrature_point_reference_space(2);
+    // basis function evaluated in at the element boundaries
     std::vector<double> plus_phi_side_1( ( this->p + 1 ) * ( this->p + 2 ) / 2 );
     std::vector<double> plus_phi_side_2( ( this->p + 1 ) * ( this->p + 2 ) / 2 );
     std::vector<double> plus_phi_side_3( ( this->p + 1 ) * ( this->p + 2 ) / 2 );
@@ -123,6 +125,7 @@ void Evolve_element::compute_U_plus_minus(){
     // loop over quadrature points
     for (int i = 0; i < number_quadrature_points; ++i) {
 
+        // initialize all the new state vectors at the quadrature point in zero to start interpolation
         U_plus_side_1[i]  = { 0.0 , 0.0, 0.0, 0.0 };
         U_plus_side_2[i]  = { 0.0 , 0.0, 0.0, 0.0 };
         U_plus_side_3[i]  = { 0.0 , 0.0, 0.0, 0.0 };
@@ -140,7 +143,17 @@ void Evolve_element::compute_U_plus_minus(){
             }
         }
 
+        // this->this_element->type contains information if the element has the square angle up or down.
+        // 0: square angle is down
+        // 1: square angle is up
+
         if ( this->element_this->type == 0 ) {
+            //
+            // if this->this_element->type == 0
+            // the element on the boundary of side 1 is the vertical element
+            // the element on the boundary of side 2 is the rigth element
+            // the element on the boundary of side 3 is the left element
+            //
             // loop over hidrodynamics indices            
             for (int k = 0; k < 4; ++k) {
                 // loop over all interior nodes
@@ -154,6 +167,12 @@ void Evolve_element::compute_U_plus_minus(){
         } 
         
         if ( this->element_this->type == 1 ) {
+            //
+            // if this->this_element->type == 1
+            // the element on the boundary of side 1 is the vertical element
+            // the element on the boundary of side 2 is the left element
+            // the element on the boundary of side 3 is the right element
+            //
             // loop over hidrodynamics indices
             for (int k = 0; k < 4; ++k) {
                 // loop over all interior nodes
