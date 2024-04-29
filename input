@@ -28,3 +28,8 @@ write_every_steps=250
 // 0 : direct interpolation
 // 1 : least squere projection
 U_initialization_type=0
+
+// time stepping method
+// 0 : forward euler
+// 1 : rk4
+stepping_method=0
