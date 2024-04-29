@@ -100,17 +100,19 @@ void Element::build_stiffness_matrix(const std::vector<std::vector<std::vector<d
     }
 }
 
-// initialize the hydronimics quantities u and f
-void Element::initialize_hydrodinamics(){
-
-    for (int i = 0; i < ( this->p + 1 ) *( this->p + 2 ) / 2 ; ++i) {
-
+// initialize the hydronimics quantities U and F
+void Element::initialize_hydrodinamics(const int& ini_type){
+    // initialization type of hidrodynamics state U
+    // 0 : direct interpolation
+    if ( ini_type == 0 ){
+        // hidrodynamic quantities 
+        double rho, u, v, p, E, H;
+        // position (x,y) and time
         double x, y, t;
-        x = this->nods_coords_phys_space[i][0]; // x position of node i
-        y = this->nods_coords_phys_space[i][1]; // y position of node i
-        t = this->time; // initial time
-
+        // hidrodynamic constant
         double rho_infty, rc, epsilon, gamma, M_infty, p_infty, U_infty, V_infty, x0, y0;
+        // initial conditions functions
+        double f0, f1, f2;
 
         rho_infty = 1.0;
         rc = 1.0;
@@ -123,41 +125,48 @@ void Element::initialize_hydrodinamics(){
         x0 = 0.0;
         y0 = 0.0;
 
-        double f0, f1, f2;
+        for (int i = 0; i < ( this->p + 1 ) *( this->p + 2 ) / 2 ; ++i) {
 
-        f0 = 1.0 - ( pow ( x - x0 - U_infty * t , 2.0 ) + pow ( y - y0 - V_infty * t , 2.0 ) ) / pow ( rc , 2.0 );
-        f1 = 1.0 - pow ( epsilon , 2.0 ) * ( gamma -1 ) * pow ( M_infty , 2.0) * exp( f0 ) / ( 8.0 * pow ( M_PI , 2.0 ) );
-        f2 = epsilon * ( pow( U_infty , 2.0) + pow( V_infty , 2.0) ) * exp( f0 / 2.0 ) / ( 2.0 * M_PI * rc );
- 
-        // hidrodynamic quantities 
-        double rho, u, v, p, E, H;
+            x = this->nods_coords_phys_space[i][0]; // x position of node i
+            y = this->nods_coords_phys_space[i][1]; // y position of node i
+            t = this->time; // initial time
 
-        rho = rho_infty * pow( f1 , 1.0 / ( gamma - 1.0 ) ); // density
-        u   = U_infty - f2 * ( y - y0 - V_infty * t ); // horizontal velocity
-        v   = V_infty + f2 * ( x - x0 - U_infty * t ); // vertical velocity
-        p   = p_infty * pow( f1 , gamma / ( gamma - 1.0 ) ); // pressure
-        E   = p / ( rho * ( gamma - 1.0 ) ) + ( pow( u , 2.0) + pow( v , 2.0) ) / 2.0; // Energy
-        H   = E + p / rho; // Entalpy
+            f0 = 1.0 - ( pow ( x - x0 - U_infty * t , 2.0 ) + pow ( y - y0 - V_infty * t , 2.0 ) ) / pow ( rc , 2.0 );
+            f1 = 1.0 - pow ( epsilon , 2.0 ) * ( gamma -1 ) * pow ( M_infty , 2.0) * exp( f0 ) / ( 8.0 * pow ( M_PI , 2.0 ) );
+            f2 = epsilon * ( pow( U_infty , 2.0) + pow( V_infty , 2.0) ) * exp( f0 / 2.0 ) / ( 2.0 * M_PI * rc );
 
-        // initialize the hidrodinamic vector u  
-        this->hidrodynamics_vector_U[i][0] = rho;
-        this->hidrodynamics_vector_U[i][1] = rho * u;
-        this->hidrodynamics_vector_U[i][2] = rho * v;
-        this->hidrodynamics_vector_U[i][3] = rho * E;
+            rho = rho_infty * pow( f1 , 1.0 / ( gamma - 1.0 ) ); // density
+            u   = U_infty - f2 * ( y - y0 - V_infty * t ); // horizontal velocity
+            v   = V_infty + f2 * ( x - x0 - U_infty * t ); // vertical velocity
+            p   = p_infty * pow( f1 , gamma / ( gamma - 1.0 ) ); // pressure
+            E   = p / ( rho * ( gamma - 1.0 ) ) + ( pow( u , 2.0) + pow( v , 2.0) ) / 2.0; // Energy
+            H   = E + p / rho; // Entalpy
 
-        // initialize the hidrodinamic vector f, x component  
-        this->hidrodynamics_vector_F[i][0][0] = rho * u;
-        this->hidrodynamics_vector_F[i][0][1] = rho * pow( u , 2 ) + p;
-        this->hidrodynamics_vector_F[i][0][2] = rho * u * v;
-        this->hidrodynamics_vector_F[i][0][3] = rho * u * H;
+            // initialize the hidrodinamic vector u  
+            this->hidrodynamics_vector_U[i][0] = rho;
+            this->hidrodynamics_vector_U[i][1] = rho * u;
+            this->hidrodynamics_vector_U[i][2] = rho * v;
+            this->hidrodynamics_vector_U[i][3] = rho * E;
 
-        // initialize the hidrodinamic vector f, y component  
-        this->hidrodynamics_vector_F[i][1][0] = rho * v;
-        this->hidrodynamics_vector_F[i][1][1] = rho * u * v;
-        this->hidrodynamics_vector_F[i][1][2] = rho * pow( v , 2 ) + p;
-        this->hidrodynamics_vector_F[i][1][3] = rho * v * H;
+            // initialize the hidrodinamic vector f, x component  
+            this->hidrodynamics_vector_F[i][0][0] = rho * u;
+            this->hidrodynamics_vector_F[i][0][1] = rho * pow( u , 2 ) + p;
+            this->hidrodynamics_vector_F[i][0][2] = rho * u * v;
+            this->hidrodynamics_vector_F[i][0][3] = rho * u * H;
 
-    }
+            // initialize the hidrodinamic vector f, y component  
+            this->hidrodynamics_vector_F[i][1][0] = rho * v;
+            this->hidrodynamics_vector_F[i][1][1] = rho * u * v;
+            this->hidrodynamics_vector_F[i][1][2] = rho * pow( v , 2 ) + p;
+            this->hidrodynamics_vector_F[i][1][3] = rho * v * H;
+        }
+    }else if( ini_type == 1 ){ // 1 : least squere projection
+
+    }else {
+        printf("ERROR: Unsupported initialization type\n0 : direct interpolation\n1 : least squere projection\n");
+        exit(EXIT_FAILURE);
+    }  
+
 
 }
 
