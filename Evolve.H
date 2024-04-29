@@ -79,7 +79,6 @@ public:
     void compute_stiffness_vector(); // compute stiffness vector (area integral over element of nabla phi_i dot F dOmega)
     void compute_residual_vector(); // compute residial vector stiffness vector minus vector result of the numerical flux integration
     void compute_time_derivative_U(); // compute DG_time_derivative_U that is time_derivative of state vector U(t): DG vector that results from dot{U}_{i} = M^{-1}_{ij} R_{j} ---> mass matrix inverse times the residual vector.
-    void compute_new_U_and_F(double& time_step); // compute new vectors U and F.
 
 };
 
