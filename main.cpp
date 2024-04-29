@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
         elements[i].build_jacobians(); // compute jacobians to connetc referece space to physical space and viceversa for each element
         elements[i].build_mass_matrix_inverse(inverse_mass_matrix); // Build mass matrix
         elements[i].build_stiffness_matrix(stiffness_matrix); // builds stiffness matrix from referece space to physical space for each element
-        elements[i].initialize_hydrodinamics(parms.U_initialization_type); //Initialize hidrodynamic quanities
+        elements[i].initialize_hydrodinamics(parms.U_initialization_type, gauss_integral_area); //Initialize hidrodynamic quanities
         elements[i].write_data(0); //write data
     }
 

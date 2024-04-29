@@ -101,7 +101,7 @@ void Element::build_stiffness_matrix(const std::vector<std::vector<std::vector<d
 }
 
 // initialize the hydronimics quantities U and F
-void Element::initialize_hydrodinamics(const int& ini_type){
+void Element::initialize_hydrodinamics(const int& ini_type, const std::vector<std::vector<double>>& gau_area_int){
     // initialization type of hidrodynamics state U
     // 0 : direct interpolation
     if ( ini_type == 0 ){
