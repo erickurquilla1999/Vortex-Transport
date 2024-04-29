@@ -23,3 +23,8 @@ number_time_steps=10000
 
 // write data
 write_every_steps=250
+
+// initialization type of hidrodynamics state U
+// 0 : direct interpolation
+// 1 : least squere projection
+U_initialization_type=0
