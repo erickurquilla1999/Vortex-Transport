@@ -60,31 +60,48 @@ int main(int argc, char* argv[]) {
     // time stepping loop
     for (int a = 1; a < parms.number_time_steps + 1; ++a) {
 
-        // Compute require quantities for time evolution of Evolve_element objects in the array evolve_elements
-        for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
-            evolve_elements[i].compute_U_plus_minus();      // compute U on the element boundaries
-            evolve_elements[i].compute_numerical_flux();    // compute numerical flux
-            evolve_elements[i].integrate_numerical_flux();  // compute the vector result of integrating the numerical flux
-            evolve_elements[i].compute_stiffness_vector();  // compute sitffness vector
-            evolve_elements[i].compute_residual_vector();   // compute residual vector
-            evolve_elements[i].compute_time_derivative_U(); // compute time derivative of U
-        }
-
         // Create the output/step_a directory
-        if (a % parms.write_every_steps == 0) {
+        if (a % parms.write_every_steps == 0) { 
             clean_create_directory("output/step_" + std::to_string(a));        
             std::cout << "Step : " << a << std::endl;
         }
 
         // Compute new state vectors U and F
-        for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
-             // Compute new state vectors U and F
-            evolve_elements[i].compute_new_U_and_F(parms.time_step);
-            // write data
-            if (a % parms.write_every_steps == 0) {
-                // write data
-                elements[i].write_data(a); 
+        //
+        // 0 : forward euler
+        //
+        if ( parms.stepping_method == 0 ){
+
+            // Compute require quantities for time evolution of Evolve_element objects in the array evolve_elements
+            for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
+                evolve_elements[i].compute_U_plus_minus();      // compute U on the element boundaries
+                evolve_elements[i].compute_numerical_flux();    // compute numerical flux
+                evolve_elements[i].integrate_numerical_flux();  // compute the vector result of integrating the numerical flux
+                evolve_elements[i].compute_stiffness_vector();  // compute sitffness vector
+                evolve_elements[i].compute_residual_vector();   // compute residual vector
+                evolve_elements[i].compute_time_derivative_U(); // compute time derivative of U
             }
+
+            // loop over elements
+            for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
+                // Compute new state vectors U and F
+                evolve_elements[i].compute_new_U_and_F(parms.time_step);
+                // write data
+                if (a % parms.write_every_steps == 0) {
+                    // write data
+                    elements[i].write_data(a); 
+                }
+            }
+        //
+        // 1 : rk4
+        //
+        }else if ( parms.stepping_method == 1 ){
+
+
+
+        }else{
+        printf("ERROR: Unsupported time stepping method\n0 : forward euler\n1 : rk4\n");
+        exit(EXIT_FAILURE);
         }
     }
 
