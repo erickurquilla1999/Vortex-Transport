@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
         if ( parms.stepping_method == 0 ){
 
             // called forward_euler function in Timestepping.cpp script
-            forward_euler(evolve_elements, parms.time_step, 2 * parms.num_element_in_x * parms.num_element_in_y);
+            forward_euler(elements, evolve_elements, parms.time_step, 2 * parms.num_element_in_x * parms.num_element_in_y);
 
         // 1 : rk4
         }else if ( parms.stepping_method == 1 ){
