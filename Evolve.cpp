@@ -283,7 +283,7 @@ void Evolve_element::compute_time_derivative_U(){
 }
 
 // compute new vectors U and F
-void Evolve_element::compute_new_U_and_F(double& time_step){
+void Evolve_element::compute_new_U_and_F(double& time_step, const int& time_stepping_method){
 
     double rho, u, v, E, H, p;
     double gamma = 1.4;

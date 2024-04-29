@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
         // Compute new state vectors U and F
         for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
              // Compute new state vectors U and F
-            evolve_elements[i].compute_new_U_and_F(parms.time_step);
+            evolve_elements[i].compute_new_U_and_F(parms.time_step, parms.stepping_method);
             // write data
             if (a % parms.write_every_steps == 0) {
                 // write data
