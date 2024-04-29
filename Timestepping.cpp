@@ -5,18 +5,24 @@
 #include "Element.H"
 #include "Evolve.H"
 
+// Compute dynamical quantites of the DG method
+void evolve_elem(Evolve_element* evo_elemts, int n_elements) {
+    // Compute require quantities for time evolution
+    for (int n = 0; n < n_elements ; ++n) {
+        evo_elemts[n].compute_U_plus_minus();      // compute U on the element boundaries
+        evo_elemts[n].compute_numerical_flux();    // compute numerical flux
+        evo_elemts[n].integrate_numerical_flux();  // compute the vector result of integrating the numerical flux
+        evo_elemts[n].compute_stiffness_vector();  // compute sitffness vector
+        evo_elemts[n].compute_residual_vector();   // compute residual vector
+        evo_elemts[n].compute_time_derivative_U(); // compute time derivative of U
+    }
+}
+
 // time stepping with forward euler
 void forward_euler(Element* elemts, Evolve_element* evo_elemts, double& t_step, const int& n_elements){
 
-    // Compute require quantities for time evolution of Evolve_element objects in the array evolve_elements
-    for (int i = 0; i < n_elements ; ++i) {
-        evo_elemts[i].compute_U_plus_minus();      // compute U on the element boundaries
-        evo_elemts[i].compute_numerical_flux();    // compute numerical flux
-        evo_elemts[i].integrate_numerical_flux();  // compute the vector result of integrating the numerical flux
-        evo_elemts[i].compute_stiffness_vector();  // compute sitffness vector
-        evo_elemts[i].compute_residual_vector();   // compute residual vector
-        evo_elemts[i].compute_time_derivative_U(); // compute time derivative of U
-    }
+    // Compute require quantities for time evolution
+    evolve_elem(evo_elemts, n_elements);
 
     // define hidrodynamics quantities
     double rho, u, v, E, H, p;
@@ -94,15 +100,8 @@ void rk4(Element* elemts, Evolve_element* evo_elemts, double& t_step, const int&
     // COMPUTE K1
     //
 
-    // Compute require quantities for time evolution of Evolve_element objects in the array evolve_elements
-    for (int n = 0; n < n_elements ; ++n) {
-        evo_elemts[n].compute_U_plus_minus();      // compute U on the element boundaries
-        evo_elemts[n].compute_numerical_flux();    // compute numerical flux
-        evo_elemts[n].integrate_numerical_flux();  // compute the vector result of integrating the numerical flux
-        evo_elemts[n].compute_stiffness_vector();  // compute sitffness vector
-        evo_elemts[n].compute_residual_vector();   // compute residual vector
-        evo_elemts[n].compute_time_derivative_U(); // compute time derivative of U
-    }
+    // Compute require quantities for time evolution
+    evolve_elem(evo_elemts, n_elements);
 
     // loop over elements
     for (int n = 0; n < n_elements ; ++n) {
@@ -143,15 +142,8 @@ void rk4(Element* elemts, Evolve_element* evo_elemts, double& t_step, const int&
     // COMPUTE K2
     //
 
-    // Compute require quantities for time evolution of Evolve_element objects in the array evolve_elements
-    for (int n = 0; n < n_elements ; ++n) {
-        evo_elemts[n].compute_U_plus_minus();      // compute U on the element boundaries
-        evo_elemts[n].compute_numerical_flux();    // compute numerical flux
-        evo_elemts[n].integrate_numerical_flux();  // compute the vector result of integrating the numerical flux
-        evo_elemts[n].compute_stiffness_vector();  // compute sitffness vector
-        evo_elemts[n].compute_residual_vector();   // compute residual vector
-        evo_elemts[n].compute_time_derivative_U(); // compute time derivative of U
-    }
+    // Compute require quantities for time evolution
+    evolve_elem(evo_elemts, n_elements);
 
     // loop over elements
     for (int n = 0; n < n_elements ; ++n) {
@@ -192,15 +184,8 @@ void rk4(Element* elemts, Evolve_element* evo_elemts, double& t_step, const int&
     // COMPUTE K3
     //
 
-    // Compute require quantities for time evolution of Evolve_element objects in the array evolve_elements
-    for (int n = 0; n < n_elements ; ++n) {
-        evo_elemts[n].compute_U_plus_minus();      // compute U on the element boundaries
-        evo_elemts[n].compute_numerical_flux();    // compute numerical flux
-        evo_elemts[n].integrate_numerical_flux();  // compute the vector result of integrating the numerical flux
-        evo_elemts[n].compute_stiffness_vector();  // compute sitffness vector
-        evo_elemts[n].compute_residual_vector();   // compute residual vector
-        evo_elemts[n].compute_time_derivative_U(); // compute time derivative of U
-    }
+    // Compute require quantities for time evolution
+    evolve_elem(evo_elemts, n_elements);
 
     // loop over elements
     for (int n = 0; n < n_elements ; ++n) {
@@ -241,15 +226,8 @@ void rk4(Element* elemts, Evolve_element* evo_elemts, double& t_step, const int&
     // COMPUTE K4
     //
 
-    // Compute require quantities for time evolution of Evolve_element objects in the array evolve_elements
-    for (int n = 0; n < n_elements ; ++n) {
-        evo_elemts[n].compute_U_plus_minus();      // compute U on the element boundaries
-        evo_elemts[n].compute_numerical_flux();    // compute numerical flux
-        evo_elemts[n].integrate_numerical_flux();  // compute the vector result of integrating the numerical flux
-        evo_elemts[n].compute_stiffness_vector();  // compute sitffness vector
-        evo_elemts[n].compute_residual_vector();   // compute residual vector
-        evo_elemts[n].compute_time_derivative_U(); // compute time derivative of U
-    }
+    // Compute require quantities for time evolution
+    evolve_elem(evo_elemts, n_elements);
 
     // loop over elements
     for (int n = 0; n < n_elements ; ++n) {
