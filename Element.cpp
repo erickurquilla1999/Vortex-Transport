@@ -35,7 +35,7 @@ Element::Element(const int& ele_num, const mesh& mesh_info, const std::vector<st
     
     // compute interior nodes coordinate in physical space
     for (int i = 0; i < ( this->p + 1 ) *( this->p + 2 ) / 2 ; ++i) {
-        this->nods_coords_phys_space[i] = reference_to_physical_space(nods_coords_refe_space[i], vertices_coords_phys_space);
+        this->nods_coords_phys_space[i] = reference_to_physical_space(this->nods_coords_refe_space[i], this->vertices_coords_phys_space);
     }
 }
 
@@ -161,6 +161,151 @@ void Element::initialize_hydrodinamics(const int& ini_type, const std::vector<st
             this->hidrodynamics_vector_F[i][1][3] = rho * v * H;
         }
     }else if( ini_type == 1 ){ // 1 : least squere projection
+
+        // number of quadrature points
+        int number_quadrature_points = gau_area_int.size(); 
+
+        // this vector store the values of the lagrange polinomial in evaluated in the quadrature points
+        // first index runs over interior nodes number, that is, the lagrange polinimial that is one on this node
+        // second item runs over the evaluation of the lagrange poliniam in the quadrature points
+        std::vector<std::vector<double>> phi_in_quad_points((this->p + 1) * (this->p + 2) / 2, std::vector<double>(number_quadrature_points));
+
+        // this vector store the position of the quadrature points in physical space
+        // first index runs over quadrature points
+        // second item runs between 0 and 1. 0 is x position and 1 is the y position
+        std::vector<std::vector<double>> r_phys_space_quad_points(number_quadrature_points, std::vector<double>(2));
+
+        // position in reference space of quadrature point | temporal variable    
+        std::vector<double> xi_eta_gauss = { 0.0 , 0.0 };
+        // phi value in point xi_eta_gauss | temporal variable    
+        std::vector<double> phi_in_xi_eta_gauss( (this->p + 1) * (this->p + 2) / 2 );
+        
+
+        // evaluate the lagrange polinomial in the quadrature points
+        for (int i = 0; i < number_quadrature_points; ++i) {
+            xi_eta_gauss[0] = gau_area_int[i][0]; // xi
+            xi_eta_gauss[1] = gau_area_int[i][1]; // eta
+            // evaluate phi value in point xi_eta_gauss
+            phi_in_xi_eta_gauss = lagrange_basis_reference_space( this->p , xi_eta_gauss ); 
+            // save the values of the lagrange polinomial in the quadrature points
+            for (int j = 0; j < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++j) {
+                phi_in_quad_points[j][i] = phi_in_xi_eta_gauss[j];
+            }
+ 
+            // convert point xi_eta_gauss to physical space
+            r_phys_space_quad_points[i] = reference_to_physical_space(xi_eta_gauss, this->vertices_coords_phys_space);
+
+        }
+
+        // DG indices vector u exact
+        // first index runs over quadrature points
+        // second item runs between 0 and 3 for hidrodynamic index
+        std::vector<std::vector<double>> DG_u_exact(number_quadrature_points, std::vector<double>(4));
+
+        // hidrodynamic quantities 
+        double rho, u, v, p, E, H;
+        // position (x,y) and time
+        double x, y, t;
+        // hidrodynamic constant
+        double rho_infty, rc, epsilon, gamma, M_infty, p_infty, U_infty, V_infty, x0, y0;
+        // initial conditions functions
+        double f0, f1, f2;
+
+        rho_infty = 1.0;
+        rc = 1.0;
+        epsilon = 0.3;
+        gamma = 1.4;
+        M_infty = 0.5;
+        p_infty = 20.0 / 7.0;
+        U_infty = 1.0 / pow( 2.0 , 0.5);
+        V_infty = 1.0 / pow( 2.0 , 0.5);
+        x0 = 0.0;
+        y0 = 0.0;
+
+        for (int i = 0; i < number_quadrature_points ; ++i) {
+
+            x = r_phys_space_quad_points[i][0]; // x position of node i
+            y = r_phys_space_quad_points[i][1]; // y position of node i
+            t = time; // initial time
+
+            f0 = 1.0 - ( pow ( x - x0 - U_infty * t , 2.0 ) + pow ( y - y0 - V_infty * t , 2.0 ) ) / pow ( rc , 2.0 );
+            f1 = 1.0 - pow ( epsilon , 2.0 ) * ( gamma -1 ) * pow ( M_infty , 2.0) * exp( f0 ) / ( 8.0 * pow ( M_PI , 2.0 ) );
+            f2 = epsilon * ( pow( U_infty , 2.0) + pow( V_infty , 2.0) ) * exp( f0 / 2.0 ) / ( 2.0 * M_PI * rc );
+
+            rho = rho_infty * pow( f1 , 1.0 / ( gamma - 1.0 ) ); // density
+            u   = U_infty - f2 * ( y - y0 - V_infty * t ); // horizontal velocity
+            v   = V_infty + f2 * ( x - x0 - U_infty * t ); // vertical velocity
+            p   = p_infty * pow( f1 , gamma / ( gamma - 1.0 ) ); // pressure
+            E   = p / ( rho * ( gamma - 1.0 ) ) + ( pow( u , 2.0) + pow( v , 2.0) ) / 2.0; // Energy
+            H   = E + p / rho; // Entalpy
+
+            // initialize the hidrodinamic vector u  
+            DG_u_exact[i][0] = rho;
+            DG_u_exact[i][1] = rho * u;
+            DG_u_exact[i][2] = rho * v;
+            DG_u_exact[i][3] = rho * E;
+
+        }
+
+        // DG indices vector b
+        // First index runs over interior nodes. 
+        // Second index runs between 0 and 3 and represend hidrodynamics variables.
+        std::vector<std::vector<double>> DG_b((this->p + 1) * (this->p + 2) / 2, std::vector<double>(4));
+
+        // loop over all interior nodes
+        for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
+
+            // initialize vector b at zero
+            DG_b[i] = { 0.0 , 0.0, 0.0 , 0.0 };
+            
+            // loop over hidrodynamics indices
+            for (int k = 0; k < 4; ++k) {
+                // loop over quadrature points
+                for (int j = 0; j < number_quadrature_points; ++j) {
+                    DG_b[i][k] += this->determinant_jacobian * phi_in_quad_points[i][j] * DG_u_exact[j][k] * gau_area_int[j][2];
+                    // DG_b is the DG vector that results from the integration of the u exect ( integral phi_i u_exact dOmega ). 
+                    // First index runs over interior nodes. 
+                    // Second index runs between 0 and 3 and represend hidrodynamics variables.
+                }
+            }
+        }
+
+        // compute hidrodynamic vector U
+        // loop over all the interior nodes of this element
+        for (int i = 0; i < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++i) {
+
+            // initialize hidrodynamics_vector_U[i][j] values to zero
+            this->hidrodynamics_vector_U[i] = { 0.0 , 0.0 , 0.0 , 0.0 }; 
+
+            // loop over hidrodynamics indices
+            for (int k = 0; k < 4; ++k) {
+                // loop over all the interior nodes of this element
+                for (int j = 0; j < ( this->p + 1 ) * ( this->p + 2 ) / 2; ++j) {
+                    //             U_i                  = sum_j              M^{-1}_{ij}                  *  b_{j}  
+                    this->hidrodynamics_vector_U[i][k] += this->inverse_mass_matrix_physical_space[i][j] * DG_b[j][k]; 
+                }
+            }      
+
+            rho = this->hidrodynamics_vector_U[i][0]; // density
+            u   = this->hidrodynamics_vector_U[i][1] / rho; // horizontal velocity
+            v   = this->hidrodynamics_vector_U[i][2] / rho; // vertical velocity
+            E   = this->hidrodynamics_vector_U[i][3] / rho; // energy
+            p   = rho * ( gamma - 1 ) * ( E - ( pow( u , 2) + pow( v , 2) ) / 2 ); // pressure
+            H   = E + p / rho; // Entalpy
+
+            // initialize the hidrodinamic vector f, x component  
+            this->hidrodynamics_vector_F[i][0][0] = rho * u;
+            this->hidrodynamics_vector_F[i][0][1] = rho * pow( u , 2 ) + p;
+            this->hidrodynamics_vector_F[i][0][2] = rho * u * v;
+            this->hidrodynamics_vector_F[i][0][3] = rho * u * H;
+
+            // initialize the hidrodinamic vector f, y component  
+            this->hidrodynamics_vector_F[i][1][0] = rho * v;
+            this->hidrodynamics_vector_F[i][1][1] = rho * u * v;
+            this->hidrodynamics_vector_F[i][1][2] = rho * pow( v , 2 ) + p;
+            this->hidrodynamics_vector_F[i][1][3] = rho * v * H;
+
+        }
 
     }else {
         printf("ERROR: Unsupported initialization type\n0 : direct interpolation\n1 : least squere projection\n");
