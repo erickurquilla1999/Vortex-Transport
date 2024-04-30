@@ -1,15 +1,4 @@
-import pandas as pd
-import glob
-import matplotlib.pyplot as plt
 import numpy as np
-import h5py
-from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,AutoMinorLocator,LogLocator)
-import matplotlib as mpl
-import matplotlib.ticker
-from matplotlib import cm
-import matplotlib.tri as tri
-from matplotlib.animation import FuncAnimation
-import matplotlib.tri as tri
 
 ################################################################################
 # Lagrange basis functions
