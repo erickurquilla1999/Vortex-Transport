@@ -60,33 +60,24 @@ int main(int argc, char* argv[]) {
 
     // time stepping loop
     for (int a = 1; a < parms.number_time_steps + 1; ++a) {
-
         // 0 : forward euler
         if ( parms.stepping_method == 0 ){
-
             // called forward_euler function in Timestepping.cpp script
             forward_euler(elements, evolve_elements, parms.time_step, 2 * parms.num_element_in_x * parms.num_element_in_y);
-
         // 1 : rk4
         }else if ( parms.stepping_method == 1 ){
-
             // called rk4 function in Timestepping.cpp script
             rk4(elements, evolve_elements, parms.time_step, 2 * parms.num_element_in_x * parms.num_element_in_y);
-
         }else{
-
             printf("ERROR: Unsupported time stepping method\n0 : forward euler\n1 : rk4\n");
             exit(EXIT_FAILURE);
-
         }
 
         // write data
         if (a % parms.write_every_steps == 0) {
-
             // Create the output/step_a directory
             clean_create_directory("output/step_" + std::to_string(a));        
             std::cout << "Step : " << a << std::endl;
-            
             // loop over elements
             for (int i = 0; i < 2 * parms.num_element_in_x * parms.num_element_in_y ; ++i) {
                     // write data
