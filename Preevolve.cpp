@@ -18,9 +18,6 @@ std::vector<std::vector<double>> inverse_mass_matrix_reference_space(const int& 
     // second item runs over the evaluation of the lagrange poliniam in the quadrature points
     std::vector<std::vector<double>> phi_in_quadrature_points( ( p + 1 ) * ( p + 2 ) / 2 , std::vector<double>( size ) );
 
-    // initialize counter
-    int counter = 0;
-
     // evaluate the lagrange polinomial in the quadrature points
     for (int i = 0; i < size; ++i) {
 
@@ -32,9 +29,8 @@ std::vector<std::vector<double>> inverse_mass_matrix_reference_space(const int& 
 
         // evaluate the lagrange polinomial in the quadrature points
         for (int j = 0; j < ( p + 1 ) * ( p + 2 ) / 2; ++j) {
-            phi_in_quadrature_points[j][counter] = phi_in_xi_eta_gauss[j];
+            phi_in_quadrature_points[j][i] = phi_in_xi_eta_gauss[j];
         }
-        counter++;
     }
 
     // define mass matrix
@@ -73,9 +69,7 @@ std::vector<std::vector<double>> inverse_mass_matrix_reference_space(const int& 
     // return inverse mass matrix
     // size ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2
     return mass_matrix_inverse;
-
 }
-
 
 // compute stiffness matrix in reference space 
 // S_ij = integral in T of ( Nabla phi_i ) phi_j dT
@@ -139,5 +133,4 @@ std::vector<std::vector<std::vector<double>>> sitffness_matrix_reference_space(c
     // first index run between spacial components in reference space. 0: xi and 1 eta.
     // second and third index run over matrix inidices of size ( p + 1 ) * ( p + 2 ) / 2 by ( p + 1 ) * ( p + 2 ) / 2 ]
     return stiffness_matrix;
-
 }
