@@ -16,7 +16,7 @@ perturb_grid=0
 integration_order=6
 
 // simulation time
-simulation_time=14.1421
+simulation_time=14.14213562373
 
 // number of time steps
 number_time_steps=10000
@@ -32,4 +32,4 @@ U_initialization_type=0
 // time stepping method
 // 0 : forward euler
 // 1 : rk4
-stepping_method=0
+stepping_method=1
