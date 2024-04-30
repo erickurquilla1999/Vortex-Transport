@@ -135,7 +135,7 @@ for i in range(len(dir_names)):
     plt.tight_layout()
 
     # Save the plot
-    plt.savefig('plotttools/step_' + dir_names[i].lstrip("output/step_") + '.pdf', bbox_inches='tight')
+    plt.savefig('plottools/step_' + dir_names[i].lstrip("output/step_") + '.pdf', bbox_inches='tight')
 
     # Close the plot to avoid memory leaks
     plt.close(fig)
@@ -269,7 +269,7 @@ def update_4fig(frame):
     plt.tight_layout()
 
     # Save the plot
-    # plt.savefig('plotttools/step_' + dir_names[frame].lstrip("output/step_") + '.pdf', bbox_inches='tight')
+    # plt.savefig('plottools/step_' + dir_names[frame].lstrip("output/step_") + '.pdf', bbox_inches='tight')
 
 # Create the figure and axes outside the functions
 fig, axs = plt.subplots(2, 2, sharex=True, sharey=True, figsize=(12, 10))
@@ -278,7 +278,7 @@ fig, axs = plt.subplots(2, 2, sharex=True, sharey=True, figsize=(12, 10))
 ani = FuncAnimation(fig, update_4fig, frames=len(dir_names), interval=400)
 
 # Save the animation as a video file
-ani.save('plotttools/animation.mp4', writer='ffmpeg', dpi=200)
+ani.save('plottools/animation.mp4', writer='ffmpeg', dpi=200)
 
 # Close the plot to avoid memory leaks
 plt.close(fig)
