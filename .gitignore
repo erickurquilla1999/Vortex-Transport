@@ -3,6 +3,7 @@ Vortex-Transport
 grid
 plotttools/*.pdf
 output
+plotttools/*.mp4
 
 # Prerequisites
 *.d
